@@ -1,4 +1,5 @@
 #include "InputHandler.hpp"
+#include "../core/Config.hpp"
 #include <cmath>
 
 InputHandler::InputHandler() 
@@ -40,21 +41,11 @@ void InputHandler::update() {
     panningActive = rightDown && !mouseCapturedByUI;
     selectionTriggered = leftPressed && !mouseCapturedByUI;
     
-    // DEBUG
-    if (leftDown) {
-        TraceLog(LOG_DEBUG, "[INPUT] Click: captured=%d, tractorActive=%d", mouseCapturedByUI, tractorActive);
-    }
-    
-    // DEBUG: Verificar si el click está siendo detectado
-    if (leftDown) {
-        TraceLog(LOG_DEBUG, "[INPUT] Click detectado. Captured: %d, TractorActive: %d", mouseCapturedByUI, tractorActive);
-    }
-
     // Lógica de Doble Espacio
     spaceDoubleTriggered = false;
     if (IsKeyPressed(KEY_SPACE)) {
         float currentTime = (float)GetTime();
-        if (currentTime - lastSpaceTime < 0.3f) {
+        if (currentTime - lastSpaceTime < Config::INPUT_DOUBLE_SPACE_THRESHOLD) {
             spaceDoubleTriggered = true;
         }
         lastSpaceTime = currentTime;

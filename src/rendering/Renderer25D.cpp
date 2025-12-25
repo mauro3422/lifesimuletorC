@@ -32,7 +32,7 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
             Vector2 end = { trChild.x - dirX * childRadius, trChild.y - dirY * childRadius };
             
             float scale = 1.0f + (((trChild.z + trParent.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
-            if (scale < 0.2f) scale = 0.2f;
+            if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
 
             Color bondColor = { 
                 (unsigned char)((parentEl.color.r + childEl.color.r) / 2),
@@ -41,8 +41,8 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
                 255 
             };
             
-            DrawLineEx(start, end, 4.0f * scale, BLACK);
-            DrawLineEx(start, end, 2.5f * scale, bondColor);
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale, BLACK);
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * scale, bondColor);
         }
     }
 
@@ -62,7 +62,7 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
         const Element& element = db.getElement(atoms[idx].atomicNumber);
         
         float scale = 1.0f + (tr.z * Config::DEPTH_SCALE_FACTOR); 
-        if (scale < 0.1f) scale = 0.1f;
+        if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
 
         float radius = (element.vdWRadius * Config::BASE_ATOM_RADIUS) * scale;
         

@@ -15,7 +15,7 @@ class CameraSystem {
 public:
     enum Mode { FOLLOW_PLAYER, FREE_LOOK };
 
-    CameraSystem() : currentMode(FOLLOW_PLAYER), targetZoom(2.0f) {}
+    CameraSystem() : currentMode(FOLLOW_PLAYER), targetZoom(Config::CAMERA_INITIAL_ZOOM) {}
 
     void update(Camera2D& camera, const InputHandler& input, Vector2 targetPos, float dt) {
         // 1. Cambio de Modo con Panning (Click derecho)
@@ -29,33 +29,30 @@ public:
         // 2. Reset con Espacio (Inicia transición cinemática)
         if (input.isSpaceTriggered()) {
             currentMode = FOLLOW_PLAYER;
-            targetZoom = 2.0f; // Zoom objetivo "chil"
+            targetZoom = Config::CAMERA_INITIAL_ZOOM; 
         }
 
         // 3. Lógica de Seguimiento Suave
         if (currentMode == FOLLOW_PLAYER) {
-            float followSpeed = 6.0f;
-            camera.target.x += (targetPos.x - camera.target.x) * followSpeed * dt;
-            camera.target.y += (targetPos.y - camera.target.y) * followSpeed * dt;
+            camera.target.x += (targetPos.x - camera.target.x) * Config::CAMERA_FOLLOW_SPEED * dt;
+            camera.target.y += (targetPos.y - camera.target.y) * Config::CAMERA_FOLLOW_SPEED * dt;
         }
 
         // 4. Zoom Global (Manual + Interpolado)
         if (!input.isMouseOverUI()) {
             float wheel = input.getMouseWheelMove();
             if (wheel != 0) {
-                float scaleFactor = 1.0f + (0.15f * std::abs(wheel));
+                float scaleFactor = 1.0f + (Config::CAMERA_ZOOM_WHEEL_SENSITIVITY * std::abs(wheel));
                 if (wheel < 0) targetZoom /= scaleFactor;
                 else targetZoom *= scaleFactor;
             }
         }
         
         // Limitar Zoom Objetivo
-        targetZoom = std::clamp(targetZoom, 0.05f, 15.0f);
+        targetZoom = std::clamp(targetZoom, Config::CAMERA_ZOOM_MIN, Config::CAMERA_ZOOM_MAX);
 
         // --- TRANSICIÓN CINEMÁTICA (Lerp para el Zoom) ---
-        // Usamos una velocidad de zoom que se sienta suave (2.5f - 4.0f es "chill")
-        float zoomSmoothFactor = 2.5f; 
-        camera.zoom += (targetZoom - camera.zoom) * zoomSmoothFactor * dt;
+        camera.zoom += (targetZoom - camera.zoom) * Config::CAMERA_ZOOM_SMOOTH * dt;
     }
 
     Mode getMode() const { return currentMode; }

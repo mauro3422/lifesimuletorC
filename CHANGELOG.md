@@ -1,4 +1,58 @@
-# Changelog - LifeSimulator C++
+
+## [Phase: Natural Chemistry Engine] - 2025-12-25
+
+### Added
+- **Coulomb Force Engine**: Real electromagnetic forces between atoms based on partial charges. Atoms attract/repel at distance before bonding.
+- **Electronegativity System**: Full Pauling scale values for CHNOPS elements. Bonds now calculate polarity automatically.
+- **Elastic Bonds (Hooke's Law)**: Molecules are no longer rigid; bonds now vibrate and flex like real chemical structures.
+- **Stress-Based Bond Breaking**: NPCs' bonds auto-break when stretched beyond `BOND_BREAK_STRESS` threshold (35 units).
+- **Player Immunity**: Player molecule (ID 0) is immune to stress rupture for fluid gameplay.
+- **Config Constants**: New physics parameters (`COULOMB_CONSTANT`, `BOND_SPRING_K`, `BOND_BREAK_STRESS`, `BOND_IDEAL_DIST`, `EM_REACH`).
+
+### Changed
+- **PhysicsEngine.step()**: Now receives `atoms` and `states` vectors for chemistry-aware force calculations.
+- **updateHierarchy**: Removed rigid position snapping; elastic forces in PhysicsEngine now handle molecular geometry.
+- **Splice Bonding**: Improved validation - only atoms with `maxBonds >= 2` can act as bridges (H can never be a bridge).
+
+### Fixed
+- **Player Movement**: Player's molecule no longer breaks apart when moving at high speeds.
+- **Compile Errors**: Added missing `ChemistryDatabase.hpp` include to PhysicsEngine.
+
+---
+
+## [Phase: Molecular Topology & Smart Chemistry] - 2025-12-25
+
+### Added
+- **Splice Bonding (Inserción por Empalme)**: Nuevo sistema que permite insertar átomos en medio de enlaces saturados (ej: de $H-H$ a $H-O-H$ de forma automática).
+- **Total Valency Calculation**: El sistema ahora considera tanto enlaces entrantes como salientes, garantizando el cumplimiento estricto de las reglas de valencia (el Hidrógeno es ahora un terminal real).
+- **Smart Molecule Scanner**: Al intentar unir un átomo, el sistema escanea automáticamente toda la molécula buscando slots libres mediante jerarquía dinámica (`findMoleculeRoot`).
+- **Tractor Beam Soft-Capture**: Implementación de frenado progresivo con amortiguación dinámica basada en la distancia para evitar colisiones violentas.
+
+### Changed
+- **Tractor Physics**: Refinado de `TRACTOR_MAX_SPEED` (400 -> 250) y `STEER_FACTOR` para una respuesta más elástica y orgánica.
+- **Auto-Acomodamiento**: La lógica de `tryBond` prioriza ahora el sitio de unión químicamente correcto sobre el punto de contacto físico si el modo es forzado por el jugador.
+
+### Fixed
+- **Saturación Molecular Falsa**: Corregido el error donde moléculas aparecían "Saturadas" prematuramente debido a IDs de molécula desincronizados.
+- **H-H-O Invalid Topology**: El sistema ya no permite la formación de cadenas de hidrógeno inválidas, forzando la estructura $H-O-H$.
+
+---
+
+## [Phase Audit: Auditoría Técnica y Refactorización] - 2025-12-25
+
+### Added
+- **MathUtils.hpp**: Nueva cabecera de utilidades unificadas para generación de jitter y búsqueda de raíces moleculares (`findMoleculeRoot`).
+- **Config.hpp Centralizado**: Estandarización de todas las constantes del motor a `inline constexpr`, eliminando "números mágicos" de los sistemas.
+- **HUD Modular**: Extracción de la lógica de interfaz de `main.cpp` a un sistema dedicado `src/ui/HUD`.
+
+### Changed
+- **Refactorización de Sistemas**: Adaptación de `Player`, `BondingSystem`, `InputHandler` y `CameraSystem` para usar la nueva configuración centralizada.
+- **Limpieza de Código**: Eliminación de logs redundantes y optimización de las constantes de interpolación de la cámara y el renderizado 2.5D.
+- **Sistema de Construcción**: Actualización de `build.ps1` para incluir los nuevos módulos.
+
+### Removed
+- Archivos residuales de logs de errores previos y archivos temporales `.txt`.
+
 
 ## [Phase 12: Smooth Docking & Notifications] - 2025-12-25
 

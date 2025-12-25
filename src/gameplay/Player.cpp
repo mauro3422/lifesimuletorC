@@ -3,6 +3,7 @@
 #include "../physics/SpatialGrid.hpp"
 #include "../physics/BondingSystem.hpp"
 #include "../core/Config.hpp"
+#include "../core/MathUtils.hpp"
 #include "../ui/NotificationManager.hpp"
 #include <cmath>
 #include <vector>
@@ -19,7 +20,6 @@ void Player::update(float dt, const InputHandler& input,
                     std::vector<StateComponent>& states,
                     const std::vector<AtomComponent>& atoms) {
     
-    // Obtenemos referencia directa al transform del jugador en el mundo
     auto& transform = worldTransforms[playerIndex];
 
     // 1. MOVIMIENTO SUAVE (Steering)
@@ -28,20 +28,17 @@ void Player::update(float dt, const InputHandler& input,
         float targetVx = dir.x * speed;
         float targetVy = dir.y * speed;
         
-        // Aceleración suave hacia la velocidad objetivo
         transform.vx += (targetVx - transform.vx) * Config::PLAYER_ACCEL; 
         transform.vy += (targetVy - transform.vy) * Config::PLAYER_ACCEL;
     } else {
-        // Frenado inercial
         transform.vx *= Config::PLAYER_FRICTION;
         transform.vy *= Config::PLAYER_FRICTION;
     }
 
-    // 2. VIBRACIÓN TERMODINÁMICA (Browniana del Jugador)
-    transform.vx += (float)GetRandomValue(-100, 100) / 100.0f * Config::THERMODYNAMIC_JITTER;
-    transform.vy += (float)GetRandomValue(-100, 100) / 100.0f * Config::THERMODYNAMIC_JITTER;
+    // 2. VIBRACIÓN TERMODINÁMICA (Browniana)
+    transform.vx += MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER;
+    transform.vy += MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER;
 
-    // Actualizamos posición (Integración simple para el jugador antes de la física global)
     transform.x += transform.vx * dt;
     transform.y += transform.vy * dt;
 
@@ -53,24 +50,24 @@ void Player::update(float dt, const InputHandler& input,
     if (tractor.isActive()) {
         int targetIdx = tractor.getTargetIndex();
         if (targetIdx != -1 && targetIdx != playerIndex) {
-            // Solo intentamos unir atomos LIBRES (no ya enlazados a otra molecula)
             if (!states[targetIdx].isClustered) {
                 float dx = transform.x - worldTransforms[targetIdx].x;
                 float dy = transform.y - worldTransforms[targetIdx].y;
                 float dist = std::sqrt(dx*dx + dy*dy);
 
                 if (dist < Config::TRACTOR_DOCKING_RANGE) {
-                    if (BondingSystem::tryBond(targetIdx, playerIndex, states, atoms, worldTransforms)) {
-                        TraceLog(LOG_INFO, ">>> [BONDING] Atomo ID %d unido a la molecula del Jugador!", targetIdx);
+                    // MODO FORZADO: El jugador ignora el angulo y busca el slot libre mas cercano
+                    BondingSystem::BondError error = BondingSystem::tryBond(targetIdx, playerIndex, states, atoms, worldTransforms, true);
+                    
+                    if (error == BondingSystem::SUCCESS) {
+                        NotificationManager::getInstance().show("¡Acoplado a la molécula del Jugador!", Config::THEME_SUCCESS);
                         tractor.release();
-                    } else {
-                        // Notificacion de enlace fallido
-                        NotificationManager::getInstance().show("Enlace incompatible!", RED, 1.5f);
+                    } else if (error == BondingSystem::VALENCY_FULL) {
+                        NotificationManager::getInstance().show("¡Estructura Molecular Saturada!", Config::THEME_WARNING);
                         tractor.release();
                     }
                 }
             }
-            // Si el atomo esta en otra molecula, atraemos la molecula entera (sin intentar bond)
         }
     }
 }
@@ -85,18 +82,24 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
         int idx = tractor.getTargetIndex();
         if (idx >= 0 && idx < (int)worldTransforms.size() && idx != playerIndex) {
             
-            // Si el atomo esta en una molecula, encontramos su raiz para mover toda la molecula
-            int targetIdx = idx;
-            if (states[idx].isClustered) {
-                // Encontrar la raiz de la molecula
-                while (states[targetIdx].parentEntityId != -1) {
-                    targetIdx = states[targetIdx].parentEntityId;
-                }
-                // Si la raiz es el jugador, ya esta unido - soltar
-                if (targetIdx == playerIndex) {
-                    tractor.release();
-                    return;
-                }
+            int targetIdx = MathUtils::findMoleculeRoot(idx, states);
+            
+            // Si la raiz es el jugador, ya esta unido - soltar
+            if (targetIdx == playerIndex) {
+                tractor.release();
+                return;
+            }
+
+            // --- LÓGICA DE RUPTURA DE ENLACES ---
+            // Si el átomo capturado tiene un padre (está enlazado), lo liberamos
+            // para que pueda ser atraído y eventualmente unirse al jugador.
+            if (states[idx].parentEntityId != -1) {
+                TraceLog(LOG_INFO, "[TRACTOR] Rompiendo enlace del atomo %d para captura", idx);
+                states[idx].parentEntityId = -1;
+                states[idx].isClustered = false;
+                states[idx].moleculeId = -1;
+                // Al liberarlo, targetIdx ahora es simplemente idx
+                targetIdx = idx;
             }
             
             auto& targetTr = worldTransforms[targetIdx];
@@ -105,17 +108,31 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
             float dist = std::sqrt(dx*dx + dy*dy);
 
             if (dist > Config::TRACTOR_REACH_MIN) {
-                targetTr.vx *= Config::TRACTOR_DAMPING; 
-                targetTr.vy *= Config::TRACTOR_DAMPING;
+                // Amortiguación dinámica: Cuanto más cerca, más frenamos la velocidad lateral
+                float currentDamping = Config::TRACTOR_DAMPING;
+                if (dist < Config::TRACTOR_REACH_MIN * 3.0f) {
+                    currentDamping *= 0.85f; // Frenado extra cerca del jugador
+                }
+                
+                targetTr.vx *= currentDamping; 
+                targetTr.vy *= currentDamping;
 
-                float steerX = (dx / dist) * Config::TRACTOR_MAX_SPEED;
-                float steerY = (dy / dist) * Config::TRACTOR_MAX_SPEED;
+                // FRENADO PROGRESIVO: Si está cerca, reducimos la potencia de atracción drásticamente
+                float speedFactor = 1.0f;
+                float brakeThreshold = Config::TRACTOR_REACH_MIN * 2.5f;
+                if (dist < brakeThreshold) {
+                    speedFactor = (dist - Config::TRACTOR_REACH_MIN) / (brakeThreshold - Config::TRACTOR_REACH_MIN);
+                    if (speedFactor < 0.01f) speedFactor = 0.01f; // Mínima fuerza para mantenerlo centrado
+                }
+
+                float steerX = (dx / dist) * Config::TRACTOR_MAX_SPEED * speedFactor;
+                float steerY = (dy / dist) * Config::TRACTOR_MAX_SPEED * speedFactor;
 
                 float jitterMag = (1.0f - (dist / Config::TRACTOR_JITTER_GRADIENT)) * Config::TRACTOR_JITTER_INTENSITY;
                 if (jitterMag < 0) jitterMag = 0;
                 
-                float jx = (float)GetRandomValue(-100, 100) / 100.0f * jitterMag;
-                float jy = (float)GetRandomValue(-100, 100) / 100.0f * jitterMag;
+                float jx = MathUtils::getJitter() * jitterMag;
+                float jy = MathUtils::getJitter() * jitterMag;
 
                 targetTr.vx += (steerX - targetTr.vx) * Config::TRACTOR_STEER_FACTOR + jx;
                 targetTr.vy += (steerY - targetTr.vy) * Config::TRACTOR_STEER_FACTOR + jy;

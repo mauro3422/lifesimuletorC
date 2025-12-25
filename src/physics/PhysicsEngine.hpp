@@ -13,7 +13,9 @@ public:
     PhysicsEngine();
     
     // El paso de simulación principal
-    void step(float dt, std::vector<TransformComponent>& transforms);
+    void step(float dt, std::vector<TransformComponent>& transforms,
+              const std::vector<AtomComponent>& atoms,
+              const std::vector<StateComponent>& states);
 
     // Acceso a la grilla para otros sistemas (como el TractorBeam)
     const SpatialGrid& getGrid() const { return grid; }

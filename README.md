@@ -16,10 +16,12 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 
 ## ✨ Características Principales
 
-- **Química Autónoma**: Los átomos se unen espontáneamente siguiendo reglas VSEPR.
+- **Física Química Real**: Motor basado en reglas científicas (Electronegatividad, Coulomb, Hooke).
+- **Química Inteligente**: Los átomos respetan valencias totales y permiten el **auto-acomodamiento** (Splice Bonding).
+- **Enlaces Elásticos**: Las moléculas vibran y pueden romperse bajo estrés (excepto la del jugador).
+- **Soft-Capture Tractor**: Captura de precisión con frenado progresivo y amortiguación elástica.
 - **Smooth Docking**: Animación suave cuando los átomos se acoplan a moléculas.
-- **Visualización Ball-and-Stick**: Enlaces con colores mezclados y sombras.
-- **Notificaciones**: Alertas visuales para enlaces incompatibles.
+- **Visualización Ball-and-Stick**: Enlaces con colores mezclados y sombras de profundidad.
 - **Logging Persistente**: Todos los eventos se guardan en `session.log`.
 
 ## 🚀 Visión Técnica
@@ -44,6 +46,8 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - [x] **Fase 10**: Autonomous Molecular Evolution
 - [x] **Fase 11**: Bond Visualization Polish
 - [x] **Fase 12**: Smooth Docking & Notifications
+- [x] **Audit**: Molecular Topology & Smart Chemistry
+- [x] **Natural Chemistry**: Coulomb, Electronegativity, Elastic Bonds
 - [ ] **Fase 13**: Bio-Génesis (ATP, Metabolismo Inicial)
 
 ---

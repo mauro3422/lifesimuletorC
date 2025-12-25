@@ -47,7 +47,7 @@ public:
     }
 
 private:
-    NotificationManager() : timer(0), messageColor(WHITE) {}
+    NotificationManager() : messageColor(WHITE), timer(0) {}
     std::string currentMessage;
     Color messageColor;
     float timer;

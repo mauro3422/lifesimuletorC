@@ -41,490 +41,621 @@
 [INFO] FONT: Default font loaded successfully (224 glyphs)
 [INFO] TIMER: Target time per frame: 6.944 milliseconds
 [INFO] [World] Jugador inicializado en (0,0)
-[INFO] [BOND] Union exitosa: 2 -> 7 (Slot 3)
-[INFO] [BOND] Union exitosa: 3 -> 64 (Slot 2)
-[INFO] [BOND] Union exitosa: 4 -> 73 (Slot 0)
-[INFO] [BOND] Union exitosa: 5 -> 375 (Slot 0)
-[INFO] [BOND] Union exitosa: 6 -> 63 (Slot 0)
-[INFO] [BOND] Union exitosa: 9 -> 118 (Slot 1)
-[INFO] [BOND] Union exitosa: 12 -> 307 (Slot 2)
-[INFO] [BOND] Union exitosa: 14 -> 170 (Slot 1)
-[INFO] [BOND] Union exitosa: 15 -> 43 (Slot 2)
-[INFO] [BOND] Union exitosa: 17 -> 55 (Slot 0)
-[INFO] [BOND] Union exitosa: 19 -> 299 (Slot 3)
-[INFO] [BOND] Union exitosa: 22 -> 57 (Slot 1)
-[INFO] [BOND] Union exitosa: 23 -> 54 (Slot 0)
-[INFO] [BOND] Union exitosa: 27 -> 35 (Slot 0)
-[INFO] [BOND] Union exitosa: 28 -> 214 (Slot 0)
-[INFO] [BOND] Union exitosa: 29 -> 372 (Slot 1)
-[INFO] [BOND] Union exitosa: 30 -> 58 (Slot 0)
-[INFO] [BOND] Union exitosa: 31 -> 281 (Slot 0)
-[INFO] [BOND] Union exitosa: 32 -> 41 (Slot 1)
-[INFO] [BOND] Union exitosa: 33 -> 143 (Slot 0)
-[INFO] [BOND] Union exitosa: 34 -> 135 (Slot 3)
-[INFO] [BOND] Union exitosa: 35 -> 187 (Slot 1)
-[INFO] [BOND] Union exitosa: 36 -> 302 (Slot 0)
-[INFO] [BOND] Union exitosa: 37 -> 267 (Slot 0)
-[INFO] [BOND] Union exitosa: 38 -> 101 (Slot 0)
-[INFO] [BOND] Union exitosa: 40 -> 147 (Slot 4)
-[INFO] [BOND] Union exitosa: 43 -> 238 (Slot 2)
-[INFO] [BOND] Union exitosa: 44 -> 70 (Slot 3)
-[INFO] [BOND] Union exitosa: 45 -> 133 (Slot 1)
-[INFO] [BOND] Union exitosa: 46 -> 81 (Slot 1)
-[INFO] [BOND] Union exitosa: 47 -> 89 (Slot 3)
-[INFO] [BOND] Union exitosa: 48 -> 194 (Slot 0)
-[INFO] [BOND] Union exitosa: 50 -> 326 (Slot 2)
-[INFO] [BOND] Union exitosa: 52 -> 240 (Slot 3)
-[INFO] [BOND] Union exitosa: 53 -> 188 (Slot 0)
-[INFO] [BOND] Union exitosa: 55 -> 69 (Slot 0)
-[INFO] [BOND] Union exitosa: 57 -> 345 (Slot 1)
-[INFO] [BOND] Union exitosa: 64 -> 146 (Slot 0)
-[INFO] [BOND] Union exitosa: 66 -> 347 (Slot 1)
-[INFO] [BOND] Union exitosa: 67 -> 143 (Slot 1)
-[INFO] [BOND] Union exitosa: 69 -> 154 (Slot 2)
-[INFO] [BOND] Union exitosa: 71 -> 105 (Slot 0)
-[INFO] [BOND] Union exitosa: 72 -> 150 (Slot 4)
-[INFO] [BOND] Union exitosa: 74 -> 274 (Slot 3)
-[INFO] [BOND] Union exitosa: 76 -> 29 (Slot 3)
-[INFO] [BOND] Union exitosa: 78 -> 145 (Slot 1)
-[INFO] [BOND] Union exitosa: 79 -> 162 (Slot 0)
-[INFO] [BOND] Union exitosa: 80 -> 140 (Slot 2)
-[INFO] [BOND] Union exitosa: 81 -> 295 (Slot 4)
-[INFO] [BOND] Union exitosa: 82 -> 304 (Slot 1)
-[INFO] [BOND] Union exitosa: 83 -> 116 (Slot 0)
-[INFO] [BOND] Union exitosa: 85 -> 96 (Slot 0)
-[INFO] [BOND] Union exitosa: 86 -> 231 (Slot 2)
-[INFO] [BOND] Union exitosa: 90 -> 280 (Slot 4)
-[INFO] [BOND] Union exitosa: 92 -> 387 (Slot 2)
-[INFO] [BOND] Union exitosa: 93 -> 359 (Slot 0)
-[INFO] [BOND] Union exitosa: 95 -> 148 (Slot 1)
-[INFO] [BOND] Union exitosa: 99 -> 104 (Slot 4)
-[INFO] [BOND] Union exitosa: 101 -> 392 (Slot 1)
-[INFO] [BOND] Union exitosa: 102 -> 290 (Slot 1)
-[INFO] [BOND] Union exitosa: 107 -> 189 (Slot 0)
-[INFO] [BOND] Union exitosa: 108 -> 134 (Slot 3)
-[INFO] [BOND] Union exitosa: 109 -> 174 (Slot 2)
-[INFO] [BOND] Union exitosa: 111 -> 200 (Slot 1)
-[INFO] [BOND] Union exitosa: 112 -> 142 (Slot 3)
-[INFO] [BOND] Union exitosa: 115 -> 351 (Slot 1)
-[INFO] [BOND] Union exitosa: 117 -> 147 (Slot 1)
-[INFO] [BOND] Union exitosa: 119 -> 50 (Slot 3)
-[INFO] [BOND] Union exitosa: 120 -> 339 (Slot 1)
-[INFO] [BOND] Union exitosa: 121 -> 349 (Slot 1)
-[INFO] [BOND] Union exitosa: 122 -> 157 (Slot 1)
-[INFO] [BOND] Union exitosa: 123 -> 152 (Slot 2)
-[INFO] [BOND] Union exitosa: 124 -> 132 (Slot 2)
-[INFO] [BOND] Union exitosa: 127 -> 269 (Slot 4)
-[INFO] [BOND] Union exitosa: 128 -> 175 (Slot 4)
-[INFO] [BOND] Union exitosa: 129 -> 31 (Slot 4)
-[INFO] [BOND] Union exitosa: 131 -> 265 (Slot 2)
-[INFO] [BOND] Union exitosa: 133 -> 14 (Slot 2)
-[INFO] [BOND] Union exitosa: 134 -> 323 (Slot 4)
-[INFO] [BOND] Union exitosa: 135 -> 379 (Slot 1)
-[INFO] [BOND] Union exitosa: 138 -> 142 (Slot 1)
-[INFO] [BOND] Union exitosa: 139 -> 259 (Slot 0)
-[INFO] [BOND] Union exitosa: 140 -> 197 (Slot 3)
-[INFO] [BOND] Union exitosa: 141 -> 373 (Slot 2)
-[INFO] [BOND] Union exitosa: 144 -> 317 (Slot 2)
-[INFO] [BOND] Union exitosa: 146 -> 208 (Slot 1)
-[INFO] [BOND] Union exitosa: 149 -> 387 (Slot 0)
-[INFO] [BOND] Union exitosa: 150 -> 220 (Slot 2)
-[INFO] [BOND] Union exitosa: 152 -> 281 (Slot 3)
-[INFO] [BOND] Union exitosa: 155 -> 267 (Slot 1)
-[INFO] [BOND] Union exitosa: 156 -> 284 (Slot 0)
-[INFO] [BOND] Union exitosa: 159 -> 227 (Slot 0)
-[INFO] [BOND] Union exitosa: 161 -> 370 (Slot 1)
-[INFO] [BOND] Union exitosa: 164 -> 169 (Slot 3)
-[INFO] [BOND] Union exitosa: 165 -> 167 (Slot 0)
-[INFO] [BOND] Union exitosa: 166 -> 214 (Slot 1)
-[INFO] [BOND] Union exitosa: 167 -> 337 (Slot 0)
-[INFO] [BOND] Union exitosa: 168 -> 290 (Slot 3)
-[INFO] [BOND] Union exitosa: 169 -> 181 (Slot 1)
-[INFO] [BOND] Union exitosa: 171 -> 185 (Slot 1)
-[INFO] [BOND] Union exitosa: 176 -> 369 (Slot 1)
-[INFO] [BOND] Union exitosa: 177 -> 217 (Slot 1)
-[INFO] [BOND] Union exitosa: 181 -> 274 (Slot 0)
-[INFO] [BOND] Union exitosa: 182 -> 134 (Slot 0)
-[INFO] [BOND] Union exitosa: 183 -> 255 (Slot 2)
-[INFO] [BOND] Union exitosa: 185 -> 338 (Slot 1)
-[INFO] [BOND] Union exitosa: 187 -> 181 (Slot 4)
-[INFO] [BOND] Union exitosa: 188 -> 217 (Slot 3)
-[INFO] [BOND] Union exitosa: 189 -> 225 (Slot 2)
-[INFO] [BOND] Union exitosa: 190 -> 288 (Slot 0)
-[INFO] [BOND] Union exitosa: 192 -> 265 (Slot 0)
-[INFO] [BOND] Union exitosa: 193 -> 287 (Slot 2)
-[INFO] [BOND] Union exitosa: 195 -> 210 (Slot 2)
-[INFO] [BOND] Union exitosa: 199 -> 190 (Slot 1)
-[INFO] [BOND] Union exitosa: 200 -> 397 (Slot 4)
-[INFO] [BOND] Union exitosa: 204 -> 325 (Slot 0)
-[INFO] [BOND] Union exitosa: 205 -> 226 (Slot 2)
-[INFO] [BOND] Union exitosa: 207 -> 37 (Slot 1)
-[INFO] [BOND] Union exitosa: 208 -> 258 (Slot 0)
-[INFO] [BOND] Union exitosa: 212 -> 342 (Slot 0)
-[INFO] [BOND] Union exitosa: 215 -> 360 (Slot 2)
-[INFO] [BOND] Union exitosa: 217 -> 285 (Slot 0)
-[INFO] [BOND] Union exitosa: 218 -> 310 (Slot 1)
-[INFO] [BOND] Union exitosa: 222 -> 394 (Slot 1)
-[INFO] [BOND] Union exitosa: 225 -> 331 (Slot 1)
-[INFO] [BOND] Union exitosa: 227 -> 334 (Slot 0)
-[INFO] [BOND] Union exitosa: 228 -> 316 (Slot 1)
-[INFO] [BOND] Union exitosa: 235 -> 319 (Slot 0)
-[INFO] [BOND] Union exitosa: 237 -> 375 (Slot 1)
-[INFO] [BOND] Union exitosa: 241 -> 283 (Slot 4)
-[INFO] [BOND] Union exitosa: 245 -> 301 (Slot 0)
-[INFO] [BOND] Union exitosa: 248 -> 307 (Slot 1)
-[INFO] [BOND] Union exitosa: 249 -> 374 (Slot 0)
-[INFO] [BOND] Union exitosa: 259 -> 277 (Slot 1)
-[INFO] [BOND] Union exitosa: 260 -> 354 (Slot 0)
-[INFO] [BOND] Union exitosa: 261 -> 382 (Slot 0)
-[INFO] [BOND] Union exitosa: 262 -> 263 (Slot 0)
-[INFO] [BOND] Union exitosa: 265 -> 299 (Slot 0)
-[INFO] [BOND] Union exitosa: 267 -> 349 (Slot 0)
-[INFO] [BOND] Union exitosa: 268 -> 378 (Slot 0)
-[INFO] [BOND] Union exitosa: 271 -> 286 (Slot 0)
-[INFO] [BOND] Union exitosa: 274 -> 381 (Slot 1)
-[INFO] [BOND] Union exitosa: 279 -> 315 (Slot 0)
-[INFO] [BOND] Union exitosa: 281 -> 93 (Slot 0)
-[INFO] [BOND] Union exitosa: 284 -> 352 (Slot 2)
-[INFO] [BOND] Union exitosa: 288 -> 316 (Slot 3)
-[INFO] [BOND] Union exitosa: 289 -> 324 (Slot 1)
-[INFO] [BOND] Union exitosa: 297 -> 383 (Slot 1)
-[INFO] [BOND] Union exitosa: 302 -> 396 (Slot 1)
-[INFO] [BOND] Union exitosa: 304 -> 185 (Slot 0)
-[INFO] [BOND] Union exitosa: 305 -> 365 (Slot 4)
-[INFO] [BOND] Union exitosa: 306 -> 325 (Slot 1)
-[INFO] [BOND] Union exitosa: 308 -> 399 (Slot 0)
-[INFO] [BOND] Union exitosa: 314 -> 384 (Slot 0)
-[INFO] [BOND] Union exitosa: 316 -> 320 (Slot 0)
-[INFO] [BOND] Union exitosa: 318 -> 365 (Slot 1)
-[INFO] [BOND] Union exitosa: 328 -> 342 (Slot 3)
-[INFO] [BOND] Union exitosa: 329 -> 353 (Slot 3)
-[INFO] [BOND] Union exitosa: 331 -> 389 (Slot 0)
-[INFO] [BOND] Union exitosa: 333 -> 281 (Slot 1)
-[INFO] [BOND] Union exitosa: 341 -> 353 (Slot 1)
-[INFO] [BOND] Union exitosa: 344 -> 394 (Slot 0)
-[INFO] [BOND] Union exitosa: 356 -> 374 (Slot 1)
-[INFO] [BOND] Union exitosa: 8 -> 383 (Slot 3)
-[INFO] [BOND] Union exitosa: 16 -> 117 (Slot 1)
-[INFO] [BOND] Union exitosa: 59 -> 123 (Slot 1)
-[INFO] [BOND] Union exitosa: 106 -> 218 (Slot 1)
-[INFO] [BOND] Union exitosa: 179 -> 315 (Slot 2)
-[INFO] [BOND] Union exitosa: 258 -> 262 (Slot 2)
-[INFO] [BOND] Union exitosa: 263 -> 268 (Slot 3)
-[INFO] [BOND] Union exitosa: 41 -> 85 (Slot 0)
-[INFO] [BOND] Union exitosa: 75 -> 112 (Slot 0)
-[INFO] [BOND] Union exitosa: 94 -> 75 (Slot 4)
-[INFO] [BOND] Union exitosa: 294 -> 249 (Slot 1)
-[INFO] [BOND] Union exitosa: 104 -> 261 (Slot 0)
-[INFO] [BOND] Union exitosa: 7 -> 187 (Slot 0)
-[INFO] [BOND] Union exitosa: 157 -> 165 (Slot 0)
-[INFO] [BOND] Union exitosa: 163 -> 157 (Slot 2)
-[INFO] [BOND] Union exitosa: 103 -> 344 (Slot 0)
-[INFO] [BOND] Union exitosa: 105 -> 93 (Slot 1)
-[INFO] [BOND] Union exitosa: 49 -> 200 (Slot 0)
-[INFO] [BOND] Union exitosa: 219 -> 204 (Slot 2)
-[INFO] [BOND] Union exitosa: 39 -> 219 (Slot 3)
-[INFO] [BOND] Union exitosa: 89 -> 39 (Slot 1)
-[INFO] [BOND] Union exitosa: 319 -> 328 (Slot 0)
-[INFO] [BOND] Union exitosa: 54 -> 177 (Slot 3)
-[INFO] [BOND] Union exitosa: 136 -> 246 (Slot 2)
-[INFO] [BOND] Union exitosa: 98 -> 314 (Slot 0)
-[INFO] [BOND] Union exitosa: 184 -> 333 (Slot 0)
-[INFO] [BOND] Union exitosa: 24 -> 139 (Slot 0)
-[INFO] [BOND] Union exitosa: 56 -> 94 (Slot 1)
-[INFO] [BOND] Union exitosa: 151 -> 157 (Slot 0)
-[INFO] [BOND] Union exitosa: 116 -> 181 (Slot 0)
-[INFO] [BOND] Union exitosa: 148 -> 182 (Slot 0)
-[INFO] [BOND] Union exitosa: 97 -> 163 (Slot 1)
-[INFO] [BOND] Union exitosa: 340 -> 66 (Slot 4)
-[INFO] [BOND] Union exitosa: 194 -> 235 (Slot 0)
-[INFO] [BOND] Union exitosa: 254 -> 280 (Slot 3)
-[INFO] [BOND] Union exitosa: 77 -> 90 (Slot 3)
-[INFO] [BOND] Union exitosa: 84 -> 397 (Slot 1)
-[INFO] [BOND] Union exitosa: 186 -> 302 (Slot 2)
-[INFO] [TRACTOR] Capturado atomo ID 115 a distancia 6.89
-[INFO] [BOND] Union exitosa: 332 -> 93 (Slot 2)
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.28
-[INFO] [BOND] Magnetic docking activado para el Jugador
-[INFO] [BOND] Union exitosa: 376 -> 0 (Slot 0)
-[INFO] >>> [BONDING] Atomo ID 376 unido a la molecula del Jugador!
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 16.72
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.56
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 14.56
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 13.08
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 12.49
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 12.54
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 14.08
-[INFO] [BOND] Union exitosa: 338 -> 376 (Slot 0)
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.92
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 16.93
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.56
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.57
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.58
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.58
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.59
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.59
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 18.80
-[INFO] [BOND] Union exitosa: 269 -> 338 (Slot 2)
-[INFO] >>> [BONDING] Atomo ID 269 unido a la molecula del Jugador!
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 18.45
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 17.12
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 15.44
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 13.75
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 12.65
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 13.01
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 13.10
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 13.45
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 13.85
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 14.31
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 15.57
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 15.42
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 14.68
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 14.39
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 14.53
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 14.99
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 15.65
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 16.41
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 17.19
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 17.96
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 18.68
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 19.34
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 19.92
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 20.24
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 20.28
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 20.52
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 20.14
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 19.30
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 18.14
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 18.49
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 19.86
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 22.35
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.04
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.25
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.23
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.21
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.20
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.18
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.17
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.50
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.48
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 23.47
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 24.49
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 25.30
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 26.15
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 26.99
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 26.99
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 26.99
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 27.21
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.87
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.46
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.46
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.46
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.45
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.45
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.61
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 11.73
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 14.62
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 20.02
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 23.19
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.02
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.01
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.00
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.00
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.00
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.00
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.00
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 9.47
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 11.61
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 8.07
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 6.94
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 11.38
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 13.34
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.05
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.21
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.21
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.21
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.21
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.22
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.22
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 15.22
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 17.68
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 17.69
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 17.70
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.08
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 18.55
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 19.40
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 21.62
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 24.58
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 26.34
-[INFO] [TRACTOR] Capturado atomo ID 115 a distancia 24.47
-[INFO] [BOND] Union exitosa: 323 -> 338 (Slot 3)
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 22.80
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 22.80
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 22.80
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 22.80
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 22.80
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 23.32
-[INFO] [TRACTOR] Capturado atomo ID 376 a distancia 24.89
-[INFO] [TRACTOR] Capturado atomo ID 115 a distancia 25.35
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 5.68
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 5.69
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 5.70
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 5.71
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 5.08
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 4.27
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 3.93
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 3.84
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 4.37
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 6.48
-[INFO] [TRACTOR] Capturado atomo ID 338 a distancia 10.09
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 12.42
-[INFO] [TRACTOR] Capturado atomo ID 127 a distancia 10.64
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.57
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.26
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.23
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.24
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.23
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.23
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.40
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 8.93
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 8.92
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 8.92
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 8.91
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 8.90
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 8.89
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.22
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.34
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 9.39
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 10.81
-[INFO] [TRACTOR] Capturado atomo ID 269 a distancia 12.98
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 13.23
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 13.20
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 13.18
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 13.16
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 11.89
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 10.21
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 10.64
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 14.73
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 19.23
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.90
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.89
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.88
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.87
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.87
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.87
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.88
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.89
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.89
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 1.63
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 1.62
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 1.61
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 1.37
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 1.23
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 1.97
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 5.35
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 8.77
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 12.97
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 16.46
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 20.88
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 23.47
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 24.22
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 24.20
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 24.19
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 24.18
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 24.17
-[INFO] [TRACTOR] Capturado atomo ID 95 a distancia 24.16
-[INFO] [TRACTOR] Capturado atomo ID 186 a distancia 4.88
-[INFO] [TRACTOR] Capturado atomo ID 115 a distancia 10.52
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 0.93
-[INFO] [TRACTOR] Capturado atomo ID 12 a distancia 9.29
-[INFO] [TRACTOR] Capturado atomo ID 12 a distancia 4.58
-[INFO] [TRACTOR] Capturado atomo ID 12 a distancia 5.06
-[INFO] [TRACTOR] Capturado atomo ID 273 a distancia 11.76
-[INFO] [TRACTOR] Capturado atomo ID 213 a distancia 8.38
-[INFO] [TRACTOR] Capturado atomo ID 115 a distancia 5.46
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 8.46
-[INFO] [BOND] Union exitosa: 351 -> 269 (Slot 1)
-[INFO] >>> [BONDING] Atomo ID 351 unido a la molecula del Jugador!
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 9.17
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 10.40
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 12.11
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 14.23
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 16.68
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 19.36
-[INFO] [TRACTOR] Capturado atomo ID 351 a distancia 22.16
-[INFO] [TRACTOR] Capturado atomo ID 186 a distancia 24.90
-[INFO] [TRACTOR] Capturado atomo ID 302 a distancia 10.38
-[INFO] [TRACTOR] Capturado atomo ID 186 a distancia 8.42
-[INFO] [TRACTOR] Capturado atomo ID 358 a distancia 6.52
-[INFO] [BOND] Union exitosa: 337 -> 269 (Slot 3)
-[INFO] [BOND] Union exitosa: 162 -> 351 (Slot 0)
-[INFO] [BOND] Union exitosa: 223 -> 304 (Slot 0)
-[INFO] [BOND] Union exitosa: 13 -> 323 (Slot 1)
-[INFO] [BOND] Union exitosa: 65 -> 79 (Slot 0)
-[INFO] [BOND] Union exitosa: 220 -> 338 (Slot 0)
-[INFO] [BOND] Union exitosa: 209 -> 269 (Slot 0)
-[INFO] [BOND] Union exitosa: 126 -> 220 (Slot 1)
-[INFO] [BOND] Union exitosa: 198 -> 220 (Slot 0)
-[INFO] [BOND] Union exitosa: 231 -> 13 (Slot 1)
-[INFO] [BOND] Union exitosa: 325 -> 231 (Slot 3)
-[INFO] [BOND] Union exitosa: 197 -> 323 (Slot 2)
-[INFO] [BOND] Union exitosa: 100 -> 197 (Slot 2)
-[INFO] [BOND] Union exitosa: 114 -> 100 (Slot 0)
-[INFO] [BOND] Union exitosa: 154 -> 198 (Slot 0)
-[INFO] [BOND] Union exitosa: 327 -> 114 (Slot 0)
-[INFO] [BOND] Union exitosa: 363 -> 209 (Slot 1)
-[INFO] [BOND] Union exitosa: 145 -> 154 (Slot 0)
-[INFO] [BOND] Union exitosa: 96 -> 327 (Slot 0)
-[INFO] [BOND] Union exitosa: 20 -> 363 (Slot 0)
-[INFO] [BOND] Union exitosa: 214 -> 231 (Slot 0)
-[INFO] [BOND] Union exitosa: 113 -> 13 (Slot 0)
-[INFO] [BOND] Union exitosa: 63 -> 209 (Slot 0)
-[INFO] [BOND] Union exitosa: 62 -> 63 (Slot 3)
-[INFO] [BOND] Union exitosa: 191 -> 214 (Slot 4)
-[INFO] [BOND] Union exitosa: 253 -> 113 (Slot 0)
-[INFO] [BOND] Union exitosa: 256 -> 323 (Slot 0)
-[INFO] [BOND] Union exitosa: 300 -> 113 (Slot 1)
-[INFO] [BOND] Union exitosa: 143 -> 223 (Slot 0)
-[INFO] [BOND] Union exitosa: 255 -> 253 (Slot 0)
-[INFO] [BOND] Union exitosa: 238 -> 126 (Slot 1)
-[INFO] [BOND] Union exitosa: 25 -> 171 (Slot 0)
-[INFO] [BOND] Union exitosa: 240 -> 256 (Slot 1)
-[INFO] [BOND] Union exitosa: 372 -> 240 (Slot 0)
-[INFO] [BOND] Union exitosa: 362 -> 62 (Slot 0)
-[INFO] [BOND] Union exitosa: 221 -> 323 (Slot 3)
-[INFO] [BOND] Union exitosa: 233 -> 63 (Slot 2)
-[INFO] [BOND] Union exitosa: 357 -> 240 (Slot 2)
-[INFO] [BOND] Union exitosa: 315 -> 256 (Slot 0)
-[INFO] [BOND] Union exitosa: 226 -> 20 (Slot 0)
-[INFO] [BOND] Union exitosa: 246 -> 362 (Slot 0)
-[INFO] [BOND] Union exitosa: 10 -> 100 (Slot 1)
-[INFO] [BOND] Union exitosa: 88 -> 140 (Slot 4)
-[INFO] [BOND] Union exitosa: 303 -> 209 (Slot 2)
-[INFO] [BOND] Union exitosa: 230 -> 13 (Slot 2)
-[INFO] [BOND] Union exitosa: 21 -> 303 (Slot 3)
-[INFO] [BOND] Union exitosa: 330 -> 21 (Slot 2)
-[INFO] [BOND] Union exitosa: 374 -> 269 (Slot 2)
-[INFO] [BOND] Union exitosa: 252 -> 197 (Slot 1)
-[INFO] [BOND] Union exitosa: 18 -> 25 (Slot 3)
-[INFO] [BOND] Union exitosa: 87 -> 374 (Slot 2)
-[INFO] [BOND] Union exitosa: 244 -> 87 (Slot 1)
-[INFO] [BOND] Union exitosa: 335 -> 240 (Slot 4)
-[INFO] [BOND] Union exitosa: 201 -> 252 (Slot 1)
-[INFO] [BOND] Union exitosa: 232 -> 10 (Slot 0)
-[INFO] [BOND] Union exitosa: 234 -> 230 (Slot 0)
-[INFO] [BOND] Union exitosa: 229 -> 234 (Slot 1)
-[INFO] [BOND] Union exitosa: 213 -> 230 (Slot 1)
-[INFO] [BOND] Union exitosa: 358 -> 303 (Slot 2)
-[INFO] [BOND] Union exitosa: 51 -> 88 (Slot 1)
-[INFO] [BOND] Union exitosa: 91 -> 88 (Slot 2)
-[INFO] [BOND] Union exitosa: 309 -> 358 (Slot 0)
-[INFO] [BOND] Union exitosa: 336 -> 226 (Slot 1)
-[INFO] [BOND] Union exitosa: 283 -> 372 (Slot 0)
-[INFO] [BOND] Union exitosa: 298 -> 335 (Slot 0)
-[INFO] [BOND] Union exitosa: 292 -> 283 (Slot 3)
-[INFO] [BOND] Union exitosa: 180 -> 330 (Slot 1)
-[INFO] [BOND] Union exitosa: 285 -> 230 (Slot 2)
+[INFO] [BOND] GLOBAL SUCCESS: 1 -> 321 (Molecule 321) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 3 -> 288 (Molecule 288) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 4 -> 348 (Molecule 348) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 5 -> 116 (Molecule 116) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 6 -> 389 (Molecule 389) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 7 -> 16 (Molecule 16) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 8 -> 137 (Molecule 137) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 10 -> 386 (Molecule 386) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 12 -> 46 (Molecule 46) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 13 -> 150 (Molecule 150) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 14 -> 27 (Molecule 27) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 15 -> 46 (Molecule 46) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 16 -> 71 (Molecule 71) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 19 -> 171 (Molecule 171) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 20 -> 347 (Molecule 347) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 21 -> 169 (Molecule 169) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 22 -> 344 (Molecule 344) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 24 -> 113 (Molecule 113) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 25 -> 150 (Molecule 150) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 27 -> 352 (Molecule 352) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 30 -> 304 (Molecule 304) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 33 -> 47 (Molecule 47) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 34 -> 349 (Molecule 349) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 35 -> 388 (Molecule 388) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 36 -> 220 (Molecule 220) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 38 -> 162 (Molecule 162) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 39 -> 49 (Molecule 49) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 40 -> 54 (Molecule 54) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 42 -> 310 (Molecule 310) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 44 -> 185 (Molecule 185) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 45 -> 154 (Molecule 154) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 46 -> 126 (Molecule 126) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 48 -> 165 (Molecule 165) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 49 -> 7 (Molecule 71) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 50 -> 58 (Molecule 58) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 52 -> 301 (Molecule 301) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 53 -> 106 (Molecule 106) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 55 -> 210 (Molecule 210) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 57 -> 199 (Molecule 199) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 58 -> 231 (Molecule 231) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 59 -> 267 (Molecule 267) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 60 -> 294 (Molecule 294) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 61 -> 77 (Molecule 77) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 64 -> 67 (Molecule 67) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 66 -> 228 (Molecule 228) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 68 -> 317 (Molecule 317) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 69 -> 243 (Molecule 243) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 70 -> 157 (Molecule 157) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 73 -> 149 (Molecule 149) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 74 -> 141 (Molecule 141) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 75 -> 164 (Molecule 164) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 77 -> 117 (Molecule 117) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 78 -> 185 (Molecule 185) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 80 -> 346 (Molecule 346) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 81 -> 253 (Molecule 253) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 85 -> 202 (Molecule 202) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 87 -> 143 (Molecule 143) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 89 -> 233 (Molecule 233) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 92 -> 130 (Molecule 130) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 93 -> 120 (Molecule 120) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 95 -> 368 (Molecule 368) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 97 -> 73 (Molecule 149) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 99 -> 346 (Molecule 346) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 100 -> 173 (Molecule 173) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 101 -> 112 (Molecule 112) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 102 -> 135 (Molecule 135) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 105 -> 122 (Molecule 122) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 106 -> 250 (Molecule 250) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 107 -> 287 (Molecule 287) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 108 -> 261 (Molecule 261) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 109 -> 146 (Molecule 146) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 110 -> 139 (Molecule 139) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 113 -> 369 (Molecule 369) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 114 -> 355 (Molecule 355) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 117 -> 244 (Molecule 244) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 118 -> 372 (Molecule 372) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 120 -> 238 (Molecule 238) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 124 -> 171 (Molecule 171) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 125 -> 351 (Molecule 351) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 126 -> 219 (Molecule 219) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 127 -> 183 (Molecule 183) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 132 -> 140 (Molecule 140) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 133 -> 137 (Molecule 137) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 134 -> 328 (Molecule 328) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 135 -> 195 (Molecule 195) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 139 -> 263 (Molecule 263) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 142 -> 302 (Molecule 302) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 143 -> 153 (Molecule 153) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 144 -> 154 (Molecule 154) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 145 -> 73 (Molecule 149) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 147 -> 256 (Molecule 256) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 148 -> 236 (Molecule 236) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 149 -> 391 (Molecule 391) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 150 -> 224 (Molecule 224) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 151 -> 371 (Molecule 371) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 153 -> 319 (Molecule 319) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 154 -> 161 (Molecule 161) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 155 -> 307 (Molecule 307) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 158 -> 169 (Molecule 169) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 164 -> 385 (Molecule 385) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 167 -> 187 (Molecule 187) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 168 -> 221 (Molecule 221) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 169 -> 172 (Molecule 172) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 172 -> 282 (Molecule 282) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 173 -> 290 (Molecule 290) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 179 -> 305 (Molecule 305) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 180 -> 284 (Molecule 284) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 184 -> 255 (Molecule 255) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 185 -> 312 (Molecule 312) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 187 -> 57 (Molecule 199) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 188 -> 327 (Molecule 327) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 190 -> 246 (Molecule 246) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 191 -> 305 (Molecule 305) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 196 -> 201 (Molecule 201) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 197 -> 206 (Molecule 206) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 205 -> 325 (Molecule 325) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 207 -> 151 (Molecule 371) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 208 -> 252 (Molecule 252) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 216 -> 242 (Molecule 242) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 217 -> 164 (Molecule 385) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 220 -> 334 (Molecule 334) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 223 -> 328 (Molecule 328) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 226 -> 330 (Molecule 330) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 230 -> 306 (Molecule 306) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 231 -> 217 (Molecule 385) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 235 -> 237 (Molecule 237) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 237 -> 277 (Molecule 277) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 244 -> 356 (Molecule 356) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 246 -> 346 (Molecule 346) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 253 -> 336 (Molecule 336) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 254 -> 368 (Molecule 368) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 258 -> 100 (Molecule 290) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 265 -> 34 (Molecule 349) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 269 -> 274 (Molecule 274) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 274 -> 351 (Molecule 351) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 275 -> 286 (Molecule 286) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 276 -> 335 (Molecule 335) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 277 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 283 -> 288 (Molecule 288) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 302 -> 316 (Molecule 316) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 304 -> 386 (Molecule 386) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 305 -> 342 (Molecule 342) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 306 -> 317 (Molecule 317) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 307 -> 313 (Molecule 313) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 312 -> 319 (Molecule 319) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 316 -> 377 (Molecule 377) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 319 -> 346 (Molecule 346) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 330 -> 347 (Molecule 347) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 341 -> 80 (Molecule 346) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 353 -> 390 (Molecule 390) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 369 -> 394 (Molecule 394) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 112 -> 180 (Molecule 284) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 201 -> 305 (Molecule 342) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 271 -> 191 (Molecule 342) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 364 -> 164 (Molecule 385) Polarity: -0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 201 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 201 -> 271 (Molecule 342) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 116 -> 226 (Molecule 347) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 342 -> 366 (Molecule 366) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 219 -> 393 (Molecule 393) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 315 -> 271 (Molecule 366) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 62 -> 302 (Molecule 377) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 140 -> 181 (Molecule 181) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 294 -> 360 (Molecule 360) Polarity: 0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 256 -> 322 (Molecule 322) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 23 -> 7 (Molecule 71) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 76 -> 127 (Molecule 183) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 236 -> 332 (Molecule 332) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 252 -> 357 (Molecule 357) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 67 -> 282 (Molecule 282) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 281 -> 335 (Molecule 335) Polarity: -0.05
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 313 -> 363 (Molecule 363) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 166 -> 313 (Molecule 363) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 159 -> 184 (Molecule 255) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 79 -> 267 (Molecule 267) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 47 -> 267 (Molecule 267) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 111 -> 265 (Molecule 349) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 56 -> 80 (Molecule 346) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 138 -> 3 (Molecule 288) Polarity: -0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 138 se separo de 3
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 138 -> 3 (Molecule 288) Polarity: -0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 138 se separo de 3
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 138 -> 3 (Molecule 288) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 250 -> 293 (Molecule 293) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 138 se separo de 3
+[INFO] [BOND] GLOBAL SUCCESS: 138 -> 322 (Molecule 322) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 325 -> 253 (Molecule 336) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 136 -> 325 (Molecule 336) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 104 -> 219 (Molecule 393) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 339 -> 126 (Molecule 393) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 206 -> 263 (Molecule 263) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 183 -> 348 (Molecule 348) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 71 -> 329 (Molecule 329) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 26 -> 7 (Molecule 329) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 86 -> 145 (Molecule 391) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 311 -> 62 (Molecule 377) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 86 se separo de 145
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 287 -> 68 (Molecule 317) Polarity: 0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 287 se separo de 68
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 271
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 271
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 305 (Molecule 366) Polarity: -0.07
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 305
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 271
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 271
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 271
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 361 se separo de 271
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 361 -> 271 (Molecule 366) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 141 -> 139 (Molecule 263) Polarity: 0.05
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 152 -> 343 (Molecule 343) Polarity: -0.06
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 119 -> 289 (Molecule 289) Polarity: -0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 72 se separo de 180
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 180 (Molecule 284) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 82 -> 205 (Molecule 336) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 297 -> 345 (Molecule 345) Polarity: 0.19
+[INFO] [BOND] GLOBAL SUCCESS: 37 -> 251 (Molecule 251) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 163 -> 241 (Molecule 241) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 17 -> 198 (Molecule 198) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 94 -> 334 (Molecule 334) Polarity: 0.06
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 5.36
+[INFO] [BOND] GLOBAL SUCCESS: 365 -> 0 (Molecule 0) Polarity: -0.13
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 5.04
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 3.95
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 2.17
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 0.53
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 1.42
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 3.18
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[INFO] [TRACTOR] Capturado atomo ID 365 a distancia 4.62
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 51 -> 251 (Molecule 251) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 90 -> 72 (Molecule 284) Polarity: 0.00
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 90 se separo de 72
+[INFO] [BOND] GLOBAL SUCCESS: 83 -> 253 (Molecule 336) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[WARNING] [PHYSICS] ENLACE ROTO por estres: Atomo 280 se separo de 208
+[INFO] [BOND] GLOBAL SUCCESS: 280 -> 208 (Molecule 357) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 32 -> 357 (Molecule 357) Polarity: 0.13
 [INFO] TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
 [INFO] SHADER: [ID 3] Default shader unloaded successfully
 [INFO] TEXTURE: [ID 1] Default texture unloaded successfully

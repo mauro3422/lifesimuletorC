@@ -16,6 +16,7 @@ g++ src/main.cpp `
     src/gameplay/TractorBeam.cpp `
     src/ui/LabelSystem.cpp `
     src/ui/Inspector.cpp `
+    src/ui/HUD.cpp `
     -I"$INCLUDE_DIR" `
     -I"$BASE_DIR/src" `
     -L"$LIB_DIR" `
