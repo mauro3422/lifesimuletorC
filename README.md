@@ -1,0 +1,50 @@
+# 🧪 LifeSimulator C++
+
+**High-Performance Molecular Evolution Engine**
+
+Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo es alcanzar una simulación masiva de física química acelerada por hardware, con una estética "Nano-HD" minimalista y funcional.
+
+## 🕹️ Controles Principales
+
+- **WASD**: Navegar por el entorno.
+- **Mouse Wheel**: Control de Zoom (Transiciones suaves).
+- **Click Izquierdo**: Activar Rayo Tractor (Capturar átomos).
+- **Click Derecho (Hold)**: **Paneo Libre** de la cámara.
+- **Espacio**: Centrar cámara en el Avatar + Abrir Inspector de Elemento.
+- **Doble Espacio**: Abrir Vista de Molécula.
+- **F11**: Pantalla Completa.
+
+## ✨ Características Principales
+
+- **Química Autónoma**: Los átomos se unen espontáneamente siguiendo reglas VSEPR.
+- **Smooth Docking**: Animación suave cuando los átomos se acoplan a moléculas.
+- **Visualización Ball-and-Stick**: Enlaces con colores mezclados y sombras.
+- **Notificaciones**: Alertas visuales para enlaces incompatibles.
+- **Logging Persistente**: Todos los eventos se guardan en `session.log`.
+
+## 🚀 Visión Técnica
+- **Motor**: C++17 con Raylib 5.0 (High-DPI enabled).
+- **Arquitectura**: Clean ECS (Entity Component System).
+- **Estética**: "LORE-CORE" / Nano-HD (Escalado compacto, tipografía ultra-nítida).
+- **UI**: Sistema modular de `UIWidgets` para consistencia visual.
+
+## 📂 Estructura
+- `src/core/`: Configuración global y constantes.
+- `src/ui/`: `Inspector`, `LabelSystem`, `UIWidgets`, `NotificationManager`.
+- `src/rendering/`: Cámara cinemática y Render 2.5D.
+- `src/chemistry/`: Base de datos de elementos y propiedades.
+- `src/physics/`: `BondingSystem`, `PhysicsEngine`, `SpatialGrid`.
+- `src/gameplay/`: `Player`, `TractorBeam`.
+
+## 🛠️ Roadmap Actualizado
+- [x] **Fase 5**: ECS & Render Base
+- [x] **Fase 6**: Rediseño Visual & Interacción Nano-HD
+- [x] **Fase 7**: Master Alchemy (CHNOPS, VSEPR, Dynamic UI)
+- [x] **Fase 8**: System Hardening & Deep Optimization
+- [x] **Fase 10**: Autonomous Molecular Evolution
+- [x] **Fase 11**: Bond Visualization Polish
+- [x] **Fase 12**: Smooth Docking & Notifications
+- [ ] **Fase 13**: Bio-Génesis (ATP, Metabolismo Inicial)
+
+---
+*Basado en el diseño original de LifeSimulator Python.*

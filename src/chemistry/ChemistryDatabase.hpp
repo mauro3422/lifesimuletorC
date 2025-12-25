@@ -1,0 +1,41 @@
+#ifndef CHEMISTRY_DATABASE_HPP
+#define CHEMISTRY_DATABASE_HPP
+
+#include "Element.hpp"
+#include <vector>
+#include <string>
+#include <unordered_map>
+
+/**
+ * BASE DE DATOS DE QUÍMICA (Optimized V2)
+ * Registra y provee acceso O(1) a todos los elementos.
+ * Utiliza un vector indexado por número atómico para máximo rendimiento.
+ */
+class ChemistryDatabase {
+public:
+    static ChemistryDatabase& getInstance() {
+        static ChemistryDatabase instance;
+        return instance;
+    }
+
+    // Obtener un elemento por su número atómico (O(1) Direct Access)
+    const Element& getElement(int atomicNumber) const;
+    
+    // Obtener un elemento por su símbolo (O(1) Hash Map)
+    const Element& getElement(const std::string& symbol) const;
+
+    bool exists(int atomicNumber) const;
+
+private:
+    ChemistryDatabase(); // Inicializa los elementos
+    
+    // Almacenamiento denso para acceso por ID
+    std::vector<Element> elements; 
+    
+    // Mapa rápido para búsqueda por Símbolo
+    std::unordered_map<std::string, int> symbolToId;
+    
+    void addElement(Element e);
+};
+
+#endif
