@@ -28,8 +28,8 @@ void Player::update(float dt, const InputHandler& input,
         transform.vx += (targetVx - transform.vx) * Config::PLAYER_ACCEL; 
         transform.vy += (targetVy - transform.vy) * Config::PLAYER_ACCEL;
     } else {
-        transform.vx *= Config::PLAYER_FRICTION;
-        transform.vy *= Config::PLAYER_FRICTION;
+        transform.vx *= Config::DRAG_COEFFICIENT;
+        transform.vy *= Config::DRAG_COEFFICIENT;
     }
 
     // 2. THERMODYNAMIC JITTER
@@ -95,7 +95,7 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
     
     float dx = tPos.x - targetTr.x;
     float dy = tPos.y - targetTr.y;
-    float dist = std::sqrt(dx*dx + dy*dy);
+    float dist = MathUtils::dist({tPos.x, tPos.y}, {targetTr.x, targetTr.y});
 
     if (dist > 5.0f) {
         targetTr.vx *= Config::TRACTOR_DAMPING; 
@@ -108,8 +108,9 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
             if (speedFactor < 0.1f) speedFactor = 0.1f;
         }
 
-        float steerX = (dx / dist) * Config::TRACTOR_MAX_SPEED * speedFactor;
-        float steerY = (dy / dist) * Config::TRACTOR_MAX_SPEED * speedFactor;
+        Vector2 dir = MathUtils::normalize(Vector2{dx, dy});
+        float steerX = dir.x * Config::TRACTOR_MAX_SPEED * speedFactor;
+        float steerY = dir.y * Config::TRACTOR_MAX_SPEED * speedFactor;
         
         float jitterMag = (1.0f - (dist / Config::TRACTOR_JITTER_GRADIENT)) * Config::TRACTOR_JITTER_INTENSITY;
         if (jitterMag < 0) jitterMag = 0;

@@ -3,26 +3,27 @@
 #include <cmath>
 #include <algorithm>
 #include "../chemistry/ChemistryDatabase.hpp"
+#include "../core/MathUtils.hpp"
 
 PhysicsEngine::PhysicsEngine() : grid(Config::GRID_CELL_SIZE) {}
 
 void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                         const std::vector<AtomComponent>& atoms,
                         std::vector<StateComponent>& states) {
-    // 0. ACTUALIZAR AMBIENTE (La grilla se actualizará al final del paso)
+    // 0. UPDATE ENVIRONMENT (The grid will be updated at the end of the step)
     environment.update(transforms, states, dt); 
 
-    // 1. APLICAR FUERZAS ELECTROMAGNÉTICAS (Coulomb O(N))
+    // 1. APPLY ELECTROMAGNETIC FORCES (Coulomb O(N))
     for (int i = 0; i < (int)transforms.size(); i++) {
         float q1 = atoms[i].partialCharge;
-        if (std::abs(q1) < 0.001f) continue; // Átomo neutro, no genera campo EM significativo
+        if (std::abs(q1) < Config::CHARGE_THRESHOLD) continue; // Neutral atom, no significant EM field
 
-        // Buscar vecinos en la grilla para aplicar fuerzas
+        // Search for neighbors in the grid to apply forces
         std::vector<int> neighbors = grid.getNearby({transforms[i].x, transforms[i].y}, Config::EM_REACH);
         for (int j : neighbors) {
             if (i == j) continue;
             float q2 = atoms[j].partialCharge;
-            if (std::abs(q2) < 0.001f) continue;
+            if (std::abs(q2) < Config::CHARGE_THRESHOLD) continue;
 
             float dx = transforms[j].x - transforms[i].x;
             float dy = transforms[j].y - transforms[i].y;
@@ -31,37 +32,44 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
             if (dist > Config::EM_REACH) continue;
 
-            // Ley de Coulomb: F = k * (q1 * q2) / r^2
-            // Limitamos r para evitar fuerzas infinitas (Repulsión de Pauli/Soft-Core)
+            // Coulomb's Law: F = k * (q1 * q2) / r^2
+            // Clamp r to avoid infinite forces (Pauli Repulsion/Soft-Core)
             float effectiveDist = std::max(dist, Config::MIN_COULOMB_DIST);
             float forceMag = (Config::COULOMB_CONSTANT * q1 * q2) / (effectiveDist * effectiveDist);
             
-            // Vector unitario de la fuerza
+            // Force unit vector
             float fx = (dx / dist) * forceMag;
             float fy = (dy / dist) * forceMag;
 
-            // Aplicar aceleración (F = ma, asumimos m=1 por ahora)
-            transforms[i].vx -= fx * dt;
-            transforms[i].vy -= fy * dt;
-            transforms[j].vx += fx * dt;
-            transforms[j].vy += fy * dt;
+            // Apply acceleration (a = F / m)
+            float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
+            float m2 = ChemistryDatabase::getInstance().getElement(atoms[j].atomicNumber).atomicMass;
+            
+            // Handle potentially zero mass from JSON (fallback to 1.0)
+            if (m1 < 0.01f) m1 = 1.0f;
+            if (m2 < 0.01f) m2 = 1.0f;
+
+            transforms[i].vx -= (fx / m1) * dt;
+            transforms[i].vy -= (fy / m1) * dt;
+            transforms[j].vx += (fx / m2) * dt;
+            transforms[j].vy += (fy / m2) * dt;
         }
     }
 
-    // 2. ENLACES ELÁSTICOS Y ESTRÉS MOLECULAR (Geometría Dinámica)
+    // 2. ELASTIC BONDS AND MOLECULAR STRESS (Dynamic Geometry)
     for (int i = 0; i < (int)transforms.size(); i++) {
         if (!states[i].isClustered || states[i].parentEntityId == -1) continue;
 
         int parentId = states[i].parentEntityId;
         int slotIdx = states[i].parentSlotIndex;
 
-        // Obtener datos del padre para calcular el slot ideal
+        // Get parent data to calculate ideal slot position
         const Element& parentElem = ChemistryDatabase::getInstance().getElement(atoms[parentId].atomicNumber);
         if (slotIdx >= (int)parentElem.bondingSlots.size()) continue;
 
         Vector3 slotDir = parentElem.bondingSlots[slotIdx];
         
-        // Calcular posición objetivo en 3D (incluyendo Z para 2.5D correcto)
+        // Calculate target position in 3D (including Z for correct 2.5D)
         float targetX = transforms[parentId].x + slotDir.x * Config::BOND_IDEAL_DIST;
         float targetY = transforms[parentId].y + slotDir.y * Config::BOND_IDEAL_DIST;
         float targetZ = transforms[parentId].z + slotDir.z * Config::BOND_IDEAL_DIST;
@@ -69,45 +77,52 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         float dx = targetX - transforms[i].x;
         float dy = targetY - transforms[i].y;
         float dz = targetZ - transforms[i].z;
-        float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
+        float dist = MathUtils::length(dx, dy, dz);
 
-        // --- RUPTURA POR ESTRÉS ---
+        // --- STRESS BREAKUP ---
         bool isPlayerMolecule = (states[i].moleculeId == 0 || i == 0 || parentId == 0);
         
         if (!isPlayerMolecule && dist > Config::BOND_BREAK_STRESS) {
             states[i].isClustered = false;
             states[i].parentEntityId = -1;
-            TraceLog(LOG_WARNING, "[PHYSICS] ENLACE ROTO por estres: Atomo %d se separo de %d", i, parentId);
+            TraceLog(LOG_WARNING, "[PHYSICS] BOND BROKEN by stress: Atom %d separated from %d", i, parentId);
             continue;
         }
 
-        // --- LEY DE HOOKE (Fuerza de Restauración) con Z ---
+        // --- HOOKE'S LAW (Restoration Force) with Z ---
         float fx = dx * Config::BOND_SPRING_K;
         float fy = dy * Config::BOND_SPRING_K;
         float fz = dz * Config::BOND_SPRING_K;
 
-        // Aplicar a ambos (Acción y Reacción) incluyendo Z
-        transforms[i].vx += fx * dt;
-        transforms[i].vy += fy * dt;
-        transforms[i].vz += fz * dt;
-        transforms[parentId].vx -= fx * dt;
-        transforms[parentId].vy -= fy * dt;
-        transforms[parentId].vz -= fz * dt;
+        // Apply acceleration based on mass
+        float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
+        float mP = parentElem.atomicMass;
+        if (m1 < 0.01f) m1 = 1.0f;
+        if (mP < 0.01f) mP = 1.0f;
+
+        // Apply to both (Action and Reaction) including Z
+        transforms[i].vx += (fx / m1) * dt;
+        transforms[i].vy += (fy / m1) * dt;
+        transforms[i].vz += (fz / m1) * dt;
+        
+        transforms[parentId].vx -= (fx / mP) * dt;
+        transforms[parentId].vy -= (fy / mP) * dt;
+        transforms[parentId].vz -= (fz / mP) * dt;
     }
 
-    // 3. FUSIÓN DE LOOPS: Integración, Fricción y Límites en un solo paso
+    // 3. LOOP FUSION: Integration, Friction, and Boundaries in one step
     for (TransformComponent& tr : transforms) {
-        // 1. Integración
+        // 1. Integration
         tr.x += tr.vx * dt;
         tr.y += tr.vy * dt;
         tr.z += tr.vz * dt;
 
-        // 2. Fricción Ambiental (Configurable)
+        // 2. Ambient Friction (Configurable)
         tr.vx *= Config::DRAG_COEFFICIENT;
         tr.vy *= Config::DRAG_COEFFICIENT;
         tr.vz *= Config::DRAG_COEFFICIENT;
 
-        // 3. Límites del Mundo (Z)
+        // 3. World Boundaries (Z)
         if (tr.z < Config::WORLD_DEPTH_MIN) {
             tr.z = Config::WORLD_DEPTH_MIN;
             tr.vz *= Config::WORLD_BOUNCE;
@@ -117,6 +132,6 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         }
     }
 
-    // Actualizar Grid Espacial
+    // Update Spatial Grid
     grid.update(transforms);
 }

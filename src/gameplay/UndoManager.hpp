@@ -6,6 +6,7 @@
 #include "../core/MathUtils.hpp"
 #include "../ui/NotificationManager.hpp"
 #include "../core/Config.hpp"
+#include "../core/LocalizationManager.hpp"
 #include <vector>
 
 /**
@@ -34,10 +35,12 @@ public:
         std::vector<StateComponent>& states,
         std::vector<AtomComponent>& atoms
     ) {
+        auto& lm = LocalizationManager::getInstance();
+
         // First check if player itself is attached to something
         if (states[playerIdx].parentEntityId != -1) {
             BondingSystem::breakBond(playerIdx, states, atoms);
-            NotificationManager::getInstance().show("Jugador liberado", Config::THEME_INFO);
+            NotificationManager::getInstance().show(lm.get("ui.notification.player_released"), Config::THEME_INFO);
             return true;
         }
 
@@ -49,7 +52,7 @@ public:
             if (states[candidate].isClustered && states[candidate].parentEntityId != -1) {
                 if (MathUtils::findMoleculeRoot(candidate, states) == playerIdx) {
                     BondingSystem::breakBond(candidate, states, atoms);
-                    NotificationManager::getInstance().show("Undo: Átomo liberado", Config::THEME_INFO);
+                    NotificationManager::getInstance().show(lm.get("ui.notification.atom_released"), Config::THEME_INFO);
                     return true;
                 }
             }
@@ -59,7 +62,7 @@ public:
         int leafId = BondingSystem::findPrunableLeaf(playerIdx, states);
         if (leafId != -1) {
             BondingSystem::breakBond(leafId, states, atoms);
-            NotificationManager::getInstance().show("Hoja podada", Config::THEME_INFO);
+            NotificationManager::getInstance().show(lm.get("ui.notification.leaf_pruned"), Config::THEME_INFO);
             return true;
         }
 

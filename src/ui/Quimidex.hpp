@@ -14,6 +14,7 @@ class Quimidex {
 public:
     Quimidex();
     void draw(InputHandler& input);
+    void reload();
     void toggle() { isOpen = !isOpen; }
     bool isVisible() const { return isOpen; }
 
@@ -24,7 +25,8 @@ private:
     int selectedMoleculeIdx = 0;
     int selectedMissionIdx = 0;
 
-    std::vector<std::string> tabLabels = { "[M] MOLECULAS", "[A] ATOMOS", "[P] PROGRESION" };
+    std::vector<std::string> tabLabels;
+
     
     void drawAtomsTab(Rectangle rect, InputHandler& input);
     void drawMoleculesTab(Rectangle rect, InputHandler& input);

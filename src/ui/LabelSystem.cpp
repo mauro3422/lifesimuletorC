@@ -1,6 +1,7 @@
 #include "LabelSystem.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
 #include "../core/Config.hpp"
+#include "../core/LocalizationManager.hpp"
 #include <algorithm>
 
 void LabelSystem::draw(const Camera2D& camera, 
@@ -33,12 +34,12 @@ void LabelSystem::draw(const Camera2D& camera,
                 float alpha = std::clamp((ATOM_THRESHOLD - zoom) * Config::LABEL_FADE_SPEED, 0.0f, 0.8f);
                 if (alpha <= 0.05f) continue;
 
-                const char* molName = "Complex Cluster";
+                std::string molName = LocalizationManager::getInstance().get("ui.label.complex_cluster");
                 int fontSize = Config::LABEL_FONT_SIZE + 2;
-                int textX = (int)tr.x - (MeasureText(molName, fontSize) / 2);
+                int textX = (int)tr.x - (MeasureText(molName.c_str(), fontSize) / 2);
                 int textY = (int)tr.y - (fontSize / 2);
 
-                DrawText(molName, textX, textY, fontSize, Fade(SKYBLUE, alpha));
+                DrawText(molName.c_str(), textX, textY, fontSize, Fade(SKYBLUE, alpha));
             }
         }
     }

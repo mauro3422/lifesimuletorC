@@ -4,11 +4,13 @@
 #include <vector>
 #include "components.hpp"
 #include "../core/Config.hpp"
+#include "../chemistry/ChemistryDatabase.hpp"
+#include "../core/MathUtils.hpp"
 #include "raylib.h"
 
 /**
- * World: Contenedor central para el ECS.
- * Encapsula los vectores de componentes y la lógica de inicialización.
+ * World: Central container for the ECS.
+ * Encapsulates component vectors and initialization logic.
  */
 class World {
 public:
@@ -21,15 +23,16 @@ public:
         atoms.clear();
         states.clear();
 
-        // 1. JUGADOR (Siempre ID 0)
+        // 1. PLAYER (Always ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
-        atoms.push_back({1, 0.0f}); // Hidrógeno inicial
-        states.push_back({false, -1, -1, -1, 1.0f, false}); // dockingProgress = 1.0, isShielded = false
-        TraceLog(LOG_INFO, "[World] Jugador inicializado en (0,0)");
+        atoms.push_back({1, 0.0f}); // Initial Hydrogen
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0}); // childCount=0, occupiedSlots=0
+        TraceLog(LOG_INFO, "[World] Player initialized at (0,0)");
 
-        // 2. MUNDO
+        // 2. WORLD POPULATION
+        ChemistryDatabase& db = ChemistryDatabase::getInstance();
         for (int i = 1; i < Config::INITIAL_ATOM_COUNT; i++) {
-            int atomicNum = Config::ATOM_TYPES[GetRandomValue(0, Config::ATOM_TYPES_COUNT - 1)];
+            int atomicNum = db.getRandomSpawnableAtomicNumber();
             
             int rangeXY = (int)Config::SPAWN_RANGE_XY;
             int rangeZ = (int)Config::SPAWN_RANGE_Z;
@@ -38,36 +41,25 @@ public:
                 (float)GetRandomValue(-rangeXY, rangeXY), 
                 (float)GetRandomValue(-rangeXY, rangeXY), 
                 (float)GetRandomValue(-rangeZ, rangeZ),
-                (float)GetRandomValue(-100, 100) / 100.0f * Config::INITIAL_VEL_RANGE,
-                (float)GetRandomValue(-100, 100) / 100.0f * Config::INITIAL_VEL_RANGE,
-                (float)GetRandomValue(-100, 100) / 100.0f * Config::INITIAL_VEL_RANGE,
+                (float)GetRandomValue(-100, 100) / Config::SPAWN_VEL_DIVISOR * Config::INITIAL_VEL_RANGE,
+                (float)GetRandomValue(-100, 100) / Config::SPAWN_VEL_DIVISOR * Config::INITIAL_VEL_RANGE,
+                (float)GetRandomValue(-100, 100) / Config::SPAWN_VEL_DIVISOR * Config::INITIAL_VEL_RANGE,
                 0.0f // rotation
             };
 
             transforms.push_back(tr);
             atoms.push_back({atomicNum, 0.0f});
-            states.push_back({false, -1, -1, -1, 1.0f, false}); 
+            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0}); 
         }
     }
 
     size_t getEntityCount() const { return atoms.size(); }
     
     /**
-     * Retorna los índices de todos los átomos que pertenecen a la misma molécula.
+     * Returns the indices of all atoms belonging to the same molecule.
      */
     std::vector<int> getMoleculeMembers(int entityId) const {
-        std::vector<int> members;
-        if (entityId < 0 || entityId >= (int)states.size()) return members;
-
-        // Identificamos la raíz de la molécula
-        int rootId = (states[entityId].moleculeId == -1) ? entityId : states[entityId].moleculeId;
-
-        for (int i = 0; i < (int)states.size(); i++) {
-            if (states[i].moleculeId == rootId || i == rootId) {
-                members.push_back(i);
-            }
-        }
-        return members;
+        return MathUtils::getMoleculeMembers(entityId, states);
     }
 };
 

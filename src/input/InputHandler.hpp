@@ -4,8 +4,8 @@
 #include "raylib.h"
 
 /**
- * Módulo para gestionar las entradas del usuario (Teclado/Mouse).
- * Centraliza la detección y previene conflictos entre UI y Mundo.
+ * Module to manage user input (Keyboard/Mouse).
+ * Centralizes detection and prevents conflicts between UI and World.
  */
 class InputHandler {
 public:
@@ -14,27 +14,27 @@ public:
     void update();
     void resetFrameState(); 
 
-    // Gestión de Captura (UI vs Mundo)
+    // Capture Management (UI vs World)
     void setMouseCaptured(bool captured);
     bool isMouseCaptured() const;
     bool isMouseOverUI() const; 
     bool isActionAllowed() const;
 
-    // Acciones del Mundo (Sujetas a captura)
+    // World Actions (Subject to capture)
     bool isTractorBeamActive() const;
     bool isPanning() const;
     bool isSelectionTriggered() const;
     bool isReleaseTriggered() const;
     
-    // Movimiento (WASD)
+    // Movement (WASD)
     Vector2 getMovementDirection() const;
 
-    // Datos de Mouse (Siempre disponibles)
+    // Mouse Data (Always available)
     Vector2 getMousePosition() const;
     Vector2 getMouseDelta() const;
     float getMouseWheelMove() const;
 
-    // Teclado
+    // Keyboard
     bool isSpaceTriggered() const;
 
 private:

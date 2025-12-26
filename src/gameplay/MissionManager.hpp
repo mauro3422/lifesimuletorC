@@ -30,6 +30,7 @@ public:
     }
 
     void initialize();
+    void reload();
     void update(float dt);
     
     const std::vector<Mission>& getMissions() const { return missions; }

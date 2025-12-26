@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <cstdarg>
 
-// Arquitectura Modular
+// Modular Architecture
 #include "ecs/World.hpp"
 #include "physics/PhysicsEngine.hpp"
 #include "physics/BondingSystem.hpp"
@@ -24,9 +24,10 @@
 #include "gameplay/MissionManager.hpp"
 #include "world/zones/ClayZone.hpp"
 #include "ui/LoadingScreen.hpp"
+#include "core/LocalizationManager.hpp"
 #include <iostream>
 
-// File Logger para persistencia de logs
+// File Logger for persistence
 static FILE* logFile = nullptr;
 void FileLogCallback(int logLevel, const char* text, va_list args) {
     if (logFile) {
@@ -36,14 +37,14 @@ void FileLogCallback(int logLevel, const char* text, va_list args) {
         fprintf(logFile, "\n");
         fflush(logFile);
     }
-    // También mostrar en consola
+    // Also show in console
     char buffer[256];
     vsnprintf(buffer, 256, text, args);
     printf("[%s] %s\n", logLevel == LOG_INFO ? "INFO" : "DEBUG", buffer);
 }
 
 int main() {
-    // Abrir archivo de log ANTES de inicializar Raylib
+    // Open log file BEFORE initializing Raylib
     logFile = fopen("session.log", "w");
     if (logFile) {
         fprintf(logFile, "=== LIFE SIMULATOR SESSION LOG ===\n");
@@ -56,39 +57,44 @@ int main() {
     if (IsWindowReady()) SetWindowMinSize(Config::WINDOW_MIN_WIDTH, Config::WINDOW_MIN_HEIGHT);
     SetTargetFPS(60); 
 
+    // 0. LOCALIZATION INITIALIZATION (Default to Spanish)
+    LocalizationManager::getInstance().setLanguage("es");
+
     PhysicsEngine physics;
     
-    // 0. INICIALIZAR ZONAS AMBIENTALES (ISLAS)
+    // 0. INITIALIZE ENVIRONMENTAL ZONES (ISLANDS)
     auto clayIsland = std::make_shared<ClayZone>((Rectangle){ -1500, -800, 2000, 1600 });
     physics.getEnvironment().addZone(clayIsland);
     InputHandler input;
     Inspector inspector;
     CameraSystem cameraSys; 
-    // 1. PANTALLA DE CARGA Y SECUENCIA DE INICIALIZACIÓN
-    LoadingScreen loading;
     
-    // Paso 1: Base de Datos Química
-    loading.draw(0.2f, "Sintetizando tabla periódica...");
+    // 1. LOADING SCREEN & INITIALIZATION SEQUENCE
+    LoadingScreen loading;
+    LocalizationManager& lang = LocalizationManager::getInstance();
+    
+    // Step 1: Chemical Database
+    loading.draw(0.2f, lang.get("ui.loading.periodic_table").c_str());
     ChemistryDatabase& db = ChemistryDatabase::getInstance(); 
     
-    // Paso 2: Generación del Mundo (Densidad Primordial)
-    loading.draw(0.5f, "Instanciando sopa primordial (1000 átomos)...");
+    // Step 2: World Generation (Primordial Density)
+    loading.draw(0.5f, lang.get("ui.loading.world_gen").c_str());
     World world;
     world.initialize();
 
-    // Paso 3: Misiones y Gameplay
-    loading.draw(0.8f, "Configurando protocolos de biogénesis...");
+    // Step 3: Missions and Gameplay
+    loading.draw(0.8f, lang.get("ui.loading.missions").c_str());
     MissionManager::getInstance().initialize();
     
-    // Paso 4: Finalización
-    loading.draw(1.0f, "Listo para la simulación.");
+    // Step 4: Finalization
+    loading.draw(1.0f, lang.get("ui.loading.ready").c_str());
     
     Quimidex quimidex;
 
-    // 2. INICIALIZAR PLAYER
+    // 2. INITIALIZE PLAYER
     Player player(0); 
 
-    // 3. CONFIGURAR CÁMARA
+    // 3. CONFIGURE CAMERA
     Camera2D camera = { 0 };
     camera.target = { world.transforms[0].x, world.transforms[0].y };
     camera.offset = { (float)GetScreenWidth() / 2.0f, (float)GetScreenHeight() / 2.0f };
@@ -107,12 +113,28 @@ int main() {
         
         if (IsKeyPressed(KEY_F11)) ToggleFullscreen();
         
+        if (IsKeyPressed(KEY_F1)) {
+            auto& lm = LocalizationManager::getInstance();
+            std::string nextLang = (lm.getLanguageCode() == "es") ? "en" : "es";
+            lm.setLanguage(nextLang);
+            
+            // Reload all localized systems
+            db.reload();
+            MissionManager::getInstance().reload();
+            quimidex.reload();
+            
+            NotificationManager::getInstance().show(
+                (nextLang == "es") ? "Idioma: ESPAÑOL" : "Language: ENGLISH",
+                LIME
+            );
+        }
+
         accumulator += frameTime;
 
         input.resetFrameState();
         input.update();
 
-        // SIMULACION (Fixed Timestep)
+        // SIMULATION (Fixed Timestep)
         while (accumulator >= fixedDeltaTime) {
             player.update(fixedDeltaTime, input, world.transforms, camera, physics.getGrid(), world.states, world.atoms);
             player.applyPhysics(world.transforms, world.states, world.atoms);
@@ -136,17 +158,17 @@ int main() {
 
         if (input.isSpaceTriggered()) {
             if (!inspectingPlayer && !inspectingMolecule) {
-                // Estado 1: Abrir Inspector de Atomo
+                // State 1: Open Atom Inspector
                 inspectingPlayer = true;
                 inspectingMolecule = false;
                 selectedEntityIndex = -1;
                 inspector.setMolecule(nullptr);
             } else if (inspectingPlayer) {
-                // Estado 2: Pasar a Inspector de Molécula
+                // State 2: Switch to Molecule Inspector
                 inspectingPlayer = false;
                 inspectingMolecule = true;
             } else {
-                // Estado 3: Cerrar todo
+                // State 3: Close all
                 inspectingPlayer = false;
                 inspectingMolecule = false;
             }
@@ -161,7 +183,7 @@ int main() {
             if (targetIdx == -1) targetIdx = 0; // Fallback to player molecule
 
             if (targetIdx >= 0 && targetIdx < (int)world.atoms.size()) {
-                auto composition = MathUtils::scanMoleculeComposition(targetIdx, world.states, world.atoms);
+                auto composition = MathUtils::getMoleculeComposition(targetIdx, world.states, world.atoms);
                 const Molecule* detected = ChemistryDatabase::getInstance().findMoleculeByComposition(composition);
                 
                 inspector.setMolecule(detected);
@@ -169,7 +191,7 @@ int main() {
                 
                 if (detected) {
                     DiscoveryLog::getInstance().discoverMolecule(detected->id);
-                    MissionManager::getInstance().notifyMoleculeDiscovered(detected->name);
+                    MissionManager::getInstance().notifyMoleculeDiscovered(detected->id);
                 }
             }
         }
@@ -192,11 +214,11 @@ int main() {
             HUD::draw(camera, cameraSys.getMode() == CameraSystem::FREE_LOOK, input);
 
             if (inspectingPlayer) {
-                // El jugador es siempre la entidad 0
+                // Player is always entity 0
                 inspector.draw(db.getElement(world.atoms[0].atomicNumber), 0, input, world.states, world.atoms);
             } else if (inspectingMolecule || (selectedEntityIndex != -1 && selectedEntityIndex < (int)world.atoms.size())) {
                 int entityToInspect = inspectingMolecule ? player.getTractor().getTargetIndex() : selectedEntityIndex;
-                if (entityToInspect == -1 && inspectingMolecule) entityToInspect = 0; // Fallback al jugador
+                if (entityToInspect == -1 && inspectingMolecule) entityToInspect = 0; // Fallback to player
 
                 if (entityToInspect != -1 && entityToInspect < (int)world.atoms.size()) {
                     int rootIdx = MathUtils::findMoleculeRoot(entityToInspect, world.states);
@@ -206,7 +228,7 @@ int main() {
                 }
             }
 
-            // NOTIFICACIONES (encima de todo)
+            // NOTIFICATIONS (Above all)
             NotificationManager::getInstance().draw();
             quimidex.draw(input);
 
@@ -217,4 +239,5 @@ int main() {
     if (logFile) fclose(logFile);
     return 0;
 }
+
 

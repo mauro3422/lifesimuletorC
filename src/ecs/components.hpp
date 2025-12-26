@@ -2,31 +2,36 @@
 #define COMPONENTS_HPP
 
 /**
- * REPRESENTACIÓN DE DATOS (ECS)
- * Buscamos el "Mínimo de Datos Requeridos" para máxima velocidad.
+ * DATA REPRESENTATION (ECS)
+ * Minimum data required for maximum caching and simulation speed.
  */
 
-// Posición, Velocidad y Rotación
+// Position, Velocity, and Rotation
 struct TransformComponent {
     float x, y, z;
     float vx, vy, vz;
     float rotation;
 };
 
-// Datos del Átomo
+// Atom Data
 struct AtomComponent {
-    int atomicNumber;  // Solo el ID único. El resto se busca en ChemistryDatabase.
+    int atomicNumber;  // Unique ID (Z). Detailed properties fetched from ChemistryDatabase.
     float partialCharge;
 };
 
-// Estado de Agrupación (Moleculas)
+// Clustering State (Molecules)
 struct StateComponent {
     bool isClustered;
-    int moleculeId;      // -1 si no está en una molécula estable
-    int parentEntityId;  // A quién está anclado (-1 = root)
-    int parentSlotIndex; // Qué brazo del padre ocupa
-    float dockingProgress; // 0.0 = recien enlazado, 1.0 = totalmente acoplado
-    bool isShielded;     // Bloquea cualquier enlace espontáneo (Rayo Tractor)
+    int moleculeId;      // -1 if not in a stable molecule
+    int parentEntityId;  // Entity this one is anchored to (-1 = root)
+    int parentSlotIndex; // Which parent slot it occupies
+    float dockingProgress; // 0.0 = recently bonded, 1.0 = fully coupled (animation)
+    bool isShielded;     // Blocks spontaneous bonding (used by Tractor Beam)
+
+    // --- OPTIMIZATIONS (Phase 17) ---
+    int childCount;      // Number of atoms bonded to this one (as children)
+    unsigned char occupiedSlots; // Bitset (1 bit per slot index) to find free slots in O(1)
 };
+
 
 #endif

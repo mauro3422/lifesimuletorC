@@ -1,0 +1,53 @@
+[
+    {
+        "id": "m_h2",
+        "reward": "+30 ATP",
+        "tier": 0,
+        "title": {
+            "es": "Formar Hidrógeno (H2)",
+            "en": "Form Hydrogen (H2)"
+        },
+        "description": {
+            "es": "Dos átomos de hidrógeno unidos. La base de la simplicidad.",
+            "en": "Two bonded hydrogen atoms. The foundation of simplicity."
+        },
+        "scientificContext": {
+            "es": "El hidrógeno es el elemento más abundante del universo. En este caldo primordial, su unión en H2 es el primer paso hacia estructuras más complejas. Representa la estabilidad mínima necesaria para la existencia.",
+            "en": "Hydrogen is the most abundant element in the universe. In this primordial soup, its union into H2 is the first step toward more complex structures. It represents the minimum stability necessary for existence."
+        }
+    },
+    {
+        "id": "m_h2o",
+        "reward": "+50 ATP",
+        "tier": 0,
+        "title": {
+            "es": "Formar Agua (H2O)",
+            "en": "Form Water (H2O)"
+        },
+        "description": {
+            "es": "La molécula de la vida. Estructura angular crítica.",
+            "en": "The molecule of life. Critical angular structure."
+        },
+        "scientificContext": {
+            "es": "El agua permite la solvatación de químicos orgánicos, facilitando las reacciones que darán lugar a la vida.",
+            "en": "Water allows the solvation of organic chemicals, facilitating the reactions that will eventually give rise to life."
+        }
+    },
+    {
+        "id": "m_adenine",
+        "reward": "+200 ATP",
+        "tier": 1,
+        "title": {
+            "es": "Formar Adenina (C5H5N5)",
+            "en": "Form Adenine (C5H5N5)"
+        },
+        "description": {
+            "es": "Base nitrogenada fundamental para el código genético.",
+            "en": "Essential nitrogenous base for the genetic code."
+        },
+        "scientificContext": {
+            "es": "La adenina es una de las cuatro bases del ADN y ARN. Su formación espontánea es un milagro de la química prebiótica.",
+            "en": "Adenine is one of the four bases of DNA and RNA. Its spontaneous formation is a miracle of prebiotic chemistry."
+        }
+    }
+]

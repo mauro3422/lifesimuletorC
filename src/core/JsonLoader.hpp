@@ -4,6 +4,7 @@
 #include "json.hpp"
 #include "../chemistry/Element.hpp"
 #include "../chemistry/Molecule.hpp"
+#include "../gameplay/MissionManager.hpp"
 #include "raylib.h"
 #include <fstream>
 #include <vector>
@@ -13,14 +14,9 @@
 
 using json = nlohmann::json;
 
-namespace JsonLoader {
+#include "../core/MathUtils.hpp"
 
-    // Utility: Normalize a vector
-    inline Vector3 normalize(Vector3 v) {
-        float len = std::sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-        if (len < 0.0001f) return {0, 0, 0};
-        return {v.x/len, v.y/len, v.z/len};
-    }
+namespace JsonLoader {
 
     // Parse Color from JSON
     inline Color parseColor(const json& j) {
@@ -92,13 +88,11 @@ namespace JsonLoader {
     }
 
     // Load Elements from JSON file
-    inline std::vector<Element> loadElements(const std::string& path) {
+    // Load Elements from JSON file (Localized)
+    inline std::vector<Element> loadElements(const std::string& path, const std::string& lang = "es") {
         std::vector<Element> elements;
-        
         std::ifstream file(path);
-        if (!file.is_open()) {
-            throw std::runtime_error("[JSON LOADER] Cannot open file: " + path);
-        }
+        if (!file.is_open()) throw std::runtime_error("[JSON LOADER] Cannot open: " + path);
         
         json data;
         try {
@@ -117,12 +111,47 @@ namespace JsonLoader {
             // Required fields
             el.atomicNumber = j.value("atomicNumber", 0);
             el.symbol = j.value("symbol", "");
-            el.name = j.value("name", "Unknown");
             el.atomicMass = j.value("atomicMass", 0.0f);
             el.vdWRadius = j.value("vdWRadius", 1.5f);
             el.maxBonds = j.value("maxBonds", 1);
             el.electronegativity = j.value("electronegativity", 2.0f);
             
+            // Localized Fields
+            if (j.contains("name") && j["name"].is_object() && j["name"].contains(lang)) 
+                el.name = j["name"][lang].get<std::string>();
+            else if (j.contains("name") && j["name"].is_object())
+                el.name = j["name"].value("en", "Unknown");
+            else
+                el.name = j.value("name", "Unknown");
+
+            if (j.contains("category") && j["category"].is_object() && j["category"].contains(lang)) 
+                el.category = j["category"][lang].get<std::string>();
+            else if (j.contains("category") && j["category"].is_object())
+                el.category = j["category"].value("en", "Unknown");
+            else
+                el.category = j.value("category", "Unknown");
+
+            if (j.contains("description") && j["description"].is_object() && j["description"].contains(lang)) 
+                el.description = j["description"][lang].get<std::string>();
+            else if (j.contains("description") && j["description"].is_object())
+                el.description = j["description"].value("en", "");
+            else
+                el.description = j.value("description", "");
+
+            if (j.contains("origin") && j["origin"].is_object() && j["origin"].contains(lang)) 
+                el.origin = j["origin"][lang].get<std::string>();
+            else if (j.contains("origin") && j["origin"].is_object())
+                el.origin = j["origin"].value("en", "");
+            else
+                el.origin = j.value("origin", "");
+
+            if (j.contains("discoveryHint") && j["discoveryHint"].is_object() && j["discoveryHint"].contains(lang)) 
+                el.discoveryHint = j["discoveryHint"][lang].get<std::string>();
+            else if (j.contains("discoveryHint") && j["discoveryHint"].is_object())
+                el.discoveryHint = j["discoveryHint"].value("en", "");
+            else
+                el.discoveryHint = j.value("discoveryHint", "");
+
             // Colors
             if (j.contains("color")) {
                 el.color = parseColor(j["color"]);
@@ -133,7 +162,6 @@ namespace JsonLoader {
             if (j.contains("backgroundColor")) {
                 el.backgroundColor = parseColor(j["backgroundColor"]);
             } else {
-                // Default: darker version of color
                 el.backgroundColor = {
                     static_cast<unsigned char>(el.color.r / 4),
                     static_cast<unsigned char>(el.color.g / 4),
@@ -142,17 +170,11 @@ namespace JsonLoader {
                 };
             }
             
-            // Lore/UI data
-            el.category = j.value("category", "Unknown");
-            el.description = j.value("description", "");
-            el.origin = j.value("origin", "");
-            el.discoveryHint = j.value("discoveryHint", "");
-            
             // Bonding Slots
             if (j.contains("bondingSlots") && j["bondingSlots"].is_array()) {
                 for (const auto& slot : j["bondingSlots"]) {
                     Vector3 v = parseVector3(slot);
-                    el.bondingSlots.push_back(normalize(v));
+                    el.bondingSlots.push_back(MathUtils::normalize(v));
                 }
             }
             
@@ -168,6 +190,85 @@ namespace JsonLoader {
                  (int)elements.size(), path.c_str());
         
         return elements;
+    }
+
+    // Load Missions from JSON file (Localized)
+    inline std::vector<Mission> loadMissions(const std::string& path, const std::string& lang = "es") {
+        std::vector<Mission> missions;
+        std::ifstream file(path);
+        if (!file.is_open()) throw std::runtime_error("[JSON LOADER] Cannot open missions: " + path);
+        
+        json data;
+        file >> data;
+        
+        for (const auto& j : data) {
+            Mission m;
+            m.id = j.value("id", "unknown");
+            m.reward = j.value("reward", "");
+            m.tier = j.value("tier", 0);
+            m.status = MissionStatus::AVAILABLE; // Default
+
+            // Localized fields
+            if (j.contains("title") && j["title"].contains(lang)) 
+                m.title = j["title"][lang].get<std::string>();
+            else m.title = j["title"].value("en", "Untitled");
+
+            if (j.contains("description") && j["description"].contains(lang)) 
+                m.description = j["description"][lang].get<std::string>();
+            else m.description = j["description"].value("en", "");
+
+            if (j.contains("scientificContext") && j["scientificContext"].contains(lang)) 
+                m.scientificContext = j["scientificContext"][lang].get<std::string>();
+            else m.scientificContext = j["scientificContext"].value("en", "");
+
+            missions.push_back(m);
+        }
+        return missions;
+    }
+
+    // Load Molecules from JSON file (Localized)
+    inline std::vector<Molecule> loadMolecules(const std::string& path, const std::string& lang = "es") {
+        std::vector<Molecule> molecules;
+        std::ifstream file(path);
+        if (!file.is_open()) throw std::runtime_error("[JSON LOADER] Cannot open molecules: " + path);
+        
+        json data;
+        file >> data;
+        
+        for (const auto& j : data) {
+            Molecule m;
+            m.id = j.value("id", "unknown");
+            m.formula = j.value("formula", "");
+            m.category = j.value("category", "");
+            m.color = parseColor(j["color"]);
+
+            // Composition: Map<StringId, Int> -> Map<AtomicNumber, Int>
+            if (j.contains("composition") && j["composition"].is_object()) {
+                for (auto& [key, val] : j["composition"].items()) {
+                    m.composition[std::stoi(key)] = val.get<int>();
+                }
+            }
+
+            // Localized fields
+            if (j.contains("name") && j["name"].contains(lang)) 
+                m.name = j["name"][lang].get<std::string>();
+            else m.name = j["name"].value("en", "Unnamed Molecule");
+
+            if (j.contains("description") && j["description"].contains(lang)) 
+                m.description = j["description"][lang].get<std::string>();
+            else m.description = j["description"].value("en", "");
+
+            if (j.contains("biologicalSignificance") && j["biologicalSignificance"].contains(lang)) 
+                m.biologicalSignificance = j["biologicalSignificance"][lang].get<std::string>();
+            else m.biologicalSignificance = j["biologicalSignificance"].value("en", "");
+
+            if (j.contains("origin") && j["origin"].contains(lang)) 
+                m.origin = j["origin"][lang].get<std::string>();
+            else m.origin = j["origin"].value("en", "");
+
+            molecules.push_back(m);
+        }
+        return molecules;
     }
 
 } // namespace JsonLoader

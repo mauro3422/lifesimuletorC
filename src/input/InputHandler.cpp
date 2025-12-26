@@ -17,27 +17,27 @@ void InputHandler::update() {
     mouseDelta = { mousePos.x - oldPos.x, mousePos.y - oldPos.y };
     wheelMove = GetMouseWheelMove();
 
-    // Detección de movimiento (WASD)
+    // Movement Detection (WASD)
     moveDir = { 0, 0 };
     if (IsKeyDown(KEY_W)) moveDir.y -= 1;
     if (IsKeyDown(KEY_S)) moveDir.y += 1;
     if (IsKeyDown(KEY_A)) moveDir.x -= 1;
     if (IsKeyDown(KEY_D)) moveDir.x += 1;
 
-    // Normalización de dirección
+    // Direction normalization
     if (moveDir.x != 0 || moveDir.y != 0) {
         float len = std::sqrt(moveDir.x * moveDir.x + moveDir.y * moveDir.y);
         moveDir.x /= len;
         moveDir.y /= len;
     }
 
-    // Detección base de mouse
+    // Base Mouse Detection
     bool leftDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
     bool rightPressed = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
     bool middleDown = IsMouseButtonDown(MOUSE_BUTTON_MIDDLE);
     bool leftPressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 
-    // Solo activamos si NO está capturado
+    // Only activate if NOT captured
     tractorActive = leftDown && !mouseCapturedByUI;
     panningActive = middleDown && !mouseCapturedByUI;
     selectionTriggered = leftPressed && !mouseCapturedByUI;

@@ -11,12 +11,13 @@ namespace Config {
     inline constexpr float BOND_SNAP_THRESHOLD = 0.45f;
     inline constexpr float BOND_AUTO_RANGE = 30.0f;
     inline constexpr int BONDING_THROTTLE_FRAMES = 6;  // Execute every 6 frames (10 Hz) 
-    inline constexpr float DAMPING = 0.985f;    
-    inline constexpr float REBOTE = -0.8f;     
     inline constexpr float THERMODYNAMIC_JITTER = 0.5f; 
     inline constexpr float GRID_CELL_SIZE = 100.0f;     
     inline constexpr float PHYSICS_EPSILON = 0.001f;
     inline constexpr float FLOAT_MAX = 1.0e30f;
+    inline constexpr float CHARGE_THRESHOLD = 0.001f; // Threshold for electromagnetic influence
+    inline constexpr float SPAWN_VEL_DIVISOR = 100.0f;
+
     
     // --- WORLD DIMENSIONS & SPAWN ---
     inline constexpr int WORLD_WIDTH_MIN = -5000;
@@ -42,17 +43,15 @@ namespace Config {
     inline constexpr float CAMERA_ZOOM_WHEEL_SENSITIVITY = 0.15f;
 
     // --- SIMULATION ---
-    inline constexpr int ATOM_TYPES[] = { 1, 6, 7, 8, 15, 16 }; 
-    inline constexpr int ATOM_TYPES_COUNT = 6;
     inline constexpr int INITIAL_ATOM_COUNT = 1000;
     inline constexpr float FIXED_DELTA_TIME = 1.0f / 60.0f;
     inline constexpr float MAX_FRAME_TIME = 0.25f;
     
     // --- INTERACTION ---
-    inline constexpr float TRACTOR_FORCE = 5.0f; // Más fuerza inicial
+    inline constexpr float TRACTOR_FORCE = 5.0f; // Initial pull force
     inline constexpr float TRACTOR_ATTENUATION = 0.01f;
     inline constexpr float TRACTOR_MAX_SPEED = 500.0f;
-    inline constexpr float TRACTOR_STEER_FACTOR = 0.12f; // Más suave, menos "brusco"
+    inline constexpr float TRACTOR_STEER_FACTOR = 0.12f; // Smoother steering
     inline constexpr float TRACTOR_DAMPING = 0.97f;
     inline constexpr float TRACTOR_PICKUP_RANGE = 70.0f;
     inline constexpr float TRACTOR_JITTER_INTENSITY = 8.0f; 
@@ -64,22 +63,22 @@ namespace Config {
     inline constexpr float TRACTOR_BEAM_WIDTH = 2.0f;
     inline constexpr float TRACTOR_TARGET_CIRCLE = 25.0f;
     
-    // --- QUÍMICA Y ELECTROMAGNETISMO ---
-    inline constexpr float COULOMB_CONSTANT = 1800.0f;    // Fuerza de atracción/repulsión
-    inline constexpr float CHARGE_DAMPING = 0.90f;      // Amortiguación de fuerzas eléctricas
-    inline constexpr float MIN_COULOMB_DIST = 18.0f;    // Para evitar singularidades (repulsión soft-core)
-    inline constexpr float EM_REACH = 150.0f;           // Rango máximo de influencia eléctrica
-    inline constexpr float POLARITY_FACTOR = 0.15f;     // Electronegatividad -> Factor de carga parcial
+    // --- CHEMISTRY & ELECTROMAGNETISM ---
+    inline constexpr float COULOMB_CONSTANT = 1800.0f;    // Attract/Repel force coefficient
+    inline constexpr float CHARGE_DAMPING = 0.90f;      // Damping for electric forces
+    inline constexpr float MIN_COULOMB_DIST = 18.0f;    // Avoid singularities (soft-core repulsion)
+    inline constexpr float EM_REACH = 150.0f;           // Max range for electric influence
+    inline constexpr float POLARITY_FACTOR = 0.15f;     // Electronegativity -> Partial charge factor
     
-    // --- ELASTICIDAD Y RUPTURA (Geometría Dinámica) ---
-    inline constexpr float BOND_SPRING_K = 15.0f;       // Fuerza del "resorte" del enlace
-    inline constexpr float BOND_DAMPING = 0.85f;        // Amortiguación de vibración molecular
-    inline constexpr float BOND_BREAK_STRESS = 35.0f;   // Distancia de ruptura (estrés máximo)
-    inline constexpr float BOND_IDEAL_DIST = 18.0f;     // Distancia de equilibrio del enlace
+    // --- ELASTICITY & RUPTURE (Dynamic Geometry) ---
+    inline constexpr float BOND_SPRING_K = 15.0f;       // Bond "spring" constant
+    inline constexpr float BOND_DAMPING = 0.85f;        // Vibration damping
+    inline constexpr float BOND_BREAK_STRESS = 35.0f;   // Break distance (max stress)
+    inline constexpr float BOND_IDEAL_DIST = 18.0f;     // Ideal bond length (rest position)
     inline constexpr float MAX_BOND_RENDER_DIST = 40.0f; // Max distance to render bond lines (prevents visual glitches)
 
     // --- BONDING ANIMATION ---
-    inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Mitad de velocidad para suavidad
+    inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Slower speed for smoother docking
     inline constexpr float BOND_LERP_POS = 0.2f;
     inline constexpr float BOND_LERP_VEL = 0.3f;
 
@@ -95,7 +94,6 @@ namespace Config {
     inline constexpr float PLAYER_VISUAL_SCALE = 1.6f;
     inline constexpr float PLAYER_SPEED = 35.0f;
     inline constexpr float PLAYER_ACCEL = 0.05f;
-    inline constexpr float PLAYER_FRICTION = 0.99f; // Match Drag Coefficient
     inline constexpr int PLAYER_SYMBOL_FONT = 14;
     inline constexpr int PLAYER_SYMBOL_OFFSET_X = -4;
     inline constexpr int PLAYER_SYMBOL_OFFSET_Y = -6;

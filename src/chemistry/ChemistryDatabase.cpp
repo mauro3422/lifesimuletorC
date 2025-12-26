@@ -1,93 +1,65 @@
 #include "ChemistryDatabase.hpp"
 #include "../core/JsonLoader.hpp"
+#include "../core/LocalizationManager.hpp"
 #include <stdexcept>
 #include <algorithm>
 #include <cmath>
 
 ChemistryDatabase::ChemistryDatabase() {
     elements.resize(120); 
-
-    // Load elements from JSON file
+    // Initial load, if it fails, the constructor should fail.
+    // The reload method handles subsequent reloads which might be more forgiving.
     try {
-        std::vector<Element> loadedElements = JsonLoader::loadElements("data/elements.json");
+        reload(); 
+    } catch (const std::exception& e) {
+        // Re-throw to indicate construction failure
+        throw;
+    }
+}
+
+void ChemistryDatabase::reload() {
+    std::string lang = LocalizationManager::getInstance().getLanguageCode();
+    
+    // 1. Clear current state (Molecules only, elements stay in slots but get updated)
+    molecules.clear();
+    symbolToId.clear(); // Clear symbol-to-ID mapping as elements will be re-added
+
+    // 2. Load Elements from JSON (Localized)
+    // Note: elements vector itself is not cleared, but elements are overwritten by addElement.
+    // This allows elements to retain their atomicNumber-based indices.
+    // If an element is removed from JSON, its old data might persist until overwritten.
+    // For a full clear, elements would need to be re-initialized or cleared.
+    // For now, we assume new elements will overwrite old ones or fill empty slots.
+    // To ensure a clean slate for elements, we could re-initialize them:
+    // for (int i = 0; i < elements.size(); ++i) elements[i] = Element(); // Reset all elements
+    
+    try {
+        std::vector<Element> loadedElements = JsonLoader::loadElements("data/elements.json", lang);
         for (const Element& el : loadedElements) {
             addElement(el);
         }
-        TraceLog(LOG_INFO, "[CHEMISTRY] Loaded %d elements from JSON", (int)loadedElements.size());
+        TraceLog(LOG_INFO, "[CHEMISTRY] Reloaded %d elements from JSON (Language: %s)", (int)loadedElements.size(), lang.c_str());
     } catch (const std::exception& e) {
-        TraceLog(LOG_ERROR, "[CHEMISTRY] Failed to load elements.json: %s", e.what());
-        TraceLog(LOG_ERROR, "[CHEMISTRY] Game cannot start without valid chemistry data!");
-        throw; // Re-throw to prevent game from starting with invalid data
+        TraceLog(LOG_ERROR, "[CHEMISTRY] Failed to reload elements.json: %s", e.what());
+        // For initial construction, this exception is re-thrown by the constructor.
+        // For subsequent reloads, we might just log and continue with potentially incomplete data.
+        // However, element data is critical, so re-throwing here ensures consistency.
+        throw; 
     }
 
-    // --- REGISTRO DE MOLÉCULAS ---
-    addMolecule({
-        "H2", "Hidrógeno Diatómico", "H2", "PRIMORDIAL",
-        "La forma más simple de molécula covalente.",
-        "Combustible estelar y precursor de toda la química compleja.",
-        "Big Bang y nubes moleculares frías.",
-        SKYBLUE,
-        {{1, 2}}
-    });
+    // 3. Load Localized Molecules from JSON
+    try {
+        molecules = JsonLoader::loadMolecules("data/molecules.json", lang);
+        TraceLog(LOG_INFO, "[CHEMISTRY] Reloaded %d molecules from JSON (Language: %s)", (int)molecules.size(), lang.c_str());
+    } catch (const std::exception& e) {
+        TraceLog(LOG_ERROR, "[CHEMISTRY] Failed to reload molecules.json: %s", e.what());
+        // Molecule loading failure is less critical than element loading, so we just log.
+    }
 
-    addMolecule({
-        "H2O", "Agua", "H2O", "VITAL",
-        "La molécula de la vida. Única sustancia que existe naturalmente en los 3 estados en la Tierra.",
-        "Solvente universal donde ocurre toda la bioquímica celular.",
-        "Fusión de carbono y helio en estrellas masivas.",
-        BLUE,
-        {{1, 2}, {8, 1}}
-    });
-
-    // --- NUEVAS MOLÉCULAS ---
-    addMolecule({
-        "O2", "Oxígeno Diatómico", "O2", "ATMOSFÉRICO",
-        "Gas incoloro e inodoro, esencial para la respiración aeróbica.",
-        "Aceptor final de electrones en la cadena de transporte molecular.",
-        "Nucleosíntesis estelar y procesos fotosintéticos posteriores.",
-        RED,
-        {{8, 2}}
-    });
-
-    addMolecule({
-        "N2", "Nitrógeno Diatómico", "N2", "INERTE",
-        "Gas triple enlace extremadamente estable. Constituye la mayor parte del aire.",
-        "Provee una atmósfera estable y es el reservorio de nitrógeno biótico.",
-        "Ciclo CNO en gigantes rojas.",
-        BLUE,
-        {{7, 2}}
-    });
-
-    addMolecule({
-        "CH4", "Metano", "CH4", "ORGÁNICO",
-        "El hidrocarburo más simple. Un potente gas de efecto invernadero.",
-        "Precursor fundamental en la síntesis de moléculas orgánicas complejas.",
-        "Procesos geológicos hidrotermales y nebulosas planetarias.",
-        GREEN,
-        {{6, 1}, {1, 4}}
-    });
-
-    addMolecule({
-        "NH3", "Amoníaco", "NH3", "PRECURSOR",
-        "Compuesto de nitrógeno e hidrógeno con un olor penetrante característico.",
-        "Fuente crítica de nitrógeno para la síntesis de aminoácidos primordiales.",
-        "Nubes de gas interestelar y volcanismo temprano.",
-        VIOLET,
-        {{7, 1}, {1, 3}}
-    });
-
-    addMolecule({
-        "CO2", "Dióxido de Carbono", "CO2", "VOLÁTIL",
-        "Compuesto lineal que regula el clima planetario mediante el efecto invernadero.",
-        "Fuente de carbono para la fijación autótrofa y precursor de azúcares.",
-        "Desgasificación volcánica y oxidación de materia orgánica.",
-        LIGHTGRAY,
-        {{6, 1}, {8, 2}}
-    });
-    
-    // MANDATORY VALIDATION: Ensure all elements have 2.5D Z-axis variance
-    validateElements();
+    // MANDATORY VALIDATION
+    validateElements(); // This method throws if validation fails.
 }
+
 
 void ChemistryDatabase::addMolecule(Molecule m) {
     molecules.push_back(m);
@@ -115,7 +87,7 @@ bool ChemistryDatabase::exists(int atomicNumber) const {
 
 const Element& ChemistryDatabase::getElement(int atomicNumber) const {
     if (atomicNumber <= 0 || atomicNumber >= (int)elements.size() || elements[atomicNumber].atomicNumber == 0) {
-        throw std::runtime_error("Elemento no encontrado en la base de datos");
+        throw std::runtime_error("Element not found in database");
     }
     return elements[atomicNumber];
 }
@@ -123,7 +95,7 @@ const Element& ChemistryDatabase::getElement(int atomicNumber) const {
 const Element& ChemistryDatabase::getElement(const std::string& symbol) const {
     auto it = symbolToId.find(symbol);
     if (it != symbolToId.end()) return getElement(it->second);
-    throw std::runtime_error("Símbolo químico no registrado");
+    throw std::runtime_error("Chemical symbol not registered");
 }
 
 // VALIDATION: Ensures all elements have proper 2.5D Z-axis variance in bondingSlots
@@ -162,3 +134,20 @@ void ChemistryDatabase::validateElements() const {
     }
     TraceLog(LOG_INFO, "[CHEMISTRY] All elements passed 2.5D Z-axis validation ✓");
 }
+
+std::vector<int> ChemistryDatabase::getSpawnableAtomicNumbers() const {
+    std::vector<int> spawnable;
+    for (const auto& el : elements) {
+        if (el.atomicNumber != 0) {
+            spawnable.push_back(el.atomicNumber);
+        }
+    }
+    return spawnable;
+}
+
+int ChemistryDatabase::getRandomSpawnableAtomicNumber() const {
+    auto spawnable = getSpawnableAtomicNumbers();
+    if (spawnable.empty()) return 1; // Hydrogen fallback
+    return spawnable[GetRandomValue(0, (int)spawnable.size() - 1)];
+}
+

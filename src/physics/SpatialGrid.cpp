@@ -32,7 +32,7 @@ std::vector<int> SpatialGrid::getNearby(Vector2 pos, float radius) const {
 }
 
 void SpatialGrid::debugDraw() const {
-    // Solo para visualizar dónde hay actividad
+    // Visualizes active grid cells for debugging
     for (auto const& [hash, cell] : cells) {
         int cx = (int)(hash >> 32);
         int cy = (int)(hash & 0xFFFFFFFF);

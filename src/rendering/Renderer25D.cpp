@@ -1,13 +1,14 @@
 #include "Renderer25D.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
 #include "../core/Config.hpp"
+#include "../core/MathUtils.hpp"
 #include <algorithm>
 #include <cmath>
 
 void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, const std::vector<AtomComponent>& atoms, const std::vector<StateComponent>& states) {
     ChemistryDatabase& db = ChemistryDatabase::getInstance();
     
-    // 1. DIBUJAR ENLACES PRIMERO (quedan DETRAS de los atomos)
+    // 1. DRAW BONDS FIRST (Rendered behind atoms)
     for (int i = 0; i < (int)states.size(); i++) {
         const StateComponent& state = states[i];
         if (state.isClustered && state.parentEntityId != -1) {
@@ -15,16 +16,15 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
             const TransformComponent& trChild = transforms[i];
             const TransformComponent& trParent = transforms[pId];
             
-            float dx = trChild.x - trParent.x;
-            float dy = trChild.y - trParent.y;
-            float dist = std::sqrt(dx*dx + dy*dy);
+            float dist = MathUtils::dist(trChild.x, trChild.y, trParent.x, trParent.y);
             
             // Skip drawing if atoms are too close (degenerate) OR too far (broken state)
             if (dist < 0.01f) continue;
             if (dist > Config::MAX_BOND_RENDER_DIST) continue; // Hide overly stretched bonds
             
-            float dirX = dx / dist;
-            float dirY = dy / dist;
+            Vector2 dir = MathUtils::normalize(Vector2{trChild.x - trParent.x, trChild.y - trParent.y});
+            float dirX = dir.x;
+            float dirY = dir.y;
             
             const Element& parentEl = db.getElement(atoms[pId].atomicNumber);
             const Element& childEl = db.getElement(atoms[i].atomicNumber);
@@ -49,7 +49,7 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
         }
     }
 
-    // 2. DIBUJAR ATOMOS (quedan ENCIMA de los enlaces)
+    // 2. DRAW ATOMS (rendered on top of bonds)
     static std::vector<int> indices;
     if (indices.size() != transforms.size()) {
         indices.resize(transforms.size());

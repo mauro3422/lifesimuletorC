@@ -3,6 +3,8 @@
 
 #include "raylib.h"
 #include <vector>
+#include <map>
+#include <cmath>
 #include "../ecs/components.hpp"
 
 namespace MathUtils {
@@ -10,6 +12,52 @@ namespace MathUtils {
     inline float getJitter() {
         return (float)GetRandomValue(-100, 100) / 100.0f;
     }
+
+    // --- VECTOR MATH (Centralized) ---
+    inline float distSq(float x1, float y1, float x2, float y2) {
+        float dx = x2 - x1;
+        float dy = y2 - y1;
+        return dx*dx + dy*dy;
+    }
+
+    inline float distSq(Vector2 v1, Vector2 v2) {
+        return distSq(v1.x, v1.y, v2.x, v2.y);
+    }
+
+    inline float dist(float x1, float y1, float x2, float y2) {
+        return std::sqrt(distSq(x1, y1, x2, y2));
+    }
+
+    inline float dist(Vector2 v1, Vector2 v2) {
+        return dist(v1.x, v1.y, v2.x, v2.y);
+    }
+
+    inline float length(float x, float y, float z = 0.0f) {
+        return std::sqrt(x*x + y*y + z*z);
+    }
+
+    inline float length(Vector2 v) {
+        return std::sqrt(v.x*v.x + v.y*v.y);
+    }
+
+    inline Vector3 normalize(float x, float y, float z) {
+        float len = length(x, y, z);
+        if (len < 0.0001f) return {0, 0, 0};
+        return {x/len, y/len, z/len};
+    }
+
+    inline Vector3 normalize(Vector3 v) {
+        return normalize(v.x, v.y, v.z);
+    }
+
+    inline Vector2 normalize(Vector2 v) {
+        float len = length(v);
+        if (len < 0.0001f) return {0, 0};
+        return {v.x/len, v.y/len};
+    }
+
+
+
 
     // Finds the root of a molecular structure given an entity index
     // O(depth) where depth is typically < 10
@@ -35,22 +83,37 @@ namespace MathUtils {
         states[entityId].moleculeId = moleculeId;
     }
 
-    // Scans a molecular cluster and returns its atomic composition
-    inline std::map<int, int> scanMoleculeComposition(int entityId, const std::vector<StateComponent>& states, const std::vector<AtomComponent>& atoms) {
-        std::map<int, int> composition;
-        if (entityId < 0 || entityId >= (int)states.size()) return composition;
+    /**
+     * Identifies all atom indices belonging to the same molecular structure.
+     * Uses the pre-propagated moleculeId for O(1) comparison during the O(N) scan.
+     */
+    inline std::vector<int> getMoleculeMembers(int entityId, const std::vector<StateComponent>& states) {
+        std::vector<int> members;
+        if (entityId < 0 || entityId >= (int)states.size()) return members;
 
-        int rootId = findMoleculeRoot(entityId, states);
-        if (rootId == -1) return composition;
+        // Current root ID (either stored in moleculeId or is itself)
+        int rootId = (states[entityId].moleculeId == -1) ? entityId : states[entityId].moleculeId;
 
-        // Traverse all entities to find those belonging to the same root
         for (int i = 0; i < (int)states.size(); i++) {
-            if (findMoleculeRoot(i, states) == rootId) {
-                composition[atoms[i].atomicNumber]++;
+            if (states[i].moleculeId == rootId || i == rootId) {
+                members.push_back(i);
             }
+        }
+        return members;
+    }
+
+    /**
+     * Scans a molecular cluster and returns its atomic composition (AtomicNumber -> Count).
+     */
+    inline std::map<int, int> getMoleculeComposition(int entityId, const std::vector<StateComponent>& states, const std::vector<AtomComponent>& atoms) {
+        std::map<int, int> composition;
+        std::vector<int> members = getMoleculeMembers(entityId, states);
+        for (int idx : members) {
+            composition[atoms[idx].atomicNumber]++;
         }
         return composition;
     }
+
 }
 
 #endif // MATH_UTILS_HPP

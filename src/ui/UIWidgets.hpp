@@ -6,19 +6,19 @@
 #include "../input/InputHandler.hpp"
 #include <string>
 #include <vector>
-#include <algorithm> // Requerido para std::clamp y std::max
+#include <algorithm> // Required for std::clamp and std::max
 #include "UIConfig.hpp"
 #include "../chemistry/Element.hpp"
 #include <cmath>
 #include <algorithm>
 
 /**
- * UIWidgets: Sistema de UI dinámico y premium para LifeSimulator C++.
- * Gestiona layouts, captura de entrada y efectos visuales avanzados.
+ * UIWidgets: Dynamic and premium UI system for LifeSimulator C++.
+ * Manages layouts, input capture, and advanced visual effects.
  */
 class UIWidgets {
 public:
-    // Dibuja un panel con un sutil resplandor exterior (Glow Effect)
+    // Draws a panel with a subtle outer glow effect
     static void drawPanel(Rectangle rect, InputHandler& input, Color accentColor = Config::THEME_BORDER) {
         if (CheckCollisionPointRec(input.getMousePosition(), rect)) {
             input.setMouseCaptured(true);
@@ -33,7 +33,7 @@ public:
         DrawRectangleRoundedLines(rect, UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, (float)Config::THEME_BORDER_WIDTH, accentColor);
     }
 
-    // Cabecera dinámica - elementos centrados verticalmente y con padding horizontal
+    // Dynamic header - vertically centered elements with horizontal padding
     static void drawHeader(Rectangle panelRect, const char* title, Color color = Config::THEME_BORDER) {
         float hHeight = UIConfig::HEADER_HEIGHT;
         float vCenter = panelRect.y + hHeight / 2;
@@ -79,7 +79,7 @@ public:
         DrawText(title, (int)panelRect.x + 28, (int)(vCenter - fontSize/2), fontSize, WHITE);
     }
 
-    // Botón interactivo centralizado
+    // Centralized interactive button
     static bool drawButton(Rectangle rect, const char* label, InputHandler& input, Color accent = Config::THEME_BORDER) {
         bool hovered = CheckCollisionPointRec(input.getMousePosition(), rect);
         if (hovered) input.setMouseCaptured(true);
@@ -97,7 +97,7 @@ public:
         return clicked;
     }
 
-    // Ficha de Elemento unificada (Para Inspector y Quimidex)
+    // Unified Element Card (For Inspector and Quimidex)
     // Now uses element.backgroundColor for card background (two-tone effect)
     static void drawElementCard(const Element& element, float x, float y, float size, InputHandler& input) {
         Rectangle cardRect = { x, y, size, size };
@@ -126,7 +126,7 @@ public:
         }
     }
 
-    // Dibuja texto envuelto y actualiza el puntero Y (Resuelve desbordamientos)
+    // Draws wrapped text and updates the Y pointer (Resolves overflows)
     static void drawTextWrapped(const char* text, float x, float& y, float maxWidth, int fontSize, Color color) {
         std::string content = text;
         std::string currentLine = "";
@@ -154,7 +154,7 @@ public:
         } else {
             DrawText(testLine.c_str(), (int)x, (int)y, fontSize, color);
         }
-        y += fontSize + 5.0f; // Espaciado final
+        y += fontSize + 5.0f; // Final spacing
     }
 
     static void drawProgressBar(Rectangle rect, float progress, Color color, const char* label = "") {
@@ -184,7 +184,7 @@ public:
         DrawLine((int)x, (int)y, (int)(x + width), (int)y, Fade(Config::THEME_TEXT_SECONDARY, UIConfig::SEPARATOR_OPACITY));
     }
 
-    // Sistema de Pestañas (Tabs)
+    // Tab System
     static int drawTabSystem(Rectangle rect, const std::vector<std::string>& labels, int activeIndex, InputHandler& input, Color accent = Config::THEME_HIGHLIGHT) {
         float tabWidth = rect.width / labels.size();
         int newIndex = activeIndex;
@@ -199,21 +199,21 @@ public:
 
             bool active = (i == activeIndex);
             
-            // Fondo
+            // Backdrop
             DrawRectangleRec(tabRect, active ? Fade(accent, 0.2f) : (hovered ? Fade(WHITE, 0.05f) : BLANK));
             
-            // Texto
+            // Text
             int fontSize = UIConfig::FONT_SIZE_LABEL;
             const char* labelStr = labels[i].c_str();
             int tWidth = MeasureText(labelStr, fontSize);
             DrawText(labelStr, (int)(tabRect.x + (tabWidth - tWidth)/2), (int)(tabRect.y + (tabRect.height - fontSize)/2), fontSize, active ? accent : (hovered ? WHITE : Config::THEME_TEXT_SECONDARY));
 
-            // Indicador activo
+            // Active indicator
             if (active) {
                 DrawRectangleRec((Rectangle){ tabRect.x, tabRect.y + tabRect.height - 2, tabRect.width, 2 }, accent);
             }
             
-            // Separador vertical
+            // Vertical separator
             if (i < (int)labels.size() - 1) {
                 DrawLine((int)(tabRect.x + tabWidth), (int)tabRect.y + 4, (int)(tabRect.x + tabWidth), (int)(tabRect.y + tabRect.height - 4), Fade(Config::THEME_BORDER, 0.5f));
             }
@@ -221,7 +221,7 @@ public:
         return newIndex;
     }
 
-    // Lista de selección (para Inventarios/Quimidex)
+    // Selection list (for Inventories/Quimidex)
     static int drawListSelection(Rectangle rect, const std::vector<std::string>& items, int activeIndex, InputHandler& input, Color accent = Config::THEME_HIGHLIGHT) {
         float itemHeight = 20.0f;
         int newIndex = activeIndex;
@@ -241,7 +241,7 @@ public:
             if (active) DrawRectangleRec(itemRect, Fade(accent, 0.15f));
             else if (hovered) DrawRectangleRec(itemRect, Fade(WHITE, 0.05f));
 
-            // Viñeta y texto
+            // Bullet and text
             DrawCircle((int)itemRect.x + 8, (int)itemRect.y + 10, 2, active ? accent : Config::THEME_TEXT_SECONDARY);
             DrawText(items[i].c_str(), (int)itemRect.x + 18, (int)itemRect.y + 5, 10, active ? WHITE : (hovered ? LIGHTGRAY : Config::THEME_TEXT_SECONDARY));
         }

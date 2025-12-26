@@ -6,6 +6,7 @@
 #include "../core/MathUtils.hpp"
 #include "../core/Config.hpp"
 #include "../ui/NotificationManager.hpp"
+#include "../core/LocalizationManager.hpp"
 #include <vector>
 #include <cmath>
 
@@ -37,17 +38,16 @@ namespace DockingSystem {
         if (targetIdx == -1 || targetIdx == playerIdx) return false;
         if (states[targetIdx].isClustered) return false;
 
-        float dx = transforms[playerIdx].x - transforms[targetIdx].x;
-        float dy = transforms[playerIdx].y - transforms[targetIdx].y;
-        float dist = std::sqrt(dx*dx + dy*dy);
+        float distSq = MathUtils::distSq(transforms[playerIdx].x, transforms[playerIdx].y, transforms[targetIdx].x, transforms[targetIdx].y);
+        float threshold = Config::TRACTOR_DOCKING_RANGE * 1.2f;
 
-        if (dist < Config::TRACTOR_DOCKING_RANGE * 1.2f) {
+        if (distSq < threshold * threshold) {
             if (BondingSystem::tryBond(targetIdx, playerIdx, states, atoms, transforms, true) 
                 == BondingSystem::SUCCESS) {
                 int root = MathUtils::findMoleculeRoot(targetIdx, states);
                 states[root].isShielded = false;
                 attachmentOrder.push_back(targetIdx);
-                NotificationManager::getInstance().show("¡Acoplado!", Config::THEME_SUCCESS);
+                NotificationManager::getInstance().show(LocalizationManager::getInstance().get("ui.notification.docked"), Config::THEME_SUCCESS);
                 return true;
             }
         }

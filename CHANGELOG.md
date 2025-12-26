@@ -1,4 +1,25 @@
 
+## [Phase 17: Deep Codebase Audit & Optimization] - 2025-12-26
+
+### Added
+- **Full UI Localization**: Complete English/Spanish support for HUD, Quimidex, Inspector, and Notifications.
+- **Runtime Language Toggle**: **F1 Key** instantly switches language without restarting.
+- **O(1) Bonding Logic**: Implemented `occupiedSlots` bitmask for instant slot detection, replacing O(N) loops.
+- **Mass-Based Physics**: Integrated `atomicMass` into all force calculations ($F=ma$); heavy atoms now have real inertia.
+- **MathUtils Extensions**: Added `dist`, `distSq`, and `normalize` overloads for `Vector2` (Raylib), consolidating vector math.
+
+### Changed
+- **Performance Optimization**: `getBestAvailableSlot` and `getFirstFreeSlot` now run in constant time O(1).
+- **Code Standardization**: Translated all internal comments and error messages from Spanish to English in `Config.hpp`, `UIWidgets.hpp`, and `InputHandler.cpp`.
+- **Gameplay Polish**: Localized `DockingSystem` and `UndoManager` feedback messages.
+- **Deprecation**: Removed ad-hoc math functions in `Player.cpp` and `Renderer25D.cpp` in favor of `MathUtils`.
+
+### Fixed
+- **Ambiguous Overloads**: Resolved `MathUtils::normalize` conflicts by using explicit `Vector2{}` casting.
+- **Hardcoded Strings**: Eliminated remaining Spanish string literals in gameplay logic.
+- **Missing Includes**: Fixed `TractorBeam.cpp` compilation errors by restoring `Config.hpp`.
+
+---
 ## [Phase: Architecture & Chemistry Hardening] - 2025-12-26
 
 ### Added

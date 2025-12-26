@@ -8,6 +8,7 @@ $LIB_DIR = "$RAYLIB_DIR/lib"
 
 # 2. Compilacion
 g++ src/main.cpp `
+    src/core/LocalizationManager.cpp `
     src/physics/PhysicsEngine.cpp `
     src/physics/SpatialGrid.cpp `
     src/physics/BondingSystem.cpp `

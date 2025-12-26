@@ -5,14 +5,14 @@
 #include <vector>
 
 /**
- * Módulo especializado en la formación y ruptura de enlaces químicos.
+ * Specialized module for the formation and breakage of chemical bonds.
  */
 class BondingModule {
 public:
-    // Evalúa si dos átomos están lo suficientemente cerca para enlazarse
+    // Evaluates if two atoms are close enough to form a bond
     static bool canBond(const AtomComponent& a, const AtomComponent& b, float distance);
     
-    // Aplica fuerzas de muelle (Spring forces) entre dos átomos enlazados
+    // Applies spring forces between two bonded atoms
     static void applyBondForce(TransformComponent& a, TransformComponent& b, float targetDist);
 };
 

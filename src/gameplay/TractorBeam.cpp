@@ -1,4 +1,5 @@
 #include "TractorBeam.hpp"
+#include "../core/MathUtils.hpp"
 #include "../core/Config.hpp"
 #include <cmath>
 
@@ -6,7 +7,7 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
                          const std::vector<TransformComponent>& transforms,
                          const SpatialGrid& grid) {
     
-    isNewCapture = false; // Reset por frame
+    isNewCapture = false; // Reset per frame
     bool startedThisFrame = isInputActive && !wasActiveLastFrame;
     wasActiveLastFrame = isInputActive;
 
@@ -19,34 +20,32 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
 
     targetPos = mouseWorldPos; 
 
-    // BLOQUEO DE OBJETIVO: Si ya tenemos uno, mantenemos el ID pase lo que pase mientras active=true
+    // TARGET LOCK: If we already have a target, keep the ID as long as active=true
     if (targetIndex != -1) {
         return; 
     }
 
-    // SOLO BUSCAMOS SI ACABAMOS DE PULSAR (Evita capturas múltiples o automáticas)
+    // ONLY SEARCH ON INITIAL CLICK (Prevents multiple or automatic captures)
     if (!startedThisFrame) {
         return;
     }
 
-    // BUSQUEDA OPTIMIZADA: Solo miramos átomos cerca del mouse usando la grilla
+    // OPTIMIZED SEARCH: Only check atoms near the mouse using the spatial grid
     float range = Config::TRACTOR_PICKUP_RANGE;
     std::vector<int> nearby = grid.getNearby(mouseWorldPos, range);
     
-    // DEBUG: Ver cuántos átomos detecta
+    // DEBUG: Verify detection count
     if (nearby.size() > 0) {
-        TraceLog(LOG_DEBUG, "[TRACTOR] Detectados %d atomos cerca del mouse", (int)nearby.size());
+        TraceLog(LOG_DEBUG, "[TRACTOR] Detected %d atoms near mouse", (int)nearby.size());
     }
     
     float minSourceDist = range;
     int bestIdx = -1;
 
     for (int i : nearby) {
-        if (i == 0) continue; // Ignorar al jugador (índice 0)
+        if (i == 0) continue; // Ignore player (index 0)
         
-        float dx = mouseWorldPos.x - transforms[i].x;
-        float dy = mouseWorldPos.y - transforms[i].y;
-        float dist = std::sqrt(dx*dx + dy*dy);
+        float dist = MathUtils::dist(mouseWorldPos, {transforms[i].x, transforms[i].y});
 
         if (dist < minSourceDist) {
             minSourceDist = dist;
@@ -55,7 +54,7 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
     }
 
     if (bestIdx != -1) {
-        TraceLog(LOG_INFO, "[TRACTOR] Capturado atomo ID %d a distancia %.2f", bestIdx, minSourceDist);
+        TraceLog(LOG_INFO, "[TRACTOR] Captured atom ID %d at distance %.2f", bestIdx, minSourceDist);
         isNewCapture = true;
     }
 

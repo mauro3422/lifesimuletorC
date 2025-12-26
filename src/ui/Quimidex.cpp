@@ -3,8 +3,19 @@
 #include "UIConfig.hpp"
 #include "../core/Config.hpp"
 
+#include "../core/LocalizationManager.hpp"
+
 Quimidex::Quimidex() {
-    // Ya no inicializamos datos mock aquí; usamos ChemistryDatabase
+    reload();
+}
+
+void Quimidex::reload() {
+    auto& lm = LocalizationManager::getInstance();
+    tabLabels = {
+        lm.get("ui.quimidex.tab.molecules"),
+        lm.get("ui.quimidex.tab.atoms"),
+        lm.get("ui.quimidex.tab.progression")
+    };
 }
 
 void Quimidex::draw(InputHandler& input) {
@@ -19,7 +30,7 @@ void Quimidex::draw(InputHandler& input) {
     Rectangle rect = { (screenW - width) / 2, (screenH - height) / 2, width, height };
 
     UIWidgets::drawPanel(rect, input, Config::THEME_HIGHLIGHT);
-    UIWidgets::drawHeader(rect, "QUIMIDEX: Enciclopedia Estelar", Config::THEME_HIGHLIGHT);
+    UIWidgets::drawHeader(rect, LocalizationManager::getInstance().get("ui.quimidex.title").c_str(), Config::THEME_HIGHLIGHT);
 
     // Botón de cierre (X) - centrado verticalmente, con padding del borde
     float closeSize = 14.0f;
@@ -62,31 +73,32 @@ void Quimidex::drawAtomsTab(Rectangle rect, InputHandler& input) {
 }
 
 void Quimidex::drawAtomDetail(Rectangle rect, const Element& element, InputHandler& input) {
-    DrawText("[#] DETALLE ATÓMICO", (int)rect.x, (int)rect.y, UIConfig::FONT_SIZE_HEADER, LIME);
+    auto& lm = LocalizationManager::getInstance();
+    DrawText(lm.get("ui.quimidex.atom_detail").c_str(), (int)rect.x, (int)rect.y, UIConfig::FONT_SIZE_HEADER, LIME);
     UIWidgets::drawSeparator(rect.x, rect.y + 15, rect.width);
 
     float curY = rect.y + 25;
     
-    // Tarjeta visual (Symbol box) - Usamos el card unificado
+    // Unified Card
     UIWidgets::drawElementCard(element, rect.x, curY, 60.0f, input); 
 
     DrawText(element.name.c_str(), (int)rect.x + 70, (int)curY, 18, WHITE);
-    DrawText(TextFormat("[%s] Numero Atómico: %d", element.symbol.c_str(), element.atomicNumber), (int)rect.x + 70, (int)curY + 22, UIConfig::FONT_SIZE_HEADER, GRAY);
+    DrawText(TextFormat("[%s] %s %d", element.symbol.c_str(), lm.get("ui.quimidex.atomic_number").c_str(), element.atomicNumber), (int)rect.x + 70, (int)curY + 22, UIConfig::FONT_SIZE_HEADER, GRAY);
 
     curY += 75;
     UIWidgets::drawSeparator(rect.x, curY, rect.width);
     curY += 10;
 
-    UIWidgets::drawValueLabel("Electronegatividad:", TextFormat("%.2f", element.electronegativity), rect.x, curY, rect.width);
-    UIWidgets::drawValueLabel("Radio VdW:", TextFormat("%d pm", (int)element.vdWRadius), rect.x, curY, rect.width);
-    UIWidgets::drawValueLabel("Masa Atómica:", TextFormat("%.2f u", element.atomicMass), rect.x, curY, rect.width);
-    UIWidgets::drawValueLabel("Valencia Máx.:", TextFormat("%d", element.maxBonds), rect.x, curY, rect.width);
+    UIWidgets::drawValueLabel(lm.get("ui.quimidex.electronegativity").c_str(), TextFormat("%.2f", element.electronegativity), rect.x, curY, rect.width);
+    UIWidgets::drawValueLabel(lm.get("ui.quimidex.vdw_radius").c_str(), TextFormat("%d pm", (int)element.vdWRadius), rect.x, curY, rect.width);
+    UIWidgets::drawValueLabel(lm.get("ui.quimidex.atomic_mass").c_str(), TextFormat("%.2f u", element.atomicMass), rect.x, curY, rect.width);
+    UIWidgets::drawValueLabel(lm.get("ui.quimidex.max_bonds").c_str(), TextFormat("%d", element.maxBonds), rect.x, curY, rect.width);
 
-    DrawText("DESCRIPCIÓN", (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, RED);
+    DrawText(lm.get("ui.inspector.description").c_str(), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, RED);
     curY += 15;
     UIWidgets::drawTextWrapped(element.description.c_str(), rect.x, curY, rect.width, UIConfig::FONT_SIZE_LABEL, WHITE);
 
-    DrawText(TextFormat(" ORIGEN: %s", element.origin.c_str()), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, GOLD);
+    DrawText(TextFormat(" %s: %s", lm.get("ui.inspector.origin").c_str(), element.origin.c_str()), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, GOLD);
     curY += 15;
 }
 
@@ -108,26 +120,27 @@ void Quimidex::drawMoleculesTab(Rectangle rect, InputHandler& input) {
 }
 
 void Quimidex::drawMoleculeDetail(Rectangle rect, const Molecule& molecule, InputHandler& input) {
-    DrawText("[#] ANÁLISIS ESTRUCTURAL", (int)rect.x, (int)rect.y, UIConfig::FONT_SIZE_HEADER, SKYBLUE);
+    auto& lm = LocalizationManager::getInstance();
+    DrawText(lm.get("ui.quimidex.structural_analysis").c_str(), (int)rect.x, (int)rect.y, UIConfig::FONT_SIZE_HEADER, SKYBLUE);
     UIWidgets::drawSeparator(rect.x, rect.y + 15, rect.width);
 
     float curY = rect.y + 25;
     
-    // Icono
+    // Icon
     UIWidgets::drawPanel({ rect.x, curY, 60, 60 }, input, molecule.color);
     DrawText(molecule.formula.c_str(), (int)rect.x + 5, (int)curY + 20, 15, molecule.color);
 
     DrawText(molecule.name.c_str(), (int)rect.x + 70, (int)curY, 18, WHITE);
-    DrawText(TextFormat("Fórmula: %s | %s", molecule.formula.c_str(), molecule.category.c_str()), (int)rect.x + 70, (int)curY + 22, UIConfig::FONT_SIZE_HEADER, GRAY);
+    DrawText(TextFormat("%s %s | %s", lm.get("ui.quimidex.formula").c_str(), molecule.formula.c_str(), molecule.category.c_str()), (int)rect.x + 70, (int)curY + 22, UIConfig::FONT_SIZE_HEADER, GRAY);
 
     curY += 75;
     UIWidgets::drawSeparator(rect.x, curY, rect.width);
     curY += 10;
 
-    DrawText("HISTORIA Y ORIGEN", (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, GRAY); curY += 15;
+    DrawText(lm.get("ui.quimidex.history").c_str(), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, GRAY); curY += 15;
     UIWidgets::drawTextWrapped(molecule.description.c_str(), rect.x, curY, rect.width, UIConfig::FONT_SIZE_LABEL, WHITE);
 
-    DrawText("CONFLUENCIA BIOLÓGICA", (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, LIME); curY += 15;
+    DrawText(lm.get("ui.quimidex.confluence").c_str(), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, LIME); curY += 15;
     UIWidgets::drawTextWrapped(molecule.biologicalSignificance.c_str(), rect.x, curY, rect.width, UIConfig::FONT_SIZE_LABEL, WHITE);
 }
 
@@ -148,26 +161,29 @@ void Quimidex::drawProgressionTab(Rectangle rect, InputHandler& input) {
 }
 
 void Quimidex::drawMissionDetail(Rectangle rect, const Mission& mission) {
+    auto& lm = LocalizationManager::getInstance();
     DrawText(TextFormat("== %s ==", mission.title.c_str()), (int)rect.x, (int)rect.y, 14, WHITE);
-    std::string statusStr = "ESTADO: ";
+    
+    std::string statusLabel = lm.get("ui.quimidex.mission_status") + " ";
+    std::string statusValue = "";
     Color statusColor = WHITE;
     switch(mission.status) {
-        case MissionStatus::LOCKED: statusStr += "BLOQUEADO"; statusColor = GRAY; break;
-        case MissionStatus::AVAILABLE: statusStr += "DISPONIBLE"; statusColor = SKYBLUE; break;
-        case MissionStatus::ACTIVE: statusStr += "ACTIVO"; statusColor = GOLD; break;
-        case MissionStatus::COMPLETED: statusStr += "COMPLETADO"; statusColor = LIME; break;
+        case MissionStatus::LOCKED: statusValue = lm.get("ui.quimidex.status.locked"); statusColor = GRAY; break;
+        case MissionStatus::AVAILABLE: statusValue = lm.get("ui.quimidex.status.available"); statusColor = SKYBLUE; break;
+        case MissionStatus::ACTIVE: statusValue = lm.get("ui.quimidex.status.active"); statusColor = GOLD; break;
+        case MissionStatus::COMPLETED: statusValue = lm.get("ui.quimidex.status.completed"); statusColor = LIME; break;
     }
-    DrawText(statusStr.c_str(), (int)rect.x, (int)rect.y + 20, UIConfig::FONT_SIZE_HEADER, statusColor);
+    DrawText((statusLabel + statusValue).c_str(), (int)rect.x, (int)rect.y + 20, UIConfig::FONT_SIZE_HEADER, statusColor);
     
     UIWidgets::drawSeparator(rect.x, rect.y + 40, rect.width);
 
     float curY = rect.y + 50;
     UIWidgets::drawTextWrapped(mission.description.c_str(), rect.x, curY, rect.width, UIConfig::FONT_SIZE_LABEL, WHITE);
 
-    DrawText("[] CONTEXTO CIENTIFICO", (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, SKYBLUE); curY += 15;
+    DrawText(lm.get("ui.quimidex.scientific_context").c_str(), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, SKYBLUE); curY += 15;
     UIWidgets::drawTextWrapped(mission.scientificContext.c_str(), rect.x, curY, rect.width, UIConfig::FONT_SIZE_LABEL, WHITE);
 
     UIWidgets::drawSeparator(rect.x, curY, rect.width); curY += 10;
-    DrawText("RECOMPENSA", (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, LIME); curY += 15;
+    DrawText(lm.get("ui.quimidex.reward").c_str(), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_SMALL, LIME); curY += 15;
     DrawText(mission.reward.c_str(), (int)rect.x, (int)curY, UIConfig::FONT_SIZE_HEADER, WHITE);
 }

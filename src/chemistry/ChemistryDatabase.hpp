@@ -19,6 +19,9 @@ public:
         return instance;
     }
 
+    void initialize() { reload(); }
+    void reload();
+
     // Obtener un elemento por su número atómico (O(1) Direct Access)
     const Element& getElement(int atomicNumber) const;
     
@@ -30,6 +33,10 @@ public:
     // Gestión de Moléculas
     const Molecule* findMoleculeByComposition(const std::map<int, int>& composition) const;
     const std::vector<Molecule>& getAllMolecules() const { return molecules; }
+
+    // Discovery & Spawning
+    std::vector<int> getSpawnableAtomicNumbers() const;
+    int getRandomSpawnableAtomicNumber() const;
 
     // Obtener lista de todos los IDs válidos para el Quimidex
     std::vector<int> getRegisteredAtomicNumbers() const {

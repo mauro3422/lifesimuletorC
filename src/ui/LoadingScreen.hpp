@@ -8,14 +8,14 @@
 #include <string>
 
 /**
- * LoadingScreen: Gestiona la transición visual durante el inicio pesado del juego.
+ * LoadingScreen: Manages visual transitions during heavy world initialization.
  */
 class LoadingScreen {
 public:
-    LoadingScreen() : progress(0.0f), status("Iniciando sistemas...") {}
+    LoadingScreen() : progress(0.0f), status("Initializing systems...") {}
 
     void draw(float targetProgress, const std::string& message) {
-        // Suavizado del progreso
+        // Smooth progress transition
         progress += (targetProgress - progress) * 0.1f;
         status = message;
 
