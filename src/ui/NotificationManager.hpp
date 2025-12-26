@@ -2,11 +2,15 @@
 #define NOTIFICATION_MANAGER_HPP
 
 #include "raylib.h"
+#include "UIConfig.hpp"
 #include <string>
+#include <vector>
+#include <algorithm>
 
 /**
- * Sistema simple de notificaciones en pantalla.
- * Muestra mensajes temporales (ej: "Enlace incompatible!")
+ * NOTIFICATION MANAGER
+ * Enhanced notification system with queue support.
+ * Shows multiple stacked notifications that fade out independently.
  */
 class NotificationManager {
 public:
@@ -16,41 +20,73 @@ public:
     }
 
     void show(const std::string& message, Color color = WHITE, float duration = 2.0f) {
-        currentMessage = message;
-        messageColor = color;
-        timer = duration;
+        // Limit queue size to prevent memory issues
+        if (notifications.size() >= MAX_NOTIFICATIONS) {
+            notifications.erase(notifications.begin());
+        }
+        notifications.push_back({ message, color, duration, duration });
     }
 
     void update(float dt) {
-        if (timer > 0) timer -= dt;
+        for (auto& n : notifications) {
+            n.timer -= dt;
+        }
+        // Remove expired notifications
+        notifications.erase(
+            std::remove_if(notifications.begin(), notifications.end(), 
+                [](const Notification& n) { return n.timer <= 0; }),
+            notifications.end()
+        );
     }
 
     void draw() {
-        if (timer <= 0) return;
+        if (notifications.empty()) return;
         
         int screenW = GetScreenWidth();
-        int fontSize = 18;
-        int textW = MeasureText(currentMessage.c_str(), fontSize);
+        int fontSize = 16;
+        float yOffset = 60.0f;
         
-        // Fondo semi-transparente
-        Rectangle bgRect = { 
-            (float)(screenW / 2 - textW / 2 - 15), 
-            60.0f, 
-            (float)(textW + 30), 
-            32.0f 
-        };
-        DrawRectangleRec(bgRect, Fade(BLACK, 0.7f));
-        DrawRectangleLinesEx(bgRect, 1, Fade(messageColor, 0.5f));
-        
-        // Texto centrado
-        DrawText(currentMessage.c_str(), screenW / 2 - textW / 2, 68, fontSize, messageColor);
+        for (const auto& n : notifications) {
+            int textW = MeasureText(n.message.c_str(), fontSize);
+            
+            // Calculate fade based on remaining time
+            float alpha = 1.0f;
+            if (n.timer < 0.5f) alpha = n.timer / 0.5f;  // Fade out in last 0.5s
+            
+            // Background
+            Rectangle bgRect = { 
+                (float)(screenW / 2 - textW / 2 - 15), 
+                yOffset, 
+                (float)(textW + 30), 
+                28.0f 
+            };
+            DrawRectangleRec(bgRect, Fade(BLACK, 0.7f * alpha));
+            DrawRectangleLinesEx(bgRect, 1, Fade(n.color, 0.5f * alpha));
+            
+            // Text centered
+            DrawText(n.message.c_str(), screenW / 2 - textW / 2, (int)yOffset + 6, fontSize, Fade(n.color, alpha));
+            
+            yOffset += 35.0f;  // Stack next notification below
+        }
+    }
+
+    void clear() {
+        notifications.clear();
     }
 
 private:
-    NotificationManager() : messageColor(WHITE), timer(0) {}
-    std::string currentMessage;
-    Color messageColor;
-    float timer;
+    static constexpr int MAX_NOTIFICATIONS = 5;
+    
+    struct Notification {
+        std::string message;
+        Color color;
+        float duration;
+        float timer;
+    };
+    
+    std::vector<Notification> notifications;
+    
+    NotificationManager() {}
 };
 
 #endif

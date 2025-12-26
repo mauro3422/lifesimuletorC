@@ -67,13 +67,13 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input, 
     }
 
     float curX = rect.x + UIConfig::INNER_PADDING;
-    float curY = rect.y + UIConfig::HEADER_HEIGHT + 4.0f;
+    float curY = rect.y + UIConfig::HEADER_HEIGHT + UIConfig::SPACING_TINY;
 
     // 2. ID y Separador
     DrawText(TextFormat(">> %s (ID: %d)", element.name.c_str(), entityID), (int)curX, (int)curY, UIConfig::FONT_SIZE_LABEL, SKYBLUE);
-    curY += 15.0f;
+    curY += UIConfig::SPACING_LARGE;
     UIWidgets::drawSeparator(curX, curY, innerWidth);
-    curY += 8.0f;
+    curY += UIConfig::SPACING_SMALL;
 
     // 3. Tarjeta de Elemento y Valencias
     UIWidgets::drawElementCard(element, curX, curY, UIConfig::INSPECTOR_CARD_SIZE, input);
@@ -84,11 +84,11 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input, 
     DrawText(TextFormat("[%s] #%d", element.symbol.c_str(), element.atomicNumber), infoX, infoY + 15, UIConfig::FONT_SIZE_LABEL, LIGHTGRAY);
     
     // Barra de Valencia Dinámica
-    UIWidgets::drawProgressBar({ (float)infoX, (float)infoY + 32, 60, UIConfig::INSPECTOR_BAR_HEIGHT }, 0.0f, element.color, TextFormat("0/%d", element.maxBonds));
+    UIWidgets::drawProgressBar({ (float)infoX, (float)infoY + UIConfig::CARD_INFO_OFFSET_Y, 60, UIConfig::INSPECTOR_BAR_HEIGHT }, 0.0f, element.color, TextFormat("0/%d", element.maxBonds));
 
-    curY += UIConfig::INSPECTOR_CARD_SIZE + 12.0f;
+    curY += UIConfig::INSPECTOR_CARD_SIZE + UIConfig::SPACING_MEDIUM;
     UIWidgets::drawSeparator(curX, curY, innerWidth);
-    curY += 8.0f;
+    curY += UIConfig::SPACING_SMALL;
 
     // 4. Datos Técnicos (Actualizan curY automáticamente)
     UIWidgets::drawValueLabel("Electroneg.", TextFormat("%.2f", element.electronegativity), curX, curY, innerWidth);
@@ -98,12 +98,12 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input, 
     
     // EL ORIGEN AHORA USA drawTextWrapped para evitar overlap
     DrawText("ORIGIN:", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, Config::THEME_TEXT_SECONDARY);
-    curY += 12.0f;
+    curY += UIConfig::SPACING_MEDIUM;
     UIWidgets::drawTextWrapped(element.origin.c_str(), curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, ColorAlpha(SKYBLUE, 0.8f));
 
-    curY += 6.0f;
+    curY += UIConfig::SPACING_SMALL - 2.0f;
     DrawText("LORE & DATA", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, SKYBLUE);
-    curY += 14.0f;
+    curY += UIConfig::SPACING_LARGE - 1.0f;
     
     // Descripción con actualización de curY
     UIWidgets::drawTextWrapped(element.description.c_str(), curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, WHITE);

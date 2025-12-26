@@ -31,12 +31,27 @@ public:
         DrawRectangleRoundedLines(rect, UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, (float)Config::THEME_BORDER_WIDTH, accentColor);
     }
 
-    // Cabecera dinámica
+    // Cabecera dinámica - elementos centrados verticalmente
     static void drawHeader(Rectangle panelRect, const char* title, Color color = Config::THEME_BORDER) {
         float hHeight = UIConfig::HEADER_HEIGHT;
+        float vCenter = panelRect.y + hHeight / 2;
+        
+        // Header background
         DrawRectangleRec((Rectangle){ panelRect.x, panelRect.y, panelRect.width, hHeight }, Fade(color, Config::THEME_HEADER_OPACITY));
-        DrawTriangle((Vector2){ panelRect.x + 5, panelRect.y + 4 }, (Vector2){ panelRect.x + 5, panelRect.y + 14 }, (Vector2){ panelRect.x + 12, panelRect.y + 9 }, WHITE);
-        DrawText(title, (int)panelRect.x + 18, (int)panelRect.y + 3, UIConfig::FONT_SIZE_HEADER, WHITE);
+        
+        // Triangle indicator (centered vertically)
+        float triSize = 10.0f;
+        float triX = panelRect.x + 6;
+        DrawTriangle(
+            (Vector2){ triX, vCenter - triSize/2 },      // Top
+            (Vector2){ triX, vCenter + triSize/2 },      // Bottom  
+            (Vector2){ triX + 7, vCenter },              // Right point
+            WHITE
+        );
+        
+        // Title text (centered vertically)
+        int fontSize = UIConfig::FONT_SIZE_HEADER;
+        DrawText(title, (int)panelRect.x + 18, (int)(vCenter - fontSize/2), fontSize, WHITE);
     }
 
     // Botón interactivo centralizado
@@ -58,11 +73,32 @@ public:
     }
 
     // Ficha de Elemento unificada (Para Inspector y Quimidex)
+    // Now uses element.backgroundColor for card background (two-tone effect)
     static void drawElementCard(const Element& element, float x, float y, float size, InputHandler& input) {
-        UIWidgets::drawPanel((Rectangle){ x, y, size, size }, input, element.color);
+        Rectangle cardRect = { x, y, size, size };
+        
+        // Background with element's custom backgroundColor
+        DrawRectangleRounded(cardRect, UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, element.backgroundColor);
+        DrawRectangleRoundedLines(cardRect, UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, 1.0f, element.color);
+        
+        // Glow effect
+        for (int i = 1; i <= 2; i++) {
+            DrawRectangleRoundedLines((Rectangle){ x - i, y - i, size + i*2, size + i*2 }, 
+                UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, 1.0f, Fade(element.color, 0.15f / i));
+        }
+        
+        // Symbol centered
         int symSize = (int)(size * 0.4f);
-        DrawText(element.symbol.c_str(), (int)x + (int)(size/2 - MeasureText(element.symbol.c_str(), symSize)/2), (int)y + (int)(size * 0.15f), symSize, element.color);
+        int symWidth = MeasureText(element.symbol.c_str(), symSize);
+        DrawText(element.symbol.c_str(), (int)x + (int)(size/2 - symWidth/2), (int)y + (int)(size * 0.15f), symSize, element.color);
+        
+        // Atomic mass bottom-left
         DrawText(TextFormat("%.1f", element.atomicMass), (int)x + 5, (int)y + (int)size - 12, UIConfig::FONT_SIZE_SMALL, element.color);
+        
+        // Capture input
+        if (CheckCollisionPointRec(input.getMousePosition(), cardRect)) {
+            input.setMouseCaptured(true);
+        }
     }
 
     // Dibuja texto envuelto y actualiza el puntero Y (Resuelve desbordamientos)
