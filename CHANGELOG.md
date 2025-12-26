@@ -16,6 +16,7 @@
 - **Resized Clay Zone**: Reduced from 2000x1600 to 800x800 and moved to `(-1200, -400)`. It is now a distinct island you must travel to.
 - **Physics Tuning**: Reduced Clay adsorption force (5.0 -> 1.0) and drag stickiness (0.95 -> 0.98).
 - **Spawn Distribution**: Increased `SPAWN_RANGE_XY` from 250 -> 1500 to disperse atoms widely across the void.
+- **Membrane Logic**: Relaxed ring-closure rule from 4 to 3 hops. This allows smaller 4-atom chains (Carbon squares) to form stable membranes.
 
 ---
 

@@ -351,9 +351,9 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                     }
 
                     // Strict Cycle Rule: Need at least 4 atoms in the chain to loop.
-                    // If total graph distance (approx) > 4.
+                    // If total graph distance (approx) >= 3 (e.g. A-B-C-D has 3 hops).
                     
-                    if (hopsI + hopsJ >= 4) {
+                    if (hopsI + hopsJ >= 3) {
                         // CLOSE THE RING (Pure Carbon / Simple Cycle)
                         states[i].cycleBondId = j;
                         

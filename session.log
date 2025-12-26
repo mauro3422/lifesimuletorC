@@ -53,47 +53,67 @@
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
 [INFO] [World] Player initialized at (0,0)
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
-[INFO] [BOND] GLOBAL SUCCESS: 18 -> 372 (Molecule 372) Polarity: -0.13
-[INFO] [BOND] GLOBAL SUCCESS: 80 -> 294 (Molecule 294) Polarity: -0.06
-[INFO] [BOND] GLOBAL SUCCESS: 109 -> 980 (Molecule 980) Polarity: -0.00
-[INFO] [BOND] GLOBAL SUCCESS: 121 -> 325 (Molecule 325) Polarity: -0.07
-[INFO] [BOND] GLOBAL SUCCESS: 140 -> 332 (Molecule 332) Polarity: 0.13
-[INFO] [BOND] GLOBAL SUCCESS: 155 -> 789 (Molecule 789) Polarity: -0.05
-[INFO] [BOND] GLOBAL SUCCESS: 166 -> 809 (Molecule 809) Polarity: -0.19
-[INFO] [BOND] GLOBAL SUCCESS: 201 -> 772 (Molecule 772) Polarity: 0.07
-[INFO] [BOND] GLOBAL SUCCESS: 210 -> 499 (Molecule 499) Polarity: 0.06
-[INFO] [BOND] GLOBAL SUCCESS: 213 -> 373 (Molecule 373) Polarity: 0.06
-[INFO] [BOND] GLOBAL SUCCESS: 220 -> 454 (Molecule 454) Polarity: 0.13
-[INFO] [BOND] GLOBAL SUCCESS: 243 -> 605 (Molecule 605) Polarity: 0.00
-[INFO] [BOND] GLOBAL SUCCESS: 272 -> 495 (Molecule 495) Polarity: -0.00
-[INFO] [BOND] GLOBAL SUCCESS: 288 -> 365 (Molecule 365) Polarity: 0.19
-[INFO] [BOND] GLOBAL SUCCESS: 315 -> 621 (Molecule 621) Polarity: -0.13
-[INFO] [BOND] GLOBAL SUCCESS: 320 -> 754 (Molecule 754) Polarity: 0.05
-[INFO] [BOND] GLOBAL SUCCESS: 322 -> 757 (Molecule 757) Polarity: -0.13
-[INFO] [BOND] GLOBAL SUCCESS: 347 -> 699 (Molecule 699) Polarity: -0.19
-[INFO] [BOND] GLOBAL SUCCESS: 360 -> 385 (Molecule 385) Polarity: 0.07
-[INFO] [BOND] GLOBAL SUCCESS: 371 -> 872 (Molecule 872) Polarity: 0.00
-[INFO] [BOND] GLOBAL SUCCESS: 506 -> 690 (Molecule 690) Polarity: 0.05
-[INFO] [BOND] GLOBAL SUCCESS: 568 -> 848 (Molecule 848) Polarity: -0.06
-[INFO] [BOND] GLOBAL SUCCESS: 589 -> 840 (Molecule 840) Polarity: 0.00
-[INFO] [BOND] GLOBAL SUCCESS: 611 -> 805 (Molecule 805) Polarity: -0.05
-[INFO] [BOND] GLOBAL SUCCESS: 653 -> 695 (Molecule 695) Polarity: -0.19
-[INFO] [BOND] GLOBAL SUCCESS: 685 -> 718 (Molecule 718) Polarity: 0.06
-[INFO] [BOND] GLOBAL SUCCESS: 694 -> 879 (Molecule 879) Polarity: -0.06
-[INFO] [BOND] GLOBAL SUCCESS: 695 -> 996 (Molecule 996) Polarity: 0.00
-[INFO] [BOND] GLOBAL SUCCESS: 748 -> 809 (Molecule 809) Polarity: -0.00
-[INFO] [BOND] GLOBAL SUCCESS: 781 -> 589 (Molecule 840) Polarity: -0.13
-[INFO] [BOND] GLOBAL SUCCESS: 783 -> 884 (Molecule 884) Polarity: 0.07
-[INFO] [BOND] GLOBAL SUCCESS: 823 -> 860 (Molecule 860) Polarity: 0.07
-[INFO] [BOND] GLOBAL SUCCESS: 831 -> 941 (Molecule 941) Polarity: 0.13
-[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 568 separated from 848
-[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 781 separated from 589
-[INFO] [BOND] GLOBAL SUCCESS: 340 -> 870 (Molecule 870) Polarity: 0.05
-[INFO] [BOND] GLOBAL SUCCESS: 772 -> 821 (Molecule 821) Polarity: -0.13
-[INFO] [BOND] GLOBAL SUCCESS: 570 -> 155 (Molecule 789) Polarity: -0.13
-[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 570 separated from 155
-[INFO] [BOND] GLOBAL SUCCESS: 226 -> 552 (Molecule 552) Polarity: -0.00
-[INFO] [BOND] GLOBAL SUCCESS: 545 -> 999 (Molecule 999) Polarity: 0.00
-[INFO] [BOND] GLOBAL SUCCESS: 86 -> 589 (Molecule 840) Polarity: 0.05
-[INFO] [BOND] GLOBAL SUCCESS: 539 -> 992 (Molecule 992) Polarity: 0.06
-[INFO] [BOND] GLOBAL SUCCESS: 474 -> 688 (Molecule 688) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 3 -> 699 (Molecule 699) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 28 -> 351 (Molecule 351) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 72 -> 234 (Molecule 234) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 84 -> 988 (Molecule 988) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 89 -> 328 (Molecule 328) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 92 -> 457 (Molecule 457) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 115 -> 643 (Molecule 643) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 120 -> 460 (Molecule 460) Polarity: 0.07
+[INFO] [BOND] GLOBAL SUCCESS: 125 -> 998 (Molecule 998) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 128 -> 969 (Molecule 969) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 142 -> 153 (Molecule 153) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 146 -> 431 (Molecule 431) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 172 -> 692 (Molecule 692) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 178 -> 326 (Molecule 326) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 188 -> 599 (Molecule 599) Polarity: -0.19
+[INFO] [BOND] GLOBAL SUCCESS: 196 -> 699 (Molecule 699) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 203 -> 664 (Molecule 664) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 207 -> 914 (Molecule 914) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 258 -> 468 (Molecule 468) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 271 -> 629 (Molecule 629) Polarity: 0.13
+[INFO] [BOND] GLOBAL SUCCESS: 279 -> 941 (Molecule 941) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 284 -> 587 (Molecule 587) Polarity: -0.13
+[INFO] [BOND] GLOBAL SUCCESS: 296 -> 441 (Molecule 441) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 302 -> 878 (Molecule 878) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 305 -> 442 (Molecule 442) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 363 -> 655 (Molecule 655) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 387 -> 964 (Molecule 964) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 407 -> 437 (Molecule 437) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 439 -> 475 (Molecule 475) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 445 -> 579 (Molecule 579) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 464 -> 693 (Molecule 693) Polarity: -0.07
+[INFO] [BOND] GLOBAL SUCCESS: 474 -> 728 (Molecule 728) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 668 -> 968 (Molecule 968) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 721 -> 977 (Molecule 977) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 759 -> 873 (Molecule 873) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 819 -> 912 (Molecule 912) Polarity: -0.00
+[INFO] [BOND] GLOBAL SUCCESS: 948 -> 983 (Molecule 983) Polarity: -0.06
+[INFO] [BOND] GLOBAL SUCCESS: 236 -> 663 (Molecule 663) Polarity: -0.05
+[INFO] [BOND] GLOBAL SUCCESS: 818 -> 964 (Molecule 964) Polarity: 0.06
+[INFO] [BOND] GLOBAL SUCCESS: 685 -> 851 (Molecule 851) Polarity: 0.05
+[INFO] [BOND] GLOBAL SUCCESS: 782 -> 928 (Molecule 928) Polarity: 0.00
+[INFO] [TRACTOR] Captured atom ID 7 at distance 18.69
+[INFO] [TRACTOR] Captured atom ID 319 at distance 12.89
+[INFO] [TRACTOR] Captured atom ID 981 at distance 4.79
+[INFO] [TRACTOR] Captured atom ID 573 at distance 5.61
+[INFO] [BOND] GLOBAL SUCCESS: 702 -> 981 (Molecule 981) Polarity: 0.00
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 702 separated from 981
+[INFO] [BOND] GLOBAL SUCCESS: 702 -> 981 (Molecule 981) Polarity: 0.00
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 702 separated from 981
+[INFO] [BOND] GLOBAL SUCCESS: 319 -> 981 (Molecule 981) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 702 -> 319 (Molecule 981) Polarity: 0.00
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 702 separated from 319
+[INFO] [BOND] GLOBAL SUCCESS: 573 -> 702 (Molecule 702) Polarity: 0.00
+[INFO] [TRACTOR] Captured atom ID 7 at distance 7.74
+[INFO] [BOND] GLOBAL SUCCESS: 702 -> 319 (Molecule 981) Polarity: 0.00
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 702 separated from 319
+[INFO] [BOND] GLOBAL SUCCESS: 7 -> 319 (Molecule 981) Polarity: 0.00
+[INFO] [BOND] GLOBAL SUCCESS: 702 -> 7 (Molecule 981) Polarity: 0.00
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 702 separated from 7
+[INFO] [BOND] GLOBAL SUCCESS: 702 -> 7 (Molecule 981) Polarity: 0.00
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 702 separated from 7
+[INFO] [TRACTOR] Captured atom ID 7 at distance 5.16
+[INFO] [BOND] Bond broken for atom 7 (released from 319)
+[INFO] [BOND] Full Isolation: Atom 7 released from all bonds
