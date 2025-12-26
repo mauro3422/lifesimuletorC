@@ -160,60 +160,61 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     }
 
     // --- PHASE 32: ACTIVE RING FOLDING (Clay Catalysis) ---
-    // When on clay, apply a magnetic force to curl chains into rings.
-    // This actively pulls the TAIL of a chain toward its HEAD.
+    // Find TERMINAL atoms (exactly 1 bond) in chains on Clay and pull them together.
+    // A terminal atom has: (parent but no children) OR (children but no parent).
+    // We collect all terminals per molecule, then apply folding force between them.
+    
+    std::vector<int> terminals; // Collect terminal atoms on Clay
     for (int i = 0; i < (int)transforms.size(); i++) {
-        // Only process ROOT atoms (molecules without a parent)
-        if (states[i].parentEntityId != -1) continue;
-        if (states[i].cycleBondId != -1) continue; // Already a closed ring
-        if (states[i].childCount < 1) continue; // Need at least a chain of 2
+        if (states[i].cycleBondId != -1) continue; // Skip closed rings
         
-        // Check if on catalytic surface (Clay)
+        // Check if on Clay
         float rangeMultiplier = environment.getBondRangeMultiplier({transforms[i].x, transforms[i].y});
-        if (rangeMultiplier < 1.2f) continue; // Not on Clay
+        if (rangeMultiplier < 1.2f) continue;
         
-        // Find the TAIL (deepest leaf in the chain from this root)
-        int tail = i;
-        int chainLength = 1;
-        while (true) {
-            // Find a child of the current tail
-            int child = -1;
-            for (int j = 0; j < (int)states.size(); j++) {
-                if (states[j].parentEntityId == tail) {
-                    child = j;
-                    break;
-                }
-            }
-            if (child == -1) break; // No more children, tail found
-            tail = child;
-            chainLength++;
-            if (chainLength > 10) break; // Safety limit
+        // Count bonds: parent counts as 1, each child counts as 1
+        int bondCount = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
+        
+        // Terminal = exactly 1 bond (end of chain)
+        if (bondCount == 1) {
+            terminals.push_back(i);
         }
-        
-        // Only apply folding force if chain is long enough (4+ atoms)
-        if (chainLength < 4) continue;
-        
-        // Apply magnetic force: TAIL attracted to HEAD (root = i)
-        float dx = transforms[i].x - transforms[tail].x;
-        float dy = transforms[i].y - transforms[tail].y;
-        float dz = transforms[i].z - transforms[tail].z;
-        float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
-        
-        if (dist > 10.0f && dist < 200.0f) { // Only when reasonably close but not touching
-            float foldingStrength = 15.0f; // Adjust for aggressiveness
-            float nx = dx / dist;
-            float ny = dy / dist;
-            float nz = dz / dist;
+    }
+    
+    // For each pair of terminals, if they're in the same molecule, pull together
+    for (size_t a = 0; a < terminals.size(); a++) {
+        for (size_t b = a + 1; b < terminals.size(); b++) {
+            int t1 = terminals[a];
+            int t2 = terminals[b];
             
-            // Apply force to TAIL (pull toward HEAD)
-            transforms[tail].vx += nx * foldingStrength * dt;
-            transforms[tail].vy += ny * foldingStrength * dt;
-            transforms[tail].vz += nz * foldingStrength * dt;
+            // Check if same molecule
+            int root1 = MathUtils::findMoleculeRoot(t1, states);
+            int root2 = MathUtils::findMoleculeRoot(t2, states);
+            if (root1 != root2) continue; // Different molecules
             
-            // Slight counter-force on HEAD to make it meet halfway
-            transforms[i].vx -= nx * foldingStrength * 0.3f * dt;
-            transforms[i].vy -= ny * foldingStrength * 0.3f * dt;
-            transforms[i].vz -= nz * foldingStrength * 0.3f * dt;
+            // Already close enough to bond? Skip (let BondingSystem handle it)
+            float dx = transforms[t2].x - transforms[t1].x;
+            float dy = transforms[t2].y - transforms[t1].y;
+            float dz = transforms[t2].z - transforms[t1].z;
+            float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
+            
+            if (dist > 20.0f && dist < 300.0f) {
+                // Apply magnetic folding force - pull terminals toward each other
+                float foldingStrength = 25.0f;
+                float nx = dx / dist;
+                float ny = dy / dist;
+                float nz = dz / dist;
+                
+                // Pull t1 toward t2
+                transforms[t1].vx += nx * foldingStrength * dt;
+                transforms[t1].vy += ny * foldingStrength * dt;
+                transforms[t1].vz += nz * foldingStrength * dt;
+                
+                // Pull t2 toward t1
+                transforms[t2].vx -= nx * foldingStrength * dt;
+                transforms[t2].vy -= ny * foldingStrength * dt;
+                transforms[t2].vz -= nz * foldingStrength * dt;
+            }
         }
     }
 
