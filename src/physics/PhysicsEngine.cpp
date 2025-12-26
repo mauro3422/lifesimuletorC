@@ -159,6 +159,64 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         transforms[partnerId].vz -= (fz / m2) * dt;
     }
 
+    // --- PHASE 32: ACTIVE RING FOLDING (Clay Catalysis) ---
+    // When on clay, apply a magnetic force to curl chains into rings.
+    // This actively pulls the TAIL of a chain toward its HEAD.
+    for (int i = 0; i < (int)transforms.size(); i++) {
+        // Only process ROOT atoms (molecules without a parent)
+        if (states[i].parentEntityId != -1) continue;
+        if (states[i].cycleBondId != -1) continue; // Already a closed ring
+        if (states[i].childCount < 1) continue; // Need at least a chain of 2
+        
+        // Check if on catalytic surface (Clay)
+        float rangeMultiplier = environment.getBondRangeMultiplier({transforms[i].x, transforms[i].y});
+        if (rangeMultiplier < 1.2f) continue; // Not on Clay
+        
+        // Find the TAIL (deepest leaf in the chain from this root)
+        int tail = i;
+        int chainLength = 1;
+        while (true) {
+            // Find a child of the current tail
+            int child = -1;
+            for (int j = 0; j < (int)states.size(); j++) {
+                if (states[j].parentEntityId == tail) {
+                    child = j;
+                    break;
+                }
+            }
+            if (child == -1) break; // No more children, tail found
+            tail = child;
+            chainLength++;
+            if (chainLength > 10) break; // Safety limit
+        }
+        
+        // Only apply folding force if chain is long enough (4+ atoms)
+        if (chainLength < 4) continue;
+        
+        // Apply magnetic force: TAIL attracted to HEAD (root = i)
+        float dx = transforms[i].x - transforms[tail].x;
+        float dy = transforms[i].y - transforms[tail].y;
+        float dz = transforms[i].z - transforms[tail].z;
+        float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
+        
+        if (dist > 10.0f && dist < 200.0f) { // Only when reasonably close but not touching
+            float foldingStrength = 15.0f; // Adjust for aggressiveness
+            float nx = dx / dist;
+            float ny = dy / dist;
+            float nz = dz / dist;
+            
+            // Apply force to TAIL (pull toward HEAD)
+            transforms[tail].vx += nx * foldingStrength * dt;
+            transforms[tail].vy += ny * foldingStrength * dt;
+            transforms[tail].vz += nz * foldingStrength * dt;
+            
+            // Slight counter-force on HEAD to make it meet halfway
+            transforms[i].vx -= nx * foldingStrength * 0.3f * dt;
+            transforms[i].vy -= ny * foldingStrength * 0.3f * dt;
+            transforms[i].vz -= nz * foldingStrength * 0.3f * dt;
+        }
+    }
+
     // 3. LOOP FUSION: Integration, Friction, and Boundaries in one step
     for (TransformComponent& tr : transforms) {
         // 1. Integration

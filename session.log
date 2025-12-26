@@ -53,20 +53,23 @@
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
 [INFO] [World] Player initialized at (0,0)
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
-[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 2004 separated from 660
-[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 361]
-[INFO] [BOND] Bond broken for atom 361 (released from 2173)
-[INFO] [BOND] Full Isolation: Atom 361 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2173]
-[INFO] [BOND] Bond broken for atom 1620 (released from 2173)
-[INFO] [BOND] Full Isolation: Atom 2173 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 803]
-[INFO] [BOND] Bond broken for atom 803 (released from 1620)
-[INFO] [BOND] Bond broken for atom 478 (released from 803)
-[INFO] [BOND] Full Isolation: Atom 803 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 478]
-[INFO] [BOND] Bond broken for atom 478 (released from 803)
-[INFO] [BOND] Full Isolation: Atom 478 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 478]
-[INFO] [BOND] Bond broken for atom 478 (released from 803)
-[INFO] [BOND] Full Isolation: Atom 478 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 565]
+[INFO] [BOND] Bond broken for atom 565 (released from 1546)
+[INFO] [BOND] Bond broken for atom 711 (released from 565)
+[INFO] [BOND] Full Isolation: Atom 565 released from all bonds
+[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 265]
+[INFO] [BOND] Bond broken for atom 265 (released from 1424)
+[INFO] [BOND] Full Isolation: Atom 265 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 2097]
+[INFO] [BOND] Bond broken for atom 565 (released from 2097)
+[INFO] [BOND] Bond broken for atom 1887 (released from 2097)
+[INFO] [BOND] Full Isolation: Atom 2097 released from all bonds
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 1887]
+[INFO] [BOND] Bond broken for atom 565 (released from 1887)
+[INFO] [BOND] Full Isolation: Atom 1887 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1424]
+[INFO] [BOND] Bond broken for atom 1424 (released from 2161)
+[INFO] [BOND] Bond broken for atom 1562 (released from 1424)
+[INFO] [BOND] Full Isolation: Atom 1424 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1424]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2445]
