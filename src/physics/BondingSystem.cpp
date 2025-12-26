@@ -350,19 +350,17 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                         hopsJ++;
                     }
 
-                    // Strict C4Si Rule: Need at least 4 atoms in the chain to loop.
-                    // If total graph distance (approx) > 4
-                    // Note: This is a heuristic. For exact, we'd need full LCA.
-                    // Assuming balanced chains or long tail.
+                    // Strict Cycle Rule: Need at least 4 atoms in the chain to loop.
+                    // If total graph distance (approx) > 4.
                     
                     if (hopsI + hopsJ >= 4) {
-                        // CLOSE THE RING
+                        // CLOSE THE RING (Pure Carbon / Simple Cycle)
                         states[i].cycleBondId = j;
-                        // states[j].cycleBondId = i; // Optional: One-way reference is enough for spring physics, simpler to manage.
                         
-                        TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Ring Closure)", i, j);
+                        TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Pure Ring Closure)", i, j);
                         
-                        // NOTIFY MISSION or ACHIEVEMENT here
+                        // NOTIFY MISSION
+                        MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
                         break; 
                     }
                 }

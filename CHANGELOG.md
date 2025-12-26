@@ -3,7 +3,7 @@
 
 ### Added
 - **Cycle Bond System**: Implemented non-hierarchical structural bonds to allow ring formation (membranes) without breaking the ECS tree.
-- **Ring Closure Logic**: "C4Si Rule" - Chains of 4+ atoms now spontaneously fuse their ends into stable loops if they belong to the same molecule.
+- **Ring Closure Logic**: "Pure Ring Rule" - Any chain of 4+ atoms (including pure Carbon) now spontaneously fuses ends into stable loops if spatially close.
 - **Cycle Physics**: `PhysicsEngine` now applies Hooke's Law to cycle bonds, maintaining ring shape dynamically.
 - **Cycle Rendering**: Visual support for displaying cycle bonds with a unique semi-transparent style.
 - **StateComponent Upgrade**: Added `cycleBondId` to track loop closures.
