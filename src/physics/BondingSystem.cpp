@@ -355,45 +355,25 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                     if (states[i].parentEntityId == j || states[j].parentEntityId == i) continue;
                     if (states[i].cycleBondId == j || states[j].cycleBondId == i) continue; // Already cycle bonded
 
-                    // DISTANCE CHECK (Graph Hops) - Simplified "Tracer"
-                    // Trace parents up to root or until meeting
-                    int pI = i; 
-                    int hopsI = 0;
-                    while (states[pI].parentEntityId != -1 && hopsI < 8) {
-                        pI = states[pI].parentEntityId;
-                        hopsI++;
-                    }
+                    // SIMPLIFIED CYCLE CHECK: Just check if both atoms have exactly 1 bond (terminals)
+                    // This is much simpler than hop counting and directly matches our Phase 32 logic.
+                    int bondsI = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
+                    int bondsJ = (states[j].parentEntityId != -1 ? 1 : 0) + states[j].childCount;
                     
-                    int pJ = j;
-                    int hopsJ = 0;
-                    while (states[pJ].parentEntityId != -1 && hopsJ < 8) {
-                        pJ = states[pJ].parentEntityId;
-                        hopsJ++;
-                    }
-
-                    // Strict Cycle Rule: Need at least 4 atoms in the chain to loop.
-                    // If total graph distance (approx) >= 3 (e.g. A-B-C-D has 3 hops).
-                    
-                    if (hopsI + hopsJ >= 3) {
-                        // CLOSE THE RING: Attempt actual bond first!
-                        // Previously we just set cycleBondId without creating the physics bond.
-                        // We MUST run tryBond to update occupancy, parent/child refs (if applicable), or just established connectivity.
-                        
-                        // Wait, cycleBondId in existing logic (lines 359) was SETTING it but NOT calling tryBond?
-                        // YES! The previous code was: "states[i].cycleBondId = j;" and then notified.
-                        // It NEVER called tryBond(). So the Atoms weren't actually physically bonded (no spring force)!
-                        // They were just "visually" cycled.
+                    // Both must be TERMINAL atoms (exactly 1 bond each) for a ring closure
+                    if (bondsI == 1 && bondsJ == 1) {
+                        TraceLog(LOG_INFO, "[CYCLE DEBUG] Terminal pair found: %d (bonds=%d) <-> %d (bonds=%d) | Dist: %.1f", i, bondsI, j, bondsJ, dist);
                         
                         // FIX: Actually bond them physically using tryCycleBond
-                        // This ignores hierarchy checks (isClustered) and just occupies slots + sets cycleBondId.
+                        BondError result = tryCycleBond(i, j, states, atoms, transforms);
                          
-                         BondError result = tryCycleBond(i, j, states, atoms, transforms);
-                         
-                         if (result == SUCCESS) {
-                             TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Phys + Visual)", i, j);
-                             MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
-                             break;
-                         }
+                        if (result == SUCCESS) {
+                            TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Phys + Visual)", i, j);
+                            MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
+                            break;
+                        } else {
+                            TraceLog(LOG_WARNING, "[CYCLE DEBUG] tryCycleBond FAILED for %d-%d. Result: %d", i, j, result);
+                        }
                     }
                 }
             }
