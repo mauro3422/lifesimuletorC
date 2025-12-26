@@ -111,6 +111,14 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         transforms[parentId].vx -= (fx / mP) * dt;
         transforms[parentId].vy -= (fy / mP) * dt;
         transforms[parentId].vz -= (fz / mP) * dt;
+        
+        // STRESS DIAGNOSTICS (User requested data)
+        static int diagCounter = 0;
+        if (diagCounter++ > 6000) { // Log occasionally (approx every 2-3 sec per atom set)
+             float strain = (dist - Config::BOND_IDEAL_DIST);
+             TraceLog(LOG_INFO, "[STRESS] Bond %d->%d (Slot %d) | Dist: %.1f / %.1f | Strain: %.1f | Stress Limit: %.1f", 
+                      parentId, i, slotIdx, dist, Config::BOND_IDEAL_DIST, strain, Config::BOND_BREAK_STRESS);
+        }
     }
 
     // --- PHASE 18: CYCLE BONDS (Non-Hierarchical Springs) ---
@@ -168,5 +176,6 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     }
 
     // Update Spatial Grid
+    // Reset diagnostics counter occasionally to prevent overflow, though local static handles it per call.
     grid.update(transforms);
 }

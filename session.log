@@ -53,3 +53,136 @@
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
 [INFO] [World] Player initialized at (0,0)
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 2176]
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 2176]
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 1256]
+[INFO] [BOND] Bond broken for atom 1256 (released from 2047)
+[INFO] [BOND] Bond broken for atom 971 (released from 1256)
+[INFO] [BOND] Full Isolation: Atom 1256 released from all bonds
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 339]
+[INFO] [BOND] Bond broken for atom 339 (released from 378)
+[INFO] [BOND] Full Isolation: Atom 339 released from all bonds
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 378]
+[INFO] [BOND] Bond broken for atom 378 (released from 1503)
+[INFO] [BOND] Bond broken for atom 339 (released from 378)
+[INFO] [BOND] Full Isolation: Atom 378 released from all bonds
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 1256]
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 378]
+[INFO] [BOND] Bond broken for atom 378 (released from 1503)
+[INFO] [BOND] Full Isolation: Atom 378 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1614]
+[INFO] [BOND] Bond broken for atom 1614 (released from 1751)
+[INFO] [BOND] Full Isolation: Atom 1614 released from all bonds
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 2423]
+[INFO] [BOND] Bond broken for atom 2069 (released from 2423)
+[INFO] [BOND] Full Isolation: Atom 2423 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 285]
+[INFO] [BOND] Bond broken for atom 285 (released from 1684)
+[INFO] [BOND] Full Isolation: Atom 285 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 956]
+[INFO] [BOND] Bond broken for atom 956 (released from 975)
+[INFO] [BOND] Bond broken for atom 510 (released from 956)
+[INFO] [BOND] Full Isolation: Atom 956 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 2208]
+[INFO] [BOND] Bond broken for atom 2208 (released from 1504)
+[INFO] [BOND] Bond broken for atom 2080 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 2208 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1909]
+[INFO] [BOND] Bond broken for atom 1909 (released from 755)
+[INFO] [BOND] Bond broken for atom 236 (released from 1909)
+[INFO] [BOND] Full Isolation: Atom 1909 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 1098)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1957]
+[INFO] [BOND] Bond broken for atom 1098 (released from 1957)
+[INFO] [BOND] Full Isolation: Atom 1957 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 2208]
+[INFO] [BOND] Bond broken for atom 2208 (released from 1259)
+[INFO] [BOND] Bond broken for atom 1562 (released from 2208)
+[INFO] [BOND] Bond broken for atom 1909 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 2208 released from all bonds
+[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 2402]
+[INFO] [BOND] Bond broken for atom 1504 (released from 2402)
+[INFO] [BOND] Full Isolation: Atom 2402 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1259]
+[INFO] [BOND] Bond broken for atom 1259 (released from 1504)
+[INFO] [BOND] Bond broken for atom 1369 (released from 1259)
+[INFO] [BOND] Bond broken for atom 1562 (released from 1259)
+[INFO] [BOND] Full Isolation: Atom 1259 released from all bonds
+[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 1369]
+[INFO] [BOND] Bond broken for atom 1369 (released from 1504)
+[INFO] [BOND] Full Isolation: Atom 1369 released from all bonds
+[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 2080]
+[INFO] [BOND] Bond broken for atom 2080 (released from 1504)
+[INFO] [BOND] Bond broken for atom 755 (released from 2080)
+[INFO] [BOND] Full Isolation: Atom 2080 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 1504]
+[INFO] [BOND] Bond broken for atom 1504 (released from 2208)
+[INFO] [BOND] Bond broken for atom 1369 (released from 1504)
+[INFO] [BOND] Bond broken for atom 2080 (released from 1504)
+[INFO] [BOND] Full Isolation: Atom 1504 released from all bonds
+[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 1369]
+[INFO] [BOND] Bond broken for atom 1369 (released from 1259)
+[INFO] [BOND] Full Isolation: Atom 1369 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1259]
+[INFO] [BOND] Bond broken for atom 1259 (released from 1909)
+[INFO] [BOND] Bond broken for atom 755 (released from 1259)
+[INFO] [BOND] Bond broken for atom 1369 (released from 1259)
+[INFO] [BOND] Bond broken for atom 1504 (released from 1259)
+[INFO] [BOND] Full Isolation: Atom 1259 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 755]
+[INFO] [BOND] Bond broken for atom 755 (released from 1504)
+[INFO] [BOND] Bond broken for atom 703 (released from 755)
+[INFO] [BOND] Bond broken for atom 1369 (released from 755)
+[INFO] [BOND] Full Isolation: Atom 755 released from all bonds
+[INFO] [TRACTOR] Captured N (in Nitrógeno Diatómico) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 2208)
+[INFO] [BOND] Bond broken for atom 1909 (released from 1562)
+[INFO] [BOND] Bond broken for atom 1957 (released from 1562)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 2208]
+[INFO] [BOND] Bond broken for atom 1909 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 2208 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 2208]
+[INFO] [BOND] Bond broken for atom 1957 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 2208 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1957]
+[INFO] [BOND] Bond broken for atom 1957 (released from 1562)
+[INFO] [BOND] Full Isolation: Atom 1957 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 1909)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1909]
+[INFO] [BOND] Bond broken for atom 1909 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 1909 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 1957)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1909]
+[INFO] [BOND] Bond broken for atom 1909 (released from 2208)
+[INFO] [BOND] Bond broken for atom 1562 (released from 1909)
+[INFO] [BOND] Full Isolation: Atom 1909 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 1957)
+[INFO] [BOND] Bond broken for atom 1909 (released from 1562)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 1957)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 2208]
+[INFO] [BOND] Bond broken for atom 1562 (released from 2208)
+[INFO] [BOND] Bond broken for atom 1909 (released from 2208)
+[INFO] [BOND] Bond broken for atom 1957 (released from 2208)
+[INFO] [BOND] Full Isolation: Atom 2208 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] [BOND] Bond broken for atom 1562 (released from 1957)
+[INFO] [BOND] Full Isolation: Atom 1562 released from all bonds
+[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 1562]
+[INFO] TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+[INFO] SHADER: [ID 3] Default shader unloaded successfully
+[INFO] TEXTURE: [ID 1] Default texture unloaded successfully
+[INFO] Window closed successfully
