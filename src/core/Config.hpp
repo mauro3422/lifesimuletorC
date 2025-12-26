@@ -8,9 +8,9 @@ namespace Config {
     // --- PHYSICS CONSTANTS ---
     inline constexpr float DRAG_COEFFICIENT = 0.95f;    // Reduced from 0.99 to allow momentum
     inline constexpr float WORLD_BOUNCE = -0.5f;
-    inline constexpr float BOND_COMPRESSION = 1.6f; 
+    inline constexpr float BOND_COMPRESSION = 1.2f; 
     inline constexpr float BOND_SNAP_THRESHOLD = 0.45f;
-    inline constexpr float BOND_AUTO_RANGE = 30.0f;
+    inline constexpr float BOND_AUTO_RANGE = 50.0f; // Increased to match new Ideal Dist (was 30.0)
     inline constexpr int BONDING_THROTTLE_FRAMES = 6;  // Execute every 6 frames (10 Hz) 
     inline constexpr float THERMODYNAMIC_JITTER = 2.5f; // Increased from 0.5 to promote bending/mixing
     inline constexpr float GRID_CELL_SIZE = 100.0f;     
@@ -67,16 +67,16 @@ namespace Config {
     // --- CHEMISTRY & ELECTROMAGNETISM ---
     inline constexpr float COULOMB_CONSTANT = 1800.0f;    // Attract/Repel force coefficient
     inline constexpr float CHARGE_DAMPING = 0.90f;      // Damping for electric forces
-    inline constexpr float MIN_COULOMB_DIST = 18.0f;    // Avoid singularities (soft-core repulsion)
+    inline constexpr float MIN_COULOMB_DIST = 30.0f;    // Increased to prevent overlap (was 18.0)
     inline constexpr float EM_REACH = 150.0f;           // Max range for electric influence
     inline constexpr float POLARITY_FACTOR = 0.15f;     // Electronegativity -> Partial charge factor
     
     // --- ELASTICITY & RUPTURE (Dynamic Geometry) ---
     inline constexpr float BOND_SPRING_K = 8.0f;        // Softer springs (was 15.0) to allow ring bending
     inline constexpr float BOND_DAMPING = 0.92f;        // Higher damping (was 0.85) to stabilize soft springs
-    inline constexpr float BOND_BREAK_STRESS = 150.0f;  // Massive increase (was 60.0) to prevent breakage during formation
-    inline constexpr float BOND_IDEAL_DIST = 24.0f;     
-    inline constexpr float MAX_BOND_RENDER_DIST = 40.0f;
+    inline constexpr float BOND_BREAK_STRESS = 180.0f;  // Even stronger to handle larger scale (was 150.0)
+    inline constexpr float BOND_IDEAL_DIST = 42.0f;     // Massive increase to ensure VISIBLE GAP (was 24.0)
+    inline constexpr float MAX_BOND_RENDER_DIST = 80.0f; // Scale render dist too
 
     // --- BONDING ANIMATION ---
     inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Slower speed for smoother docking
