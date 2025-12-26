@@ -124,7 +124,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         float dx = transforms[partnerId].x - transforms[i].x;
         float dy = transforms[partnerId].y - transforms[i].y;
         float dz = transforms[partnerId].z - transforms[i].z;
-        float dist = MathUtils::length(dx, dy, dz);
+
 
         // Apply same Hooke's Law as normal bonds
         float fx = dx * Config::BOND_SPRING_K;

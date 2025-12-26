@@ -20,6 +20,27 @@
 
 ---
 
+## [Phase 20: Thermodynamics & Stability] - 2025-12-26
+
+### Physics Overhaul
+- **System Liveliness**: Increased `THERMODYNAMIC_JITTER` (0.5 -> 2.5). Atoms now vibrate and flow naturally, breaking stagnation.
+- **Fluid Dynamics**: Reduced `DRAG_COEFFICIENT` (0.99 -> 0.95). Momentum is preserved longer.
+- **Structural Integrity**: Increased `BOND_BREAK_STRESS` (35.0 -> 60.0). Chemical bonds are now much stronger and resist the increased chaotic energy.
+
+---
+
+## [Phase 21: Density & Scale Optimization] - 2025-12-26
+
+### World Density
+- **Population Explosion**: Increased `INITIAL_ATOM_COUNT` from 1000 -> 2500.
+- **Concentrated Spawn**: Reduced `SPAWN_RANGE_XY` from 1500 -> 1200.
+- **Result**: The "void" is now filled with a rich chemical soup (approx 4x density increase).
+
+### Visuals
+- **Visibility**: Increased `BASE_ATOM_RADIUS` (6.0 -> 7.0) and `PLAYER_VISUAL_SCALE` (1.6 -> 1.8) for better legibility at zoom.
+
+---
+
 ## [Phase 17.5: Codebase Hygiene & Architectual Refactor] - 2025-12-26
 
 ### Refactored
