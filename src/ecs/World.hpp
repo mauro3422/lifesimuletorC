@@ -24,18 +24,20 @@ public:
         // 1. JUGADOR (Siempre ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({1, 0.0f}); // Hidrógeno inicial
-        states.push_back({false, -1, -1, -1, 1.0f}); // dockingProgress = 1.0 (no animacion)
+        states.push_back({false, -1, -1, -1, 1.0f, false}); // dockingProgress = 1.0, isShielded = false
         TraceLog(LOG_INFO, "[World] Jugador inicializado en (0,0)");
 
         // 2. MUNDO
         for (int i = 1; i < Config::INITIAL_ATOM_COUNT; i++) {
             int atomicNum = Config::ATOM_TYPES[GetRandomValue(0, Config::ATOM_TYPES_COUNT - 1)];
             
-            // New spawn spread logic: Muy denso alrededor del origen (0,0)
+            int rangeXY = (int)Config::SPAWN_RANGE_XY;
+            int rangeZ = (int)Config::SPAWN_RANGE_Z;
+            
             TransformComponent tr = {
-                (float)GetRandomValue(-250, 250), 
-                (float)GetRandomValue(-250, 250), 
-                (float)GetRandomValue(-40, 40),
+                (float)GetRandomValue(-rangeXY, rangeXY), 
+                (float)GetRandomValue(-rangeXY, rangeXY), 
+                (float)GetRandomValue(-rangeZ, rangeZ),
                 (float)GetRandomValue(-100, 100) / 100.0f * Config::INITIAL_VEL_RANGE,
                 (float)GetRandomValue(-100, 100) / 100.0f * Config::INITIAL_VEL_RANGE,
                 (float)GetRandomValue(-100, 100) / 100.0f * Config::INITIAL_VEL_RANGE,
@@ -44,7 +46,7 @@ public:
 
             transforms.push_back(tr);
             atoms.push_back({atomicNum, 0.0f});
-            states.push_back({false, -1, -1, -1, 1.0f}); // dockingProgress = 1.0 (no animacion)
+            states.push_back({false, -1, -1, -1, 1.0f, false}); 
         }
     }
 

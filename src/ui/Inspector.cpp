@@ -1,71 +1,92 @@
 #include "Inspector.hpp"
 #include "UIWidgets.hpp"
+#include "UIConfig.hpp"
 #include "../core/Config.hpp"
+#include "../chemistry/ChemistryDatabase.hpp"
+#include "../gameplay/DiscoveryLog.hpp"
+#include "../gameplay/MissionManager.hpp"
 #include <string>
 
 Inspector::Inspector() {}
 
-void Inspector::draw(const Element& element, int entityID, InputHandler& input) {
+void Inspector::draw(const Element& element, int entityID, InputHandler& input, std::vector<StateComponent>& states, std::vector<AtomComponent>& atoms) {
     int screenH = GetScreenHeight();
     
     // CONFIGURACIÓN DE LAYOUT
     float margin = (float)Config::INSPECTOR_MARGIN;
-    float width = (float)Config::INSPECTOR_WIDTH;
+    float width = UIConfig::INSPECTOR_WIDTH;
     float x = margin;
-    float innerWidth = width - 16.0f;
-    
-    // --- PASO 1: CALCULAR ALTURA EXACTA (PRE-PASS) ---
-    float calculatedHeight = 24.0f; // Header
-    calculatedHeight += 15.0f;      // ID line
-    calculatedHeight += 8.0f;       // Separador
-    calculatedHeight += 62.0f;      // Element Card area
-    calculatedHeight += 8.0f;       // Separador
-    
-    // Datos técnicos
-    calculatedHeight += (10.0f + 5.0f) * 4; // 4 rows
-    
-    // Origen (Dynamic)
-    float tempY = 0;
-    UIWidgets::drawTextWrapped(element.origin.c_str(), 0, tempY, innerWidth, 10, BLANK); 
-    calculatedHeight += 12.0f + tempY; // Label + Text
-    
-    // Lore Header + Lore (Dynamic)
-    calculatedHeight += 6.0f + 14.0f;
-    tempY = 0;
-    UIWidgets::drawTextWrapped(element.description.c_str(), 0, tempY, innerWidth, 10, BLANK);
-    calculatedHeight += tempY;
-    
-    // Botón
-    calculatedHeight += 30.0f; 
+    float innerWidth = width - (UIConfig::INNER_PADDING * 2.0f);
 
-    // Rectángulo final ajustado al contenido
+    Color activeColor = currentMolecule ? currentMolecule->color : element.color;
+    // Si es un clúster pero NO una molécula reconocida, usamos un color neutro o el del elemento detectado
+    if (!currentMolecule && states[entityID].parentEntityId != -1) activeColor = element.color;
+    
+    // --- PASO 1: CALCULAR ALTURA ESTIMADA ---
+    float calculatedHeight = 40.0f; // Margen base (header + padding)
+    
+    if (currentMolecule) {
+        calculatedHeight = 260.0f; // Moleculas suelen ser fijas pero largas
+    } else {
+        int totalAtoms = 0;
+        for (auto const& [num, count] : currentComposition) totalAtoms += count;
+        
+        if (totalAtoms > 1) {
+            // Clúster: Header + Status + Sep + CompH + (N * 15) + Sep + ObsH + Obs + Footer
+            calculatedHeight = UIConfig::HEADER_HEIGHT + 15 + 8 + 15 + (currentComposition.size() * UIConfig::LIST_ITEM_HEIGHT) + 20 + 12 + 50 + 40;
+        } else {
+            calculatedHeight = (float)Config::INSPECTOR_HEIGHT;
+        }
+    }
+
     Rectangle rect = { x, (float)(screenH - calculatedHeight - margin), width, calculatedHeight };
 
     // 1. Fondo Premium con Glow
-    UIWidgets::drawPanel(rect, input, element.color);
-    UIWidgets::drawHeader(rect, TextFormat("[+] %s", element.name.c_str()), element.color);
+    UIWidgets::drawPanel(rect, input, activeColor);
+    
+    std::string headerTitle = currentMolecule ? TextFormat("[M] %s", currentMolecule->name.c_str()) : TextFormat("[+] %s", element.name.c_str());
+    
+    // Si no es molécula pero tiene más de 1 átomo, es un clúster transitorio
+    int totalAtoms = 0;
+    for (auto const& [num, count] : currentComposition) totalAtoms += count;
 
-    float curX = rect.x + 8.0f;
-    float curY = rect.y + 24.0f;
+    if (!currentMolecule && totalAtoms > 1) {
+        headerTitle = TextFormat("[C] Cluster de %s", element.symbol.c_str());
+    }
+    
+    UIWidgets::drawHeader(rect, headerTitle.c_str(), activeColor);
+
+    // Si estamos en modo clúster (detectado por tener composición > 1 átomo)
+    // o si específicamente tenemos una molécula reconocida.
+    if (currentMolecule) {
+        drawMoleculeOverlay(rect, input);
+        return; 
+    } else if (totalAtoms > 1) {
+        drawTransitoryMoleculeOverlay(rect, input);
+        return;
+    }
+
+    float curX = rect.x + UIConfig::INNER_PADDING;
+    float curY = rect.y + UIConfig::HEADER_HEIGHT + 4.0f;
 
     // 2. ID y Separador
-    DrawText(TextFormat(">> %s (ID: %d)", element.name.c_str(), entityID), (int)curX, (int)curY, 10, SKYBLUE);
+    DrawText(TextFormat(">> %s (ID: %d)", element.name.c_str(), entityID), (int)curX, (int)curY, UIConfig::FONT_SIZE_LABEL, SKYBLUE);
     curY += 15.0f;
     UIWidgets::drawSeparator(curX, curY, innerWidth);
     curY += 8.0f;
 
     // 3. Tarjeta de Elemento y Valencias
-    drawElementCard(element, curX, curY, 50.0f, input);
+    UIWidgets::drawElementCard(element, curX, curY, UIConfig::INSPECTOR_CARD_SIZE, input);
     
-    int infoX = (int)curX + 57;
+    int infoX = (int)curX + (int)UIConfig::INSPECTOR_CARD_SIZE + 7;
     int infoY = (int)curY + 2;
-    DrawText(element.name.c_str(), infoX, infoY, 12, WHITE);
-    DrawText(TextFormat("[%s] #%d", element.symbol.c_str(), element.atomicNumber), infoX, infoY + 15, 10, LIGHTGRAY);
+    DrawText(element.name.c_str(), infoX, infoY, UIConfig::FONT_SIZE_HEADER, WHITE);
+    DrawText(TextFormat("[%s] #%d", element.symbol.c_str(), element.atomicNumber), infoX, infoY + 15, UIConfig::FONT_SIZE_LABEL, LIGHTGRAY);
     
     // Barra de Valencia Dinámica
-    UIWidgets::drawProgressBar({ (float)infoX, (float)infoY + 32, 60, 6 }, 0.0f, element.color, TextFormat("0/%d", element.maxBonds));
+    UIWidgets::drawProgressBar({ (float)infoX, (float)infoY + 32, 60, UIConfig::INSPECTOR_BAR_HEIGHT }, 0.0f, element.color, TextFormat("0/%d", element.maxBonds));
 
-    curY += 62.0f;
+    curY += UIConfig::INSPECTOR_CARD_SIZE + 12.0f;
     UIWidgets::drawSeparator(curX, curY, innerWidth);
     curY += 8.0f;
 
@@ -76,23 +97,18 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input) 
     UIWidgets::drawValueLabel("Max Bonds", TextFormat("%d", element.maxBonds), curX, curY, innerWidth);
     
     // EL ORIGEN AHORA USA drawTextWrapped para evitar overlap
-    DrawText("ORIGIN:", (int)curX, (int)curY, 9, Config::THEME_TEXT_SECONDARY);
+    DrawText("ORIGIN:", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, Config::THEME_TEXT_SECONDARY);
     curY += 12.0f;
-    UIWidgets::drawTextWrapped(element.origin.c_str(), curX, curY, innerWidth, 10, ColorAlpha(SKYBLUE, 0.8f));
+    UIWidgets::drawTextWrapped(element.origin.c_str(), curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, ColorAlpha(SKYBLUE, 0.8f));
 
     curY += 6.0f;
-    DrawText("LORE & DATA", (int)curX, (int)curY, 9, SKYBLUE);
+    DrawText("LORE & DATA", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, SKYBLUE);
     curY += 14.0f;
     
     // Descripción con actualización de curY
-    UIWidgets::drawTextWrapped(element.description.c_str(), curX, curY, innerWidth, 10, WHITE);
+    UIWidgets::drawTextWrapped(element.description.c_str(), curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, WHITE);
 
-    // 5. Botón ANALYZE (Siempre al final del flujo)
-    curY += 5.0f;
-    Rectangle btnRect = { rect.x + 5, curY, rect.width - 10, 20 };
-    if (UIWidgets::drawButton(btnRect, "ANALYZE MOLECULE", input, element.color)) {
-        TraceLog(LOG_INFO, "User requested deep molecule analysis");
-    }
+    // Ajuste final del panel
     
     // Ajuste final del panel si el botón se sale (para el siguiente frame o evitar corte visual)
     // Nota: En Raylib inmediato, si calculamos la altura DESPUÉS de dibujar el panel, queda mal un frame.
@@ -100,7 +116,70 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input) 
 }
 
 void Inspector::drawElementCard(const Element& element, float x, float y, float size, InputHandler& input) {
-    UIWidgets::drawPanel((Rectangle){ x, y, size, size }, input, element.color);
-    DrawText(element.symbol.c_str(), (int)x + (size/2 - MeasureText(element.symbol.c_str(), 20)/2), (int)y + 8, 20, element.color);
-    DrawText(TextFormat("%.1f", element.atomicMass), (int)x + 5, (int)y + (int)size - 12, 9, WHITE);
+    UIWidgets::drawElementCard(element, x, y, size, input);
+}
+
+void Inspector::drawMoleculeOverlay(Rectangle rect, InputHandler& input) {
+    if (!currentMolecule) return;
+
+    float curX = rect.x + UIConfig::INNER_PADDING;
+    float curY = rect.y + UIConfig::HEADER_HEIGHT + 4.0f;
+    float innerWidth = rect.width - (UIConfig::INNER_PADDING * 2.0f);
+
+    // Fórmula e ID
+    DrawText(TextFormat("ANÁLISIS ESTRUCTURAL: %s", currentMolecule->formula.c_str()), (int)curX, (int)curY, UIConfig::FONT_SIZE_LABEL, GOLD);
+    curY += 15.0f;
+    UIWidgets::drawSeparator(curX, curY, innerWidth);
+    curY += 8.0f;
+
+    // Visual Card (Usamos ID de molécula en lugar de símbolo)
+    UIWidgets::drawPanel({ curX, curY, UIConfig::INSPECTOR_CARD_SIZE, UIConfig::INSPECTOR_CARD_SIZE }, input, currentMolecule->color);
+    DrawText(currentMolecule->id.c_str(), (int)curX + 10, (int)curY + 15, 20, WHITE);
+    
+    DrawText(currentMolecule->name.c_str(), (int)curX + (int)UIConfig::INSPECTOR_CARD_SIZE + 7, (int)curY + 2, UIConfig::FONT_SIZE_HEADER, WHITE);
+    DrawText(currentMolecule->category.c_str(), (int)curX + (int)UIConfig::INSPECTOR_CARD_SIZE + 7, (int)curY + 15, UIConfig::FONT_SIZE_LABEL, GRAY);
+    
+    curY += UIConfig::INSPECTOR_CARD_SIZE + 12.0f;
+    UIWidgets::drawSeparator(curX, curY, innerWidth);
+    curY += 8.0f;
+
+    DrawText("ROL PREBIÓTICO:", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, Fade(currentMolecule->color, 0.8f));
+    curY += 12.0f;
+    UIWidgets::drawTextWrapped(currentMolecule->biologicalSignificance.c_str(), curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, WHITE);
+
+    curY += 10.0f;
+    DrawText("SÍNTESIS Y ORIGEN:", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, SKYBLUE);
+    curY += 14.0f;
+    UIWidgets::drawTextWrapped(currentMolecule->description.c_str(), curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, Fade(WHITE, 0.9f));
+}
+
+void Inspector::drawTransitoryMoleculeOverlay(Rectangle rect, InputHandler& input) {
+    float curX = rect.x + UIConfig::INNER_PADDING;
+    float curY = rect.y + UIConfig::HEADER_HEIGHT + 4.0f;
+    float innerWidth = rect.width - (UIConfig::INNER_PADDING * 2.0f);
+
+    DrawText("ESTADO: MOLÉCULA TRANSITORIA", (int)curX, (int)curY, UIConfig::FONT_SIZE_LABEL, SKYBLUE);
+    curY += 15.0f;
+    UIWidgets::drawSeparator(curX, curY, innerWidth);
+    curY += 8.0f;
+
+    DrawText("COMPOSICIÓN DETECTADA:", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, GRAY);
+    curY += 15.0f;
+
+    for (auto const& [atomicNum, count] : currentComposition) {
+        const Element& el = ChemistryDatabase::getInstance().getElement(atomicNum);
+        UIWidgets::drawValueLabel(el.name.c_str(), TextFormat("x%d", count), curX, curY, innerWidth);
+        curY += 2.0f; // Pequeño ajuste entre labels
+    }
+
+    curY += 10.0f;
+    UIWidgets::drawSeparator(curX, curY, innerWidth);
+    curY += 10.0f;
+
+    DrawText("ANÁLISIS PRIMORDIAL:", (int)curX, (int)curY, UIConfig::FONT_SIZE_SMALL, GOLD);
+    curY += 12.0f;
+    UIWidgets::drawTextWrapped("Esta estructura no coincide con ninguna base de datos conocida. Representa una fase de alta energía o un precursor biótico aún no catalogado en la sopa primordial.", 
+                               curX, curY, innerWidth, UIConfig::FONT_SIZE_LABEL, Fade(WHITE, 0.8f));
+
+    curY = rect.y + rect.height - 30;
 }

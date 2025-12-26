@@ -1,4 +1,35 @@
 
+## [Phase: Tractor Beam Refinement & Undo System] - 2025-12-26
+
+### Added
+- **Valencia Shield (Escudo de Valencia)**: New `isShielded` field in `StateComponent` prevents captured atoms from attracting "garbage" during transport.
+- **Sticky Capture System**: Tractor beam now locks onto a single atom per click and won't auto-target others until released.
+- **`becameActive()` API**: New method in `TractorBeam` detects the exact frame of capture for one-time operations.
+- **Mouse-Based Dragging**: Atoms now follow the cursor position instead of being pulled directly toward the player.
+- **Theme Constants**: Added `THEME_INFO` and `THEME_DANGER` colors to `Config.hpp` for notification system.
+
+### Changed
+- **Hierarchical Undo System**: Right-click now follows priority order:
+  1. Self-release if player is captured by NPC molecule
+  2. Chronological undo of manually attached atoms
+  3. Prunable leaf search for natural molecule growth
+- **Full Isolation Capture**: `breakAllBonds()` now executes only once on capture frame, preventing physics instability.
+- **Global Shield Check**: Spontaneous bonding now checks root molecule's shield status, not individual atoms.
+- **Tractor Physics Tuning**: 
+  - `TRACTOR_FORCE`: 2.0 → 5.0
+  - `TRACTOR_MAX_SPEED`: 250 → 500
+  - `TRACTOR_PICKUP_RANGE`: 50 → 70
+  - `BOND_DOCKING_SPEED`: 0.08 → 0.04 (smoother)
+- **Player.cpp Reconstruction**: Complete rewrite to fix bracket imbalance and improve code clarity.
+
+### Fixed
+- **Vacuum Effect**: Fixed issue where tractor beam would suck up multiple atoms when moving cursor quickly.
+- **Dead Valencia Bug**: Fixed bug where player couldn't bond captured atoms due to shield blocking self.
+- **Garbage Clusters**: Atoms being towed no longer attract random neighbors during transport.
+- **Compilation Errors**: Resolved missing `THEME_INFO` constant and structural bracket issues in `Player.cpp`.
+
+---
+
 ## [Phase: Natural Chemistry Engine] - 2025-12-25
 
 ### Added

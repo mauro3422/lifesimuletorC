@@ -1,5 +1,7 @@
 # 1. Rutas (Corregidas segun la estructura real de raylib extraido)
-$BASE_DIR = Get-Location
+$BASE_DIR = $PSScriptRoot
+Set-Location $BASE_DIR
+
 $RAYLIB_DIR = "$BASE_DIR/external/raylib/raylib-5.0_win64_mingw-w64"
 $INCLUDE_DIR = "$RAYLIB_DIR/include"
 $LIB_DIR = "$RAYLIB_DIR/lib"
@@ -17,6 +19,8 @@ g++ src/main.cpp `
     src/ui/LabelSystem.cpp `
     src/ui/Inspector.cpp `
     src/ui/HUD.cpp `
+    src/ui/Quimidex.cpp `
+    src/gameplay/MissionManager.cpp `
     -I"$INCLUDE_DIR" `
     -I"$BASE_DIR/src" `
     -L"$LIB_DIR" `
@@ -29,6 +33,7 @@ g++ src/main.cpp `
 if ($?) {
     Write-Host "--- Build Completado con EXITO ---" -ForegroundColor Green
     ./LifeSimulator.exe
-} else {
+}
+else {
     Write-Host "Error en la compilacion." -ForegroundColor Red
 }

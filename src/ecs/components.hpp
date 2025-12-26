@@ -25,7 +25,8 @@ struct StateComponent {
     int moleculeId;      // -1 si no está en una molécula estable
     int parentEntityId;  // A quién está anclado (-1 = root)
     int parentSlotIndex; // Qué brazo del padre ocupa
-    float dockingProgress; // 0.0 = recien enlazado, 1.0 = totalmente acoplado (para animacion suave)
+    float dockingProgress; // 0.0 = recien enlazado, 1.0 = totalmente acoplado
+    bool isShielded;     // Bloquea cualquier enlace espontáneo (Rayo Tractor)
 };
 
 #endif

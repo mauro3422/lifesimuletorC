@@ -8,9 +8,9 @@ PhysicsEngine::PhysicsEngine() : grid(Config::GRID_CELL_SIZE) {}
 
 void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                         const std::vector<AtomComponent>& atoms,
-                        const std::vector<StateComponent>& states) {
-    // 0. ACTUALIZAR GRID (Necesaria para fuerzas de largo alcance EM)
-    grid.update(transforms);
+                        std::vector<StateComponent>& states) {
+    // 0. ACTUALIZAR AMBIENTE (La grilla se actualizará al final del paso)
+    environment.update(transforms, states, dt); 
 
     // 1. APLICAR FUERZAS ELECTROMAGNÉTICAS (Coulomb O(N))
     for (int i = 0; i < (int)transforms.size(); i++) {
@@ -26,7 +26,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
             float dx = transforms[j].x - transforms[i].x;
             float dy = transforms[j].y - transforms[i].y;
-            float distSq = dx*dx + dy*dy + 0.1f;
+            float distSq = dx*dx + dy*dy + (Config::PHYSICS_EPSILON * Config::PHYSICS_EPSILON);
             float dist = std::sqrt(distSq);
 
             if (dist > Config::EM_REACH) continue;
@@ -75,8 +75,8 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         bool isPlayerMolecule = (states[i].moleculeId == 0 || i == 0 || parentId == 0);
         
         if (!isPlayerMolecule && dist > Config::BOND_BREAK_STRESS) {
-            const_cast<StateComponent&>(states[i]).isClustered = false;
-            const_cast<StateComponent&>(states[i]).parentEntityId = -1;
+            states[i].isClustered = false;
+            states[i].parentEntityId = -1;
             TraceLog(LOG_WARNING, "[PHYSICS] ENLACE ROTO por estres: Atomo %d se separo de %d", i, parentId);
             continue;
         }

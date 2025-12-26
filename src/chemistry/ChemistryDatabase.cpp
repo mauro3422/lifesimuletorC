@@ -94,6 +94,82 @@ ChemistryDatabase::ChemistryDatabase() {
             norm({1, -0.3f, 0})
         }
     });
+
+    // --- REGISTRO DE MOLÉCULAS ---
+    addMolecule({
+        "H2", "Hidrógeno Diatómico", "H2", "PRIMORDIAL",
+        "La forma más simple de molécula covalente.",
+        "Combustible estelar y precursor de toda la química compleja.",
+        "Big Bang y nubes moleculares frías.",
+        SKYBLUE,
+        {{1, 2}}
+    });
+
+    addMolecule({
+        "H2O", "Agua", "H2O", "VITAL",
+        "La molécula de la vida. Única sustancia que existe naturalmente en los 3 estados en la Tierra.",
+        "Solvente universal donde ocurre toda la bioquímica celular.",
+        "Fusión de carbono y helio en estrellas masivas.",
+        BLUE,
+        {{1, 2}, {8, 1}}
+    });
+
+    // --- NUEVAS MOLÉCULAS ---
+    addMolecule({
+        "O2", "Oxígeno Diatómico", "O2", "ATMOSFÉRICO",
+        "Gas incoloro e inodoro, esencial para la respiración aeróbica.",
+        "Aceptor final de electrones en la cadena de transporte molecular.",
+        "Nucleosíntesis estelar y procesos fotosintéticos posteriores.",
+        RED,
+        {{8, 2}}
+    });
+
+    addMolecule({
+        "N2", "Nitrógeno Diatómico", "N2", "INERTE",
+        "Gas triple enlace extremadamente estable. Constituye la mayor parte del aire.",
+        "Provee una atmósfera estable y es el reservorio de nitrógeno biótico.",
+        "Ciclo CNO en gigantes rojas.",
+        BLUE,
+        {{7, 2}}
+    });
+
+    addMolecule({
+        "CH4", "Metano", "CH4", "ORGÁNICO",
+        "El hidrocarburo más simple. Un potente gas de efecto invernadero.",
+        "Precursor fundamental en la síntesis de moléculas orgánicas complejas.",
+        "Procesos geológicos hidrotermales y nebulosas planetarias.",
+        GREEN,
+        {{6, 1}, {1, 4}}
+    });
+
+    addMolecule({
+        "NH3", "Amoníaco", "NH3", "PRECURSOR",
+        "Compuesto de nitrógeno e hidrógeno con un olor penetrante característico.",
+        "Fuente crítica de nitrógeno para la síntesis de aminoácidos primordiales.",
+        "Nubes de gas interestelar y volcanismo temprano.",
+        VIOLET,
+        {{7, 1}, {1, 3}}
+    });
+
+    addMolecule({
+        "CO2", "Dióxido de Carbono", "CO2", "VOLÁTIL",
+        "Compuesto lineal que regula el clima planetario mediante el efecto invernadero.",
+        "Fuente de carbono para la fijación autótrofa y precursor de azúcares.",
+        "Desgasificación volcánica y oxidación de materia orgánica.",
+        LIGHTGRAY,
+        {{6, 1}, {8, 2}}
+    });
+}
+
+void ChemistryDatabase::addMolecule(Molecule m) {
+    molecules.push_back(m);
+}
+
+const Molecule* ChemistryDatabase::findMoleculeByComposition(const std::map<int, int>& composition) const {
+    for (const auto& mol : molecules) {
+        if (mol.composition == composition) return &mol;
+    }
+    return nullptr;
 }
 
 void ChemistryDatabase::addElement(Element e) {

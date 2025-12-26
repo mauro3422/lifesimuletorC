@@ -14,12 +14,17 @@ namespace Config {
     inline constexpr float REBOTE = -0.8f;     
     inline constexpr float THERMODYNAMIC_JITTER = 0.5f; 
     inline constexpr float GRID_CELL_SIZE = 100.0f;     
+    inline constexpr float PHYSICS_EPSILON = 0.001f;
+    inline constexpr float FLOAT_MAX = 1.0e30f;
     
-    // --- WORLD DIMENSIONS ---
+    // --- WORLD DIMENSIONS & SPAWN ---
     inline constexpr int WORLD_WIDTH_MIN = -5000;
     inline constexpr int WORLD_WIDTH_MAX = 5000;
     inline constexpr int WORLD_HEIGHT_MIN = -5000;
     inline constexpr int WORLD_HEIGHT_MAX = 5000;
+    inline constexpr float SPAWN_RANGE_XY = 250.0f;
+    inline constexpr float SPAWN_RANGE_Z = 40.0f;
+    inline constexpr float INITIAL_VEL_RANGE = 2.0f;
     inline constexpr int WORLD_DEPTH_MIN = -300;
     inline constexpr int WORLD_DEPTH_MAX = 300;
 
@@ -38,18 +43,17 @@ namespace Config {
     // --- SIMULATION ---
     inline constexpr int ATOM_TYPES[] = { 1, 6, 7, 8, 15, 16 }; 
     inline constexpr int ATOM_TYPES_COUNT = 6;
-    inline constexpr int INITIAL_ATOM_COUNT = 400;
-    inline constexpr float INITIAL_VEL_RANGE = 2.0f;
+    inline constexpr int INITIAL_ATOM_COUNT = 1000;
     inline constexpr float FIXED_DELTA_TIME = 1.0f / 60.0f;
     inline constexpr float MAX_FRAME_TIME = 0.25f;
     
     // --- INTERACTION ---
-    inline constexpr float TRACTOR_FORCE = 2.0f;
+    inline constexpr float TRACTOR_FORCE = 5.0f; // Más fuerza inicial
     inline constexpr float TRACTOR_ATTENUATION = 0.01f;
-    inline constexpr float TRACTOR_MAX_SPEED = 250.0f;
-    inline constexpr float TRACTOR_STEER_FACTOR = 0.08f;
-    inline constexpr float TRACTOR_DAMPING = 0.94f;
-    inline constexpr float TRACTOR_PICKUP_RANGE = 50.0f;
+    inline constexpr float TRACTOR_MAX_SPEED = 500.0f;
+    inline constexpr float TRACTOR_STEER_FACTOR = 0.12f; // Más suave, menos "brusco"
+    inline constexpr float TRACTOR_DAMPING = 0.97f;
+    inline constexpr float TRACTOR_PICKUP_RANGE = 70.0f;
     inline constexpr float TRACTOR_JITTER_INTENSITY = 8.0f; 
     inline constexpr float TRACTOR_DOCKING_RANGE = 40.0f;   
     inline constexpr float TRACTOR_DOCKING_FORCE = 0.5f;    
@@ -64,6 +68,7 @@ namespace Config {
     inline constexpr float CHARGE_DAMPING = 0.90f;      // Amortiguación de fuerzas eléctricas
     inline constexpr float MIN_COULOMB_DIST = 18.0f;    // Para evitar singularidades (repulsión soft-core)
     inline constexpr float EM_REACH = 150.0f;           // Rango máximo de influencia eléctrica
+    inline constexpr float POLARITY_FACTOR = 0.15f;     // Electronegatividad -> Factor de carga parcial
     
     // --- ELASTICIDAD Y RUPTURA (Geometría Dinámica) ---
     inline constexpr float BOND_SPRING_K = 15.0f;       // Fuerza del "resorte" del enlace
@@ -72,7 +77,7 @@ namespace Config {
     inline constexpr float BOND_IDEAL_DIST = 18.0f;     // Distancia de equilibrio del enlace
 
     // --- BONDING ANIMATION ---
-    inline constexpr float BOND_DOCKING_SPEED = 0.08f;
+    inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Mitad de velocidad para suavidad
     inline constexpr float BOND_LERP_POS = 0.2f;
     inline constexpr float BOND_LERP_VEL = 0.3f;
 
@@ -86,9 +91,9 @@ namespace Config {
     
     // --- PLAYER ---
     inline constexpr float PLAYER_VISUAL_SCALE = 1.6f;
-    inline constexpr float PLAYER_SPEED = 120.0f;
-    inline constexpr float PLAYER_ACCEL = 0.15f;
-    inline constexpr float PLAYER_FRICTION = 0.92f;
+    inline constexpr float PLAYER_SPEED = 35.0f;
+    inline constexpr float PLAYER_ACCEL = 0.05f;
+    inline constexpr float PLAYER_FRICTION = 0.99f; // Match Drag Coefficient
     inline constexpr int PLAYER_SYMBOL_FONT = 14;
     inline constexpr int PLAYER_SYMBOL_OFFSET_X = -4;
     inline constexpr int PLAYER_SYMBOL_OFFSET_Y = -6;
@@ -100,7 +105,7 @@ namespace Config {
     inline constexpr int HUD_FONT_ZOOM = 12;
 
     // --- UI INSPECTOR ---
-    inline constexpr int INSPECTOR_WIDTH = 170;
+    inline constexpr int INSPECTOR_WIDTH = 190;
     inline constexpr int INSPECTOR_HEIGHT = 280;
     inline constexpr int INSPECTOR_MARGIN = 15;
     inline constexpr int INSPECTOR_FONT_HEADER = 12;
@@ -122,6 +127,8 @@ namespace Config {
     inline constexpr Color THEME_HIGHLIGHT = SKYBLUE;
     inline constexpr Color THEME_WARNING = ORANGE;
     inline constexpr Color THEME_SUCCESS = LIME;
+    inline constexpr Color THEME_INFO = SKYBLUE;
+    inline constexpr Color THEME_DANGER = RED;
     
     inline constexpr float THEME_ROUNDNESS = 0.05f;
     inline constexpr int THEME_BORDER_WIDTH = 1;

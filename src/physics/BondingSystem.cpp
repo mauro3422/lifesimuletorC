@@ -1,6 +1,8 @@
 #include "BondingSystem.hpp"
 #include "core/Config.hpp"
 #include "core/MathUtils.hpp"
+#include "gameplay/MissionManager.hpp"
+#include "world/EnvironmentManager.hpp"
 #include <cmath>
 
 int BondingSystem::getFirstFreeSlot(int parentId, const std::vector<StateComponent>& states, const std::vector<AtomComponent>& atoms) {
@@ -38,9 +40,10 @@ int BondingSystem::getFirstFreeSlot(int parentId, const std::vector<StateCompone
 
 BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId, 
                            std::vector<StateComponent>& states,
-                           const std::vector<AtomComponent>& atoms,
+                           std::vector<AtomComponent>& atoms,
                            const std::vector<TransformComponent>& transforms,
-                           bool forced) {
+                           bool forced,
+                           float angleMultiplier) {
     if (sourceId < 0 || targetId < 0 || sourceId == targetId) return INTERNAL_ERROR;
     if (states[sourceId].isClustered) return ALREADY_CLUSTERED; 
 
@@ -57,7 +60,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
 
     int bestHostId = -1;
     int bestSlotIdx = -1;
-    float minSourceDist = 9999.0f;
+    float minSourceDist = Config::FLOAT_MAX;
     bool moleculeHasAnyFreeSlot = false;
 
     for (int hostId : candidates) {
@@ -72,7 +75,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
         }
 
         // El modo forced ignora el ángulo en la búsqueda del mejor slot
-        int slotIdx = getBestAvailableSlot(hostId, relPos, states, atoms, forced);
+        int slotIdx = getBestAvailableSlot(hostId, relPos, states, atoms, forced, angleMultiplier);
         
         // AUTO-ACOMODAMIENTO: Si el modo es forzado y no encontramos slot por ángulo,
         // intentamos buscar simplemente el primer slot libre en este host de la molécula.
@@ -101,11 +104,15 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
         // --- CÁLCULO DE POLARIDAD (Carga Parcial) ---
         float enHost = ChemistryDatabase::getInstance().getElement(atoms[bestHostId].atomicNumber).electronegativity;
         float enSource = ChemistryDatabase::getInstance().getElement(atoms[sourceId].atomicNumber).electronegativity;
-        float polarity = (enHost - enSource) * 0.15f; 
-        const_cast<AtomComponent&>(atoms[bestHostId]).partialCharge += polarity;
-        const_cast<AtomComponent&>(atoms[sourceId]).partialCharge -= polarity;
+        float polarity = (enHost - enSource) * Config::POLARITY_FACTOR; 
+        atoms[bestHostId].partialCharge += polarity;
+        atoms[sourceId].partialCharge -= polarity;
 
         TraceLog(LOG_INFO, "[BOND] GLOBAL SUCCESS: %d -> %d (Molecule %d) Polarity: %.2f", sourceId, bestHostId, molRootId, polarity);
+        
+        // Notificar al sistema de misiones
+        MissionManager::getInstance().notifyBondCreated(atoms[sourceId].atomicNumber, atoms[bestHostId].atomicNumber);
+        
         return SUCCESS;
     }
 
@@ -118,7 +125,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
         // Regla Universal A: Solo átomos capaces de formar puentes (valencia >= 2) pueden "empalmar".
         if (sourceElem.maxBonds >= 2) {
             int closestHost = -1;
-            float minDist = 9999.0f;
+            float minDist = Config::FLOAT_MAX;
             for (int hostId : candidates) {
                 float dx = transforms[sourceId].x - transforms[hostId].x;
                 float dy = transforms[sourceId].y - transforms[hostId].y;
@@ -153,8 +160,6 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
                 if (connectionId != -1) {
                     // REGLA DE INTEGRIDAD: El átomo que queda como puente DEBE tener valencia >= 2.
                     // No podemos "empujar" un hidrógeno para que sea puente.
-                    const Element& connElem = ChemistryDatabase::getInstance().getElement(atoms[connectionId].atomicNumber);
-                    const Element& hostElem = ChemistryDatabase::getInstance().getElement(atoms[closestHost].atomicNumber);
                     
                     if (isParentConn) {
                         // CASO A: Insertar entre Host y su Padre (Parent -> Source -> Host)
@@ -192,9 +197,9 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
                     // --- CÁLCULO DE POLARIDAD (Carga Parcial) ---
                     float enHost = ChemistryDatabase::getInstance().getElement(atoms[closestHost].atomicNumber).electronegativity;
                     float enSource = ChemistryDatabase::getInstance().getElement(atoms[sourceId].atomicNumber).electronegativity;
-                    float polarity = (enHost - enSource) * 0.15f; // Coeficiente de polaridad
-                    const_cast<AtomComponent&>(atoms[closestHost]).partialCharge += polarity;
-                    const_cast<AtomComponent&>(atoms[sourceId]).partialCharge -= polarity;
+                    float polarity = (enHost - enSource) * Config::POLARITY_FACTOR; 
+                    atoms[closestHost].partialCharge += polarity;
+                    atoms[sourceId].partialCharge -= polarity;
 
                     return SUCCESS;
                 }
@@ -208,7 +213,8 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
 int BondingSystem::getBestAvailableSlot(int parentId, Vector3 relativePos,
                                    const std::vector<StateComponent>& states,
                                    const std::vector<AtomComponent>& atoms,
-                                   bool ignoreAngle) {
+                                   bool ignoreAngle,
+                                   float angleMultiplier) {
     ChemistryDatabase& db = ChemistryDatabase::getInstance();
     const Element& element = db.getElement(atoms[parentId].atomicNumber);
     
@@ -226,7 +232,7 @@ int BondingSystem::getBestAvailableSlot(int parentId, Vector3 relativePos,
     if (currentBonds >= element.maxBonds) return -1;
 
     int bestSlot = -1;
-    float maxDot = -2.0f; 
+    float maxDot = -Config::FLOAT_MAX; 
 
     for (int i = 0; i < (int)element.bondingSlots.size(); i++) {
         bool occupied = false;
@@ -252,7 +258,7 @@ int BondingSystem::getBestAvailableSlot(int parentId, Vector3 relativePos,
     if (ignoreAngle) return bestSlot;
 
     // Si no, verificamos el umbral geométrico (Modo Natural/NPC)
-    return (maxDot > Config::BOND_SNAP_THRESHOLD) ? bestSlot : -1; 
+    return (maxDot > (Config::BOND_SNAP_THRESHOLD / angleMultiplier)) ? bestSlot : -1; 
 }
 
 void BondingSystem::updateHierarchy(std::vector<TransformComponent>& transforms,
@@ -264,16 +270,9 @@ void BondingSystem::updateHierarchy(std::vector<TransformComponent>& transforms,
         StateComponent& state = states[i];
         if (state.isClustered && state.parentEntityId != -1) {
             int pId = state.parentEntityId;
-            const TransformComponent& parentTr = transforms[pId];
             const Element& parentElement = db.getElement(atoms[pId].atomicNumber);
 
             if (state.parentSlotIndex >= 0 && state.parentSlotIndex < (int)parentElement.bondingSlots.size()) {
-                Vector3 slotDir = parentElement.bondingSlots[state.parentSlotIndex];
-                
-                float parentRadius = parentElement.vdWRadius * Config::BASE_ATOM_RADIUS;
-                float childRadius = db.getElement(atoms[i].atomicNumber).vdWRadius * Config::BASE_ATOM_RADIUS;
-                float bondDist = (parentRadius + childRadius) * Config::BOND_COMPRESSION;
-
                 // --- ACOPLAMIENTO ELÁSTICO (Manejado ahora por PhysicsEngine) ---
                 // Ya no forzamos la posición directamente aquí para permitir vibración y estrés.
                 // Simplemente actualizamos el dockingProgress para animaciones visuales.
@@ -290,8 +289,9 @@ void BondingSystem::updateHierarchy(std::vector<TransformComponent>& transforms,
 }
 
 void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states,
-                                               const std::vector<AtomComponent>& atoms,
+                                               std::vector<AtomComponent>& atoms,
                                                const std::vector<TransformComponent>& transforms,
+                                               EnvironmentManager* env,
                                                int tractedEntityId) {
     
     int tractedRoot = (tractedEntityId != -1) ? MathUtils::findMoleculeRoot(tractedEntityId, states) : -1;
@@ -308,7 +308,14 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
             float dz = transforms[i].z - transforms[j].z;
             float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
 
-            if (dist < Config::BOND_AUTO_RANGE) {
+            float rangeMultiplier = 1.0f;
+            float angleMultiplier = 1.0f;
+            if (env) {
+                rangeMultiplier = env->getBondRangeMultiplier({transforms[i].x, transforms[i].y});
+                angleMultiplier = env->getBondAngleMultiplier({transforms[i].x, transforms[i].y});
+            }
+
+            if (dist < Config::BOND_AUTO_RANGE * rangeMultiplier) {
                 // EXCLUSIÓN: 
                 // 1. Ignoramos si alguno pertenece a la molécula del jugador (ID 0).
                 // 2. Ignoramos si alguno pertenece a la molécula que estamos arrastrando con el tractor.
@@ -317,11 +324,107 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
 
                 if (rootI == 0 || rootJ == 0) continue;
                 if (tractedRoot != -1 && (rootI == tractedRoot || rootJ == tractedRoot)) continue;
+                
+                // ESCUDO DE VALENCIA GLOBAL: Si la raíz de la molécula está protegida, nadie se une
+                if (states[rootI].isShielded || states[rootJ].isShielded) continue;
 
-                if (tryBond(i, j, states, atoms, transforms, false) == SUCCESS) {
+                if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == SUCCESS) {
                     break;
                 }
             }
         }
     }
+}
+void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states, 
+                              std::vector<AtomComponent>& atoms) {
+    if (entityId < 0 || entityId >= (int)states.size()) return;
+    StateComponent& state = states[entityId];
+
+    if (!state.isClustered || state.parentEntityId == -1) return;
+
+    int parentId = state.parentEntityId;
+
+    // --- REVERTIR POLARIDAD ---
+    // Recuperamos los elementos para recalcular la polaridad que se aplicó originalmente
+    float enHost = ChemistryDatabase::getInstance().getElement(atoms[parentId].atomicNumber).electronegativity;
+    float enSource = ChemistryDatabase::getInstance().getElement(atoms[entityId].atomicNumber).electronegativity;
+    float polarity = (enHost - enSource) * Config::POLARITY_FACTOR; 
+
+    atoms[parentId].partialCharge -= polarity;
+    atoms[entityId].partialCharge += polarity;
+
+    // --- LIBERAR ENLACE ---
+    state.isClustered = false;
+    state.parentEntityId = -1;
+    state.parentSlotIndex = -1;
+    state.moleculeId = -1; 
+    state.dockingProgress = 0.0f;
+
+    TraceLog(LOG_INFO, "[BOND] Enlace roto para atomo %d (liberado de %d)", entityId, parentId);
+}
+
+int BondingSystem::findLastChild(int parentId, const std::vector<StateComponent>& states) {
+    int lastChild = -1;
+    for (int i = 0; i < (int)states.size(); i++) {
+        if (states[i].isClustered && states[i].parentEntityId == parentId) {
+            if (i > lastChild) {
+                lastChild = i;
+            }
+        }
+    }
+    return lastChild;
+}
+
+int BondingSystem::findPrunableLeaf(int parentId, const std::vector<StateComponent>& states) {
+    // Buscamos un átomo que tenga a parentId en su linaje (o sea el hijo directo)
+    // pero que él mismo NO tenga hijos.
+    
+    int bestLeaf = -1;
+    for (int i = 0; i < (int)states.size(); i++) {
+        if (states[i].isClustered && states[i].parentEntityId != -1) {
+            // Verificamos si este átomo i pertenece a la estructura del parentId
+            // (Simplificado: buscamos hijos directos de parentId que sean hojas, 
+            // o recursivamente buscamos la hoja más lejana)
+                if (states[i].parentEntityId == parentId) {
+                    // Es hijo directo. Buscamos si él mismo tiene hijos
+                    bool hasChildren = false;
+                    for (int j = 0; j < (int)states.size(); j++) {
+                        if (states[j].isClustered && states[j].parentEntityId == i) {
+                            hasChildren = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!hasChildren) {
+                        // Es una hoja directa. Preferimos la de mayor índice (más reciente)
+                        if (i > bestLeaf) bestLeaf = i;
+                    } else {
+                        // Si tiene hijos, buscamos recursivamente en esa rama la hoja más profunda
+                        int leafInBranch = findPrunableLeaf(i, states);
+                        if (leafInBranch > bestLeaf) bestLeaf = leafInBranch;
+                    }
+                }
+        }
+    }
+    return bestLeaf;
+}
+
+void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& states, 
+                                  std::vector<AtomComponent>& atoms) {
+    if (entityId < 0 || entityId >= (int)states.size()) return;
+
+    // 1. Romper conexión con el padre
+    if (states[entityId].parentEntityId != -1) {
+        breakBond(entityId, states, atoms);
+    }
+
+    // 2. Romper todas las conexiones con los hijos
+    // Iteramos al revés para evitar problemas de índice si cambiara el tamaño (que no cambia)
+    for (int i = 0; i < (int)states.size(); i++) {
+        if (states[i].isClustered && states[i].parentEntityId == entityId) {
+            breakBond(i, states, atoms);
+        }
+    }
+
+    TraceLog(LOG_INFO, "[BOND] Full Isolation: Atomo %d liberado de todos sus enlaces", entityId);
 }

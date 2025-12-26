@@ -1,0 +1,851 @@
+g++ : In file included from 
+src/ecs/World.hpp:6,
+En l?nea: 1 Car?cter: 219
++ ... B_DIR/lib"; g++ src/main.cpp 
+src/physics/PhysicsEngine.cpp 
+src/physic ...
++                 ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpeci 
+   fied: (In file include...cs/World.  
+  hpp:6,:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCo 
+   mmandError
+ 
+                 from src/main.cpp:8:
+src/ecs/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ecs/../core/Config.hpp:27:28: 
+note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/physics/PhysicsEngine.cpp:2:
+src/physics/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/physics/../core/Config.hpp:27:28: 
+note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/physics/BondingSystem.cpp:2:
+c:/Users/mauro/OneDrive/Escritorio/prac
+tica c++/LifeSimulatorCPP/src/core/Conf
+ig.hpp:47:28: error: redefinition of 
+'constexpr const float 
+Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+c:/Users/mauro/OneDrive/Escritorio/prac
+tica c++/LifeSimulatorCPP/src/core/Conf
+ig.hpp:27:28: note: 'constexpr const 
+float Config::INITIAL_VEL_RANGE' 
+previously defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/rendering/Renderer25D.cpp:3:
+src/rendering/../core/Config.hpp:47:28:
+ error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/rendering/../core/Config.hpp:27:28:
+ note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/input/InputHandler.cpp:2:
+src/input/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/input/../core/Config.hpp:27:28: 
+note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/gameplay/Player.cpp:5:
+src/gameplay/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/gameplay/../core/Config.hpp:27:28: 
+note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/gameplay/TractorBeam.cpp:2:
+src/gameplay/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/gameplay/../core/Config.hpp:27:28: 
+note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/ui/LabelSystem.cpp:3:
+src/ui/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ui/../core/Config.hpp:27:28: note: 
+'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/ui/UIWidgets.hpp:5,
+                 from 
+src/ui/Inspector.cpp:1:
+src/ui/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ui/../core/Config.hpp:27:28: note: 
+'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:9:1: error: 
+'Inspector' does not name a type
+    9 | Inspector::Inspector() {}
+      | ^~~~~~~~~
+src/ui/Inspector.cpp:11:6: error: 
+'Inspector' has not been declared
+   11 | void Inspector::draw(const 
+Element& element, int entityID, 
+InputHandler& input, 
+std::vector<StateComponent>& states, 
+std::vector<AtomComponent>& atoms) {
+      |      ^~~~~~~~~
+src/ui/Inspector.cpp:11:93: error: 
+'StateComponent' was not declared in 
+this scope
+   11 | void Inspector::draw(const 
+Element& element, int entityID, 
+InputHandler& input, 
+std::vector<StateComponent>& states, 
+std::vector<AtomComponent>& atoms) {
+      |                                
+                                       
+                      ^~~~~~~~~~~~~~
+src/ui/Inspector.cpp:11:107: error: 
+template argument 1 is invalid
+   11 | void Inspector::draw(const 
+Element& element, int entityID, 
+InputHandler& input, 
+std::vector<StateComponent>& states, 
+std::vector<AtomComponent>& atoms) {
+      |                                
+                                       
+                                    ^
+src/ui/Inspector.cpp:11:107: error: 
+template argument 2 is invalid
+src/ui/Inspector.cpp:11:130: error: 
+'AtomComponent' was not declared in 
+this scope
+   11 | void Inspector::draw(const 
+Element& element, int entityID, 
+InputHandler& input, 
+std::vector<StateComponent>& states, 
+std::vector<AtomComponent>& atoms) {
+      |                                
+                                       
+                                       
+                    ^~~~~~~~~~~~~
+src/ui/Inspector.cpp:11:143: error: 
+template argument 1 is invalid
+   11 | void Inspector::draw(const 
+Element& element, int entityID, 
+InputHandler& input, 
+std::vector<StateComponent>& states, 
+std::vector<AtomComponent>& atoms) {
+      |                                
+                                       
+                                       
+                                 ^
+src/ui/Inspector.cpp:11:143: error: 
+template argument 2 is invalid
+src/ui/Inspector.cpp: In function 
+'void draw(const Element&, int, 
+InputHandler&, int&, int&)':
+src/ui/Inspector.cpp:20:25: error: 
+'currentMolecule' was not declared in 
+this scope
+   20 |     Color activeColor = 
+currentMolecule ? 
+currentMolecule->color : element.color;
+      |                         
+^~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:22:35: error: 
+invalid types 'int[int]' for array 
+subscript
+   22 |     if (!currentMolecule && 
+states[entityID].parentEntityId != -1) 
+activeColor = element.color;
+      |                                
+   ^
+src/ui/Inspector.cpp:31:41: error: 
+'currentComposition' was not declared 
+in this scope
+   31 |         for (auto const& [num, 
+count] : currentComposition) 
+totalAtoms += count;
+      |                                
+         ^~~~~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:35:73: error: 
+'currentComposition' was not declared 
+in this scope
+   35 |             calculatedHeight = 
+UIConfig::HEADER_HEIGHT + 15 + 8 + 15 
++ (currentComposition.size() * 
+UIConfig::LIST_ITEM_HEIGHT) + 20 + 12 
++ 50 + 40;
+      |                                
+                                       
+  ^~~~~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:50:37: error: 
+'currentComposition' was not declared 
+in this scope
+   50 |     for (auto const& [num, 
+count] : currentComposition) 
+totalAtoms += count;
+      |                                
+     ^~~~~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:61:9: error: 
+'drawMoleculeOverlay' was not declared 
+in this scope
+   61 |         
+drawMoleculeOverlay(rect, input);
+      |         ^~~~~~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:64:9: error: 
+'drawTransitoryMoleculeOverlay' was 
+not declared in this scope
+   64 |         
+drawTransitoryMoleculeOverlay(rect, 
+input);
+      |         
+^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+src/ui/Inspector.cpp: At global scope:
+src/ui/Inspector.cpp:117:6: error: 
+'Inspector' has not been declared
+  117 | void 
+Inspector::drawElementCard(const 
+Element& element, float x, float y, 
+float size, InputHandler& input) {
+      |      ^~~~~~~~~
+src/ui/Inspector.cpp:121:6: error: 
+'Inspector' has not been declared
+  121 | void Inspector::drawMoleculeOve
+rlay(Rectangle rect, InputHandler& 
+input) {
+      |      ^~~~~~~~~
+src/ui/Inspector.cpp: In function 
+'void drawMoleculeOverlay(Rectangle, 
+InputHandler&)':
+src/ui/Inspector.cpp:122:10: error: 
+'currentMolecule' was not declared in 
+this scope
+  122 |     if (!currentMolecule) 
+return;
+      |          ^~~~~~~~~~~~~~~
+src/ui/Inspector.cpp:129:53: error: 
+'currentMolecule' was not declared in 
+this scope
+  129 |     
+DrawText(TextFormat("AN??LISIS 
+ESTRUCTURAL: %s", 
+currentMolecule->formula.c_str()), 
+(int)curX, (int)curY, 
+UIConfig::FONT_SIZE_LABEL, GOLD);
+      |                                
+                     ^~~~~~~~~~~~~~~
+src/ui/Inspector.cpp: At global scope:
+src/ui/Inspector.cpp:155:6: error: 
+'Inspector' has not been declared
+  155 | void Inspector::drawTransitoryM
+oleculeOverlay(Rectangle rect, 
+InputHandler& input) {
+      |      ^~~~~~~~~
+src/ui/Inspector.cpp: In function 
+'void drawTransitoryMoleculeOverlay(Rec
+tangle, InputHandler&)':
+src/ui/Inspector.cpp:168:43: error: 
+'currentComposition' was not declared 
+in this scope
+  168 |     for (auto const& 
+[atomicNum, count] : 
+currentComposition) {
+      |                                
+           ^~~~~~~~~~~~~~~~~~
+In file included from 
+src/ui/UIWidgets.hpp:5,
+                 from src/ui/HUD.cpp:2:
+src/ui/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ui/../core/Config.hpp:27:28: note: 
+'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+In file included from 
+src/ui/UIWidgets.hpp:5,
+                 from 
+src/ui/Quimidex.cpp:1:
+src/ui/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ui/../core/Config.hpp:27:28: note: 
+'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:5:1: error: 
+'Quimidex' does not name a type
+    5 | Quimidex::Quimidex() {
+      | ^~~~~~~~
+src/ui/Quimidex.cpp:9:6: error: 
+'Quimidex' has not been declared
+    9 | void 
+Quimidex::draw(InputHandler& input) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp: In function 'void 
+draw(InputHandler&)':
+src/ui/Quimidex.cpp:10:10: error: 
+'isOpen' was not declared in this scope
+   10 |     if (!isOpen) return;
+      |          ^~~~~~
+src/ui/Quimidex.cpp:25:9: error: 
+'isOpen' was not declared in this scope
+   25 |         isOpen = false;
+      |         ^~~~~~
+src/ui/Quimidex.cpp:30:5: error: 
+'activeTab' was not declared in this 
+scope
+   30 |     activeTab = 
+UIWidgets::drawTabSystem(tabRect, 
+tabLabels, activeTab, input);
+      |     ^~~~~~~~~
+src/ui/Quimidex.cpp:30:51: error: 
+'tabLabels' was not declared in this 
+scope
+   30 |     activeTab = 
+UIWidgets::drawTabSystem(tabRect, 
+tabLabels, activeTab, input);
+      |                                
+                   ^~~~~~~~~
+src/ui/Quimidex.cpp:35:17: error: 
+'drawMoleculesTab' was not declared in 
+this scope
+   35 |         case 0: 
+drawMoleculesTab(contentRect, input); 
+break;
+      |                 
+^~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:36:17: error: 
+'drawAtomsTab' was not declared in 
+this scope
+   36 |         case 1: 
+drawAtomsTab(contentRect, input); 
+break;
+      |                 ^~~~~~~~~~~~
+src/ui/Quimidex.cpp:37:17: error: 
+'drawProgressionTab' was not declared 
+in this scope
+   37 |         case 2: 
+drawProgressionTab(contentRect, 
+input); break;
+      |                 
+^~~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp: At global scope:
+src/ui/Quimidex.cpp:41:6: error: 
+'Quimidex' has not been declared
+   41 | void 
+Quimidex::drawAtomsTab(Rectangle rect, 
+InputHandler& input) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp: In function 'void 
+drawAtomsTab(Rectangle, 
+InputHandler&)':
+src/ui/Quimidex.cpp:47:38: error: 
+'ChemistryDatabase' has not been 
+declared
+   47 |     std::vector<int> 
+atomicNumbers = ChemistryDatabase::getI
+nstance().getRegisteredAtomicNumbers();
+      |                                
+      ^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:50:25: error: 
+'ChemistryDatabase' has not been 
+declared
+   50 |         names.push_back(Chemist
+ryDatabase::getInstance().getElement(nu
+m).symbol + " - " + ChemistryDatabase::
+getInstance().getElement(num).name);
+      |                         
+^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:50:91: error: 
+'ChemistryDatabase' has not been 
+declared
+   50 |         names.push_back(Chemist
+ryDatabase::getInstance().getElement(nu
+m).symbol + " - " + ChemistryDatabase::
+getInstance().getElement(num).name);
+      |                                
+                                       
+                    ^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:53:5: error: 
+'selectedElementIdx' was not declared 
+in this scope
+   53 |     selectedElementIdx = 
+UIWidgets::drawListSelection(listRect, 
+names, selectedElementIdx, input);
+      |     ^~~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:57:36: error: 
+'ChemistryDatabase' has not been 
+declared
+   57 |         
+drawAtomDetail(detailRect, ChemistryDat
+abase::getInstance().getElement(atomicN
+umbers[selectedElementIdx]), input);
+      |                                
+    ^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:57:9: error: 
+'drawAtomDetail' was not declared in 
+this scope; did you mean 
+'drawAtomsTab'?
+   57 |         
+drawAtomDetail(detailRect, ChemistryDat
+abase::getInstance().getElement(atomicN
+umbers[selectedElementIdx]), input);
+      |         ^~~~~~~~~~~~~~
+      |         drawAtomsTab
+src/ui/Quimidex.cpp: At global scope:
+src/ui/Quimidex.cpp:61:6: error: 
+'Quimidex' has not been declared
+   61 | void 
+Quimidex::drawAtomDetail(Rectangle 
+rect, const Element& element, 
+InputHandler& input) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp:90:6: error: 
+'Quimidex' has not been declared
+   90 | void 
+Quimidex::drawMoleculesTab(Rectangle 
+rect, InputHandler& input) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp: In function 'void 
+drawMoleculesTab(Rectangle, 
+InputHandler&)':
+src/ui/Quimidex.cpp:95:23: error: 
+'Molecule' was not declared in this 
+scope
+   95 |     const 
+std::vector<Molecule>& dbMolecules = Ch
+emistryDatabase::getInstance().getAllMo
+lecules();
+      |                       ^~~~~~~~
+src/ui/Quimidex.cpp:95:31: error: 
+template argument 1 is invalid
+   95 |     const 
+std::vector<Molecule>& dbMolecules = Ch
+emistryDatabase::getInstance().getAllMo
+lecules();
+      |                               ^
+src/ui/Quimidex.cpp:95:31: error: 
+template argument 2 is invalid
+src/ui/Quimidex.cpp:95:48: error: 
+'ChemistryDatabase' has not been 
+declared
+   95 |     const 
+std::vector<Molecule>& dbMolecules = Ch
+emistryDatabase::getInstance().getAllMo
+lecules();
+      |                                
+                ^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:98:28: error: 
+'begin' was not declared in this 
+scope; did you mean 'std::begin'?
+   98 |     for (const auto& mol : 
+dbMolecules) 
+molNames.push_back(mol.name);
+      |                            
+^~~~~~~~~~~
+      |                            
+std::begin
+In file included from C:/msys64/mingw64
+/include/c++/15.2.0/string:55,
+                 from 
+src/ui/UIWidgets.hpp:7:
+C:/msys64/mingw64/include/c++/15.2.0/bi
+ts/range_access.h:120:37: note: 
+'std::begin' declared here
+  120 |   template<typename _Tp> const 
+_Tp* begin(const valarray<_Tp>&) 
+noexcept;
+      |                                
+     ^~~~~
+src/ui/Quimidex.cpp:98:28: error: 
+'end' was not declared in this scope; 
+did you mean 'std::end'?
+   98 |     for (const auto& mol : 
+dbMolecules) 
+molNames.push_back(mol.name);
+      |                            
+^~~~~~~~~~~
+      |                            
+std::end
+C:/msys64/mingw64/include/c++/15.2.0/bi
+ts/range_access.h:122:37: note: 
+'std::end' declared here
+  122 |   template<typename _Tp> const 
+_Tp* end(const valarray<_Tp>&) 
+noexcept;
+      |                                
+     ^~~
+src/ui/Quimidex.cpp:100:5: error: 
+'selectedMoleculeIdx' was not declared 
+in this scope
+  100 |     selectedMoleculeIdx = 
+UIWidgets::drawListSelection(listRect, 
+molNames, selectedMoleculeIdx, input);
+      |     ^~~~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:102:76: error: 
+request for member 'size' in 
+'dbMolecules', which is of non-class 
+type 'const int'
+  102 |     if (selectedMoleculeIdx >= 
+0 && selectedMoleculeIdx < 
+(int)dbMolecules.size()) {
+      |                                
+                                       
+     ^~~~
+src/ui/Quimidex.cpp:103:9: error: 
+'drawMoleculeDetail' was not declared 
+in this scope; did you mean 
+'drawMoleculesTab'?
+  103 |         
+drawMoleculeDetail(detailRect, 
+dbMolecules[selectedMoleculeIdx], 
+input);
+      |         ^~~~~~~~~~~~~~~~~~
+      |         drawMoleculesTab
+src/ui/Quimidex.cpp: At global scope:
+src/ui/Quimidex.cpp:107:6: error: 
+'Quimidex' has not been declared
+  107 | void 
+Quimidex::drawMoleculeDetail(Rectangle 
+rect, const Molecule& molecule, 
+InputHandler& input) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp:107:57: error: 
+'Molecule' does not name a type
+  107 | void 
+Quimidex::drawMoleculeDetail(Rectangle 
+rect, const Molecule& molecule, 
+InputHandler& input) {
+      |                                
+                         ^~~~~~~~
+src/ui/Quimidex.cpp: In function 'void 
+drawMoleculeDetail(Rectangle, const 
+int&, InputHandler&)':
+src/ui/Quimidex.cpp:114:68: error: 
+request for member 'color' in 
+'molecule', which is of non-class type 
+'const int'
+  114 |     UIWidgets::drawPanel({ 
+rect.x, curY, 60, 60 }, input, 
+molecule.color);
+      |                                
+                                    
+^~~~~
+src/ui/Quimidex.cpp:115:23: error: 
+request for member 'formula' in 
+'molecule', which is of non-class type 
+'const int'
+  115 |     
+DrawText(molecule.formula.c_str(), 
+(int)rect.x + 5, (int)curY + 20, 15, 
+molecule.color);
+      |                       ^~~~~~~
+src/ui/Quimidex.cpp:115:86: error: 
+request for member 'color' in 
+'molecule', which is of non-class type 
+'const int'
+  115 |     
+DrawText(molecule.formula.c_str(), 
+(int)rect.x + 5, (int)curY + 20, 15, 
+molecule.color);
+      |                                
+                                       
+               ^~~~~
+src/ui/Quimidex.cpp:117:23: error: 
+request for member 'name' in 
+'molecule', which is of non-class type 
+'const int'
+  117 |     
+DrawText(molecule.name.c_str(), 
+(int)rect.x + 70, (int)curY, 18, 
+WHITE);
+      |                       ^~~~
+src/ui/Quimidex.cpp:118:54: error: 
+request for member 'formula' in 
+'molecule', which is of non-class type 
+'const int'
+  118 |     
+DrawText(TextFormat("F??rmula: %s | 
+%s", molecule.formula.c_str(), 
+molecule.category.c_str()), 
+(int)rect.x + 70, (int)curY + 22, 
+UIConfig::FONT_SIZE_HEADER, GRAY);
+      |                                
+                      ^~~~~~~
+src/ui/Quimidex.cpp:118:80: error: 
+request for member 'category' in 
+'molecule', which is of non-class type 
+'const int'
+  118 |     
+DrawText(TextFormat("F??rmula: %s | 
+%s", molecule.formula.c_str(), 
+molecule.category.c_str()), 
+(int)rect.x + 70, (int)curY + 22, 
+UIConfig::FONT_SIZE_HEADER, GRAY);
+      |                                
+                                       
+         ^~~~~~~~
+src/ui/Quimidex.cpp:125:41: error: 
+request for member 'description' in 
+'molecule', which is of non-class type 
+'const int'
+  125 |     UIWidgets::drawTextWrapped(
+molecule.description.c_str(), rect.x, 
+curY, rect.width, 
+UIConfig::FONT_SIZE_LABEL, WHITE);
+      |                                
+         ^~~~~~~~~~~
+src/ui/Quimidex.cpp:128:41: error: 
+request for member 
+'biologicalSignificance' in 
+'molecule', which is of non-class type 
+'const int'
+  128 |     UIWidgets::drawTextWrapped(
+molecule.biologicalSignificance.c_str()
+, rect.x, curY, rect.width, 
+UIConfig::FONT_SIZE_LABEL, WHITE);
+      |                                
+         ^~~~~~~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp: At global scope:
+src/ui/Quimidex.cpp:131:6: error: 
+'Quimidex' has not been declared
+  131 | void 
+Quimidex::drawProgressionTab(Rectangle 
+rect, InputHandler& input) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp: In function 'void 
+drawProgressionTab(Rectangle, 
+InputHandler&)':
+src/ui/Quimidex.cpp:136:28: error: 
+'MissionManager' has not been declared
+  136 |     const auto& missions = Miss
+ionManager::getInstance().getMissions()
+;
+      |                            
+^~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:140:5: error: 
+'selectedMissionIdx' was not declared 
+in this scope
+  140 |     selectedMissionIdx = 
+UIWidgets::drawListSelection(listRect, 
+mTitles, selectedMissionIdx, input);
+      |     ^~~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:143:9: error: 
+'drawMissionDetail' was not declared 
+in this scope; did you mean 
+'drawAtomDetail'?
+  143 |         
+drawMissionDetail(detailRect, 
+missions[selectedMissionIdx]);
+      |         ^~~~~~~~~~~~~~~~~
+      |         drawAtomDetail
+src/ui/Quimidex.cpp: At global scope:
+src/ui/Quimidex.cpp:147:6: error: 
+'Quimidex' has not been declared
+  147 | void 
+Quimidex::drawMissionDetail(Rectangle 
+rect, const Mission& mission) {
+      |      ^~~~~~~~
+src/ui/Quimidex.cpp:147:56: error: 
+'Mission' does not name a type
+  147 | void 
+Quimidex::drawMissionDetail(Rectangle 
+rect, const Mission& mission) {
+      |                                
+                        ^~~~~~~
+src/ui/Quimidex.cpp: In function 'void 
+drawMissionDetail(Rectangle, const 
+int&)':
+src/ui/Quimidex.cpp:148:45: error: 
+request for member 'title' in 
+'mission', which is of non-class type 
+'const int'
+  148 |     DrawText(TextFormat("== %s 
+==", mission.title.c_str()), 
+(int)rect.x, (int)rect.y, 14, WHITE);
+      |                                
+             ^~~~~
+src/ui/Quimidex.cpp:151:20: error: 
+request for member 'status' in 
+'mission', which is of non-class type 
+'const int'
+  151 |     switch(mission.status) {
+      |                    ^~~~~~
+src/ui/Quimidex.cpp:152:14: error: 
+'MissionStatus' has not been declared
+  152 |         case 
+MissionStatus::LOCKED: statusStr += 
+"BLOQUEADO"; statusColor = GRAY; break;
+      |              ^~~~~~~~~~~~~
+src/ui/Quimidex.cpp:153:14: error: 
+'MissionStatus' has not been declared
+  153 |         case 
+MissionStatus::AVAILABLE: statusStr += 
+"DISPONIBLE"; statusColor = SKYBLUE; 
+break;
+      |              ^~~~~~~~~~~~~
+src/ui/Quimidex.cpp:154:14: error: 
+'MissionStatus' has not been declared
+  154 |         case 
+MissionStatus::ACTIVE: statusStr += 
+"ACTIVO"; statusColor = GOLD; break;
+      |              ^~~~~~~~~~~~~
+src/ui/Quimidex.cpp:155:14: error: 
+'MissionStatus' has not been declared
+  155 |         case 
+MissionStatus::COMPLETED: statusStr += 
+"COMPLETADO"; statusColor = LIME; 
+break;
+      |              ^~~~~~~~~~~~~
+src/ui/Quimidex.cpp:162:40: error: 
+request for member 'description' in 
+'mission', which is of non-class type 
+'const int'
+  162 |     UIWidgets::drawTextWrapped(
+mission.description.c_str(), rect.x, 
+curY, rect.width, 
+UIConfig::FONT_SIZE_LABEL, WHITE);
+      |                                
+        ^~~~~~~~~~~
+src/ui/Quimidex.cpp:165:40: error: 
+request for member 'scientificContext' 
+in 'mission', which is of non-class 
+type 'const int'
+  165 |     UIWidgets::drawTextWrapped(
+mission.scientificContext.c_str(), 
+rect.x, curY, rect.width, 
+UIConfig::FONT_SIZE_LABEL, WHITE);
+      |                                
+        ^~~~~~~~~~~~~~~~~
+src/ui/Quimidex.cpp:169:22: error: 
+request for member 'reward' in 
+'mission', which is of non-class type 
+'const int'
+  169 |     
+DrawText(mission.reward.c_str(), 
+(int)rect.x, (int)curY, 
+UIConfig::FONT_SIZE_HEADER, WHITE);
+      |                      ^~~~~~
+In file included from 
+src/gameplay/MissionManager.cpp:3:
+src/gameplay/../core/Config.hpp:47:28: 
+error: redefinition of 'constexpr 
+const float Config::INITIAL_VEL_RANGE'
+   47 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~
+src/gameplay/../core/Config.hpp:27:28: 
+note: 'constexpr const float 
+Config::INITIAL_VEL_RANGE' previously 
+defined here
+   27 |     inline constexpr float 
+INITIAL_VEL_RANGE = 2.0f;
+      |                            
+^~~~~~~~~~~~~~~~~

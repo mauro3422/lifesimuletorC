@@ -5,6 +5,11 @@
 void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive, 
                          const std::vector<TransformComponent>& transforms,
                          const SpatialGrid& grid) {
+    
+    isNewCapture = false; // Reset por frame
+    bool startedThisFrame = isInputActive && !wasActiveLastFrame;
+    wasActiveLastFrame = isInputActive;
+
     active = isInputActive;
 
     if (!active) {
@@ -12,8 +17,16 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
         return;
     }
 
+    targetPos = mouseWorldPos; 
+
+    // BLOQUEO DE OBJETIVO: Si ya tenemos uno, mantenemos el ID pase lo que pase mientras active=true
     if (targetIndex != -1) {
         return; 
+    }
+
+    // SOLO BUSCAMOS SI ACABAMOS DE PULSAR (Evita capturas múltiples o automáticas)
+    if (!startedThisFrame) {
+        return;
     }
 
     // BUSQUEDA OPTIMIZADA: Solo miramos átomos cerca del mouse usando la grilla
@@ -43,6 +56,7 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
 
     if (bestIdx != -1) {
         TraceLog(LOG_INFO, "[TRACTOR] Capturado atomo ID %d a distancia %.2f", bestIdx, minSourceDist);
+        isNewCapture = true;
     }
 
     targetIndex = bestIdx;

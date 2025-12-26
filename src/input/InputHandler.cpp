@@ -3,9 +3,9 @@
 #include <cmath>
 
 InputHandler::InputHandler() 
-    : tractorActive(false), panningActive(false), selectionTriggered(false),
+    : tractorActive(false), panningActive(false), selectionTriggered(false), releaseTriggered(false),
       moveDir({0,0}), mousePos({0,0}), mouseDelta({0,0}), wheelMove(0), 
-      mouseCapturedByUI(false), lastSpaceTime(0), spaceDoubleTriggered(false) {}
+      mouseCapturedByUI(false) {}
 
 void InputHandler::resetFrameState() {
     mouseCapturedByUI = false;
@@ -33,23 +33,16 @@ void InputHandler::update() {
 
     // Detección base de mouse
     bool leftDown = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
-    bool rightDown = IsMouseButtonDown(MOUSE_BUTTON_RIGHT);
+    bool rightPressed = IsMouseButtonPressed(MOUSE_BUTTON_RIGHT);
+    bool middleDown = IsMouseButtonDown(MOUSE_BUTTON_MIDDLE);
     bool leftPressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 
     // Solo activamos si NO está capturado
     tractorActive = leftDown && !mouseCapturedByUI;
-    panningActive = rightDown && !mouseCapturedByUI;
+    panningActive = middleDown && !mouseCapturedByUI;
     selectionTriggered = leftPressed && !mouseCapturedByUI;
+    releaseTriggered = rightPressed && !mouseCapturedByUI;
     
-    // Lógica de Doble Espacio
-    spaceDoubleTriggered = false;
-    if (IsKeyPressed(KEY_SPACE)) {
-        float currentTime = (float)GetTime();
-        if (currentTime - lastSpaceTime < Config::INPUT_DOUBLE_SPACE_THRESHOLD) {
-            spaceDoubleTriggered = true;
-        }
-        lastSpaceTime = currentTime;
-    }
 }
 
 void InputHandler::setMouseCaptured(bool captured) {
@@ -58,6 +51,7 @@ void InputHandler::setMouseCaptured(bool captured) {
         tractorActive = false;
         panningActive = false;
         selectionTriggered = false;
+        releaseTriggered = false;
     }
 }
 
@@ -67,6 +61,7 @@ bool InputHandler::isActionAllowed() const { return !mouseCapturedByUI; }
 bool InputHandler::isTractorBeamActive() const { return tractorActive; }
 bool InputHandler::isPanning() const { return panningActive; }
 bool InputHandler::isSelectionTriggered() const { return selectionTriggered; }
+bool InputHandler::isReleaseTriggered() const { return releaseTriggered; }
 
 Vector2 InputHandler::getMovementDirection() const { return moveDir; }
 
@@ -74,5 +69,4 @@ Vector2 InputHandler::getMousePosition() const { return mousePos; }
 Vector2 InputHandler::getMouseDelta() const { return mouseDelta; }
 float InputHandler::getMouseWheelMove() const { return wheelMove; }
 bool InputHandler::isSpaceTriggered() const { return IsKeyPressed(KEY_SPACE); }
-bool InputHandler::isSpaceDoubleTriggered() const { return spaceDoubleTriggered; }
 bool InputHandler::isMouseOverUI() const { return mouseCapturedByUI; }

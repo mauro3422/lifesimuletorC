@@ -24,6 +24,7 @@ public:
     bool isTractorBeamActive() const;
     bool isPanning() const;
     bool isSelectionTriggered() const;
+    bool isReleaseTriggered() const;
     
     // Movimiento (WASD)
     Vector2 getMovementDirection() const;
@@ -35,22 +36,18 @@ public:
 
     // Teclado
     bool isSpaceTriggered() const;
-    bool isSpaceDoubleTriggered() const;
 
 private:
     bool tractorActive;
     bool panningActive;
     bool selectionTriggered;
+    bool releaseTriggered;
     Vector2 moveDir;
     Vector2 mousePos;
     Vector2 mouseDelta;
     float wheelMove;
     
     bool mouseCapturedByUI; 
-
-    // Lógica para doble espacio
-    float lastSpaceTime;
-    bool spaceDoubleTriggered;
 };
 
 #endif

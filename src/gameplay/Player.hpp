@@ -21,11 +21,11 @@ public:
                 const Camera2D& camera,
                 const SpatialGrid& grid,
                 std::vector<StateComponent>& states,
-                const std::vector<AtomComponent>& atoms);
+                std::vector<AtomComponent>& atoms);
 
     void applyPhysics(std::vector<TransformComponent>& worldTransforms,
                       std::vector<StateComponent>& states,
-                      const std::vector<AtomComponent>& atoms); 
+                      std::vector<AtomComponent>& atoms); 
     
     TractorBeam& getTractor() { return tractor; }
     int getAtomicNumber() const { return atomicNumber; }
@@ -37,6 +37,7 @@ private:
     TractorBeam tractor;
     int atomicNumber;
     float speed;
+    std::vector<int> attachmentOrder; // Pila cronológica de átomos unidos
 };
 
 #endif

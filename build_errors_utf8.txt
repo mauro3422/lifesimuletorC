@@ -1,0 +1,24 @@
+﻿g++ : src/ui/Inspector.cpp: In member 
+function 'void Inspector::drawTransitor
+yMoleculeOverlay(Rectangle, 
+InputHandler&)':
+En línea: 1 Carácter: 1
++ g++ src/ui/Inspector.cpp -c -o 
+src/ui/Inspector.o -I"external/raylib/ 
+...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpeci 
+   fied: (src/ui/Inspecto...nputHandl  
+  er&)'::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCo 
+   mmandError
+ 
+src/ui/Inspector.cpp:167:29: error: 
+'ChemistryDatabase' has not been 
+declared
+  167 |         const Element& el = Che
+mistryDatabase::getInstance().getElemen
+t(atomicNum);
+      |                             
+^~~~~~~~~~~~~~~~~

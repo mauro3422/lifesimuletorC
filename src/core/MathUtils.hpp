@@ -26,6 +26,26 @@ namespace MathUtils {
         
         return rootId;
     }
+
+    // Scans a molecular cluster and returns its atomic composition
+    inline std::map<int, int> scanMoleculeComposition(int entityId, const std::vector<StateComponent>& states, const std::vector<AtomComponent>& atoms) {
+        std::map<int, int> composition;
+        if (entityId < 0 || entityId >= (int)states.size()) return composition;
+
+        int rootId = findMoleculeRoot(entityId, states);
+        if (rootId == -1) return composition;
+
+        // Traverse all entities to find those belonging to the same root
+        // This is more robust than relying on the moleculeId field which might be out of sync.
+        for (int i = 0; i < (int)states.size(); i++) {
+            // A cluster member is anyone who shares the same root ID.
+            // The root ID itself (parentEntityId == -1) must be included too.
+            if (findMoleculeRoot(i, states) == rootId) {
+                composition[atoms[i].atomicNumber]++;
+            }
+        }
+        return composition;
+    }
 }
 
 #endif // MATH_UTILS_HPP

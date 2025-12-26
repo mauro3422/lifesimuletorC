@@ -8,8 +8,8 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 
 - **WASD**: Navegar por el entorno.
 - **Mouse Wheel**: Control de Zoom (Transiciones suaves).
-- **Click Izquierdo**: Activar Rayo Tractor (Capturar átomos).
-- **Click Derecho (Hold)**: **Paneo Libre** de la cámara.
+- **Click Izquierdo**: Activar Rayo Tractor (Captura quirúrgica de átomos).
+- **Click Derecho**: **Desacoplar átomo** (Undo jerárquico) / **Paneo Libre** (Hold).
 - **Espacio**: Centrar cámara en el Avatar + Abrir Inspector de Elemento.
 - **Doble Espacio**: Abrir Vista de Molécula.
 - **F11**: Pantalla Completa.
@@ -48,6 +48,7 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - [x] **Fase 12**: Smooth Docking & Notifications
 - [x] **Audit**: Molecular Topology & Smart Chemistry
 - [x] **Natural Chemistry**: Coulomb, Electronegativity, Elastic Bonds
+- [x] **Tractor Beam Refinement**: Valencia Shield, Sticky Capture, Hierarchical Undo
 - [ ] **Fase 13**: Bio-Génesis (ATP, Metabolismo Inicial)
 
 ---
