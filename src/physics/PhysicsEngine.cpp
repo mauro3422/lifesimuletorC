@@ -11,6 +11,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                         const std::vector<AtomComponent>& atoms,
                         std::vector<StateComponent>& states) {
     // 0. UPDATE ENVIRONMENT (The grid will be updated at the end of the step)
+    static int diagCounter = 0;
     environment.update(transforms, states, dt); 
 
     // 1. APPLY ELECTROMAGNETIC FORCES (Coulomb O(N))
@@ -112,12 +113,17 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         transforms[parentId].vy -= (fy / mP) * dt;
         transforms[parentId].vz -= (fz / mP) * dt;
         
-        // STRESS DIAGNOSTICS (User requested data)
-        static int diagCounter = 0;
-        if (diagCounter++ > 6000) { // Log occasionally (approx every 2-3 sec per atom set)
-             float strain = (dist - Config::BOND_IDEAL_DIST);
-             TraceLog(LOG_INFO, "[STRESS] Bond %d->%d (Slot %d) | Dist: %.1f / %.1f | Strain: %.1f | Stress Limit: %.1f", 
-                      parentId, i, slotIdx, dist, Config::BOND_IDEAL_DIST, strain, Config::BOND_BREAK_STRESS);
+        // STRESS DIAGNOSTICS (Refined)
+        // Log ONLY for atoms connected to Player (Entity 0) or high stress to prevent spam
+        if (diagCounter > 120) { // Check every 2 seconds (uses counter incremented at end of frame)
+             if (states[parentId].moleculeId == 0) { // Only Player's structure
+                 float strain = (dist - Config::BOND_IDEAL_DIST);
+                 // Only log if significant deviation (> 20%) to avoid noise
+                 if (abs(strain) > 5.0f) {
+                     TraceLog(LOG_INFO, "[STRESS] Bond %d->%d (Slot %d) | Dist: %.1f / %.1f | Strain: %.1f", 
+                              parentId, i, slotIdx, dist, Config::BOND_IDEAL_DIST, strain);
+                 }
+             }
         }
     }
 
@@ -176,6 +182,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     }
 
     // Update Spatial Grid
-    // Reset diagnostics counter occasionally to prevent overflow, though local static handles it per call.
+    diagCounter++;
+    if (diagCounter > 120) diagCounter = 0;
     grid.update(transforms);
 }

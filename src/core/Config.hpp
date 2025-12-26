@@ -65,9 +65,9 @@ namespace Config {
     inline constexpr float TRACTOR_TARGET_CIRCLE = 25.0f;
     
     // --- CHEMISTRY & ELECTROMAGNETISM ---
-    inline constexpr float COULOMB_CONSTANT = 1800.0f;    // Attract/Repel force coefficient
+    inline constexpr float COULOMB_CONSTANT = 2000.0f;    // Increased slightly 
     inline constexpr float CHARGE_DAMPING = 0.90f;      // Damping for electric forces
-    inline constexpr float MIN_COULOMB_DIST = 30.0f;    // Increased to prevent overlap (was 18.0)
+    inline constexpr float MIN_COULOMB_DIST = 38.0f;    // Matches BOND_IDEAL_DIST (approx) to prevent compression
     inline constexpr float EM_REACH = 150.0f;           // Max range for electric influence
     inline constexpr float POLARITY_FACTOR = 0.15f;     // Electronegativity -> Partial charge factor
     
