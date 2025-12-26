@@ -1,4 +1,15 @@
 
+## [Phase 18: Proto-Membranes & Cycle Bonds] - 2025-12-26
+
+### Added
+- **Cycle Bond System**: Implemented non-hierarchical structural bonds to allow ring formation (membranes) without breaking the ECS tree.
+- **Ring Closure Logic**: "C4Si Rule" - Chains of 4+ atoms now spontaneously fuse their ends into stable loops if they belong to the same molecule.
+- **Cycle Physics**: `PhysicsEngine` now applies Hooke's Law to cycle bonds, maintaining ring shape dynamically.
+- **Cycle Rendering**: Visual support for displaying cycle bonds with a unique semi-transparent style.
+- **StateComponent Upgrade**: Added `cycleBondId` to track loop closures.
+
+---
+
 ## [Phase 17.5: Codebase Hygiene & Architectual Refactor] - 2025-12-26
 
 ### Refactored
