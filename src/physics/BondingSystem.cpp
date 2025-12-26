@@ -182,7 +182,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
                         states[sourceId].dockingProgress = 0.0f;
                     }
                     
-                    if (isCycle) TraceLog(LOG_INFO, "[BOND] SPLICE: Atom %d used as bridge for %d", sourceId, molRootId);
+                    TraceLog(LOG_INFO, "[BOND] SPLICE: Atom %d used as bridge for %d", sourceId, molRootId);
                     
                     // --- POLARITY CALCULATION (Partial Charge) ---
                     float enHost = ChemistryDatabase::getInstance().getElement(atoms[closestHost].atomicNumber).electronegativity;

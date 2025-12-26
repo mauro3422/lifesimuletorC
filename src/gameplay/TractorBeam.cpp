@@ -51,6 +51,8 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
     // If they overlap, Z should win.
     
     // Improved Selection:
+    float minSourceDist = range;
+    int bestIdx = -1;
     // float bestScore = -1.0f; 
 
     for (int i : nearby) {
@@ -75,9 +77,13 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
 
     if (bestIdx != -1) {
         // --- SMART LOGGING: IDENTIFY MOLECULE ---
-        int molId = states[bestIdx].moleculeId;
-        const auto& mol = ChemistryDatabase::getInstance().getMoleculeById(molId);
-        const char* molName = mol ? mol->name.c_str() : "Unknown";
+        // 1. Calculate Composition (O(N) but only on click)
+        std::map<int, int> comp = MathUtils::getMoleculeComposition(bestIdx, states, atoms);
+        
+        // 2. Look up in Database
+        const Molecule* mol = ChemistryDatabase::getInstance().findMoleculeByComposition(comp);
+        
+        const char* molName = mol ? mol->name.c_str() : "Unknown Structure";
         const char* atomName = ChemistryDatabase::getInstance().getElement(atoms[bestIdx].atomicNumber).symbol.c_str();
 
         TraceLog(LOG_INFO, "[TRACTOR] Captured %s (in %s) [ID: %d]", atomName, molName, bestIdx);
