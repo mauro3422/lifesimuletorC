@@ -9,6 +9,8 @@
 #include <algorithm> // Requerido para std::clamp y std::max
 #include "UIConfig.hpp"
 #include "../chemistry/Element.hpp"
+#include <cmath>
+#include <algorithm>
 
 /**
  * UIWidgets: Sistema de UI dinámico y premium para LifeSimulator C++.
@@ -31,27 +33,50 @@ public:
         DrawRectangleRoundedLines(rect, UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, (float)Config::THEME_BORDER_WIDTH, accentColor);
     }
 
-    // Cabecera dinámica - elementos centrados verticalmente
+    // Cabecera dinámica - elementos centrados verticalmente y con padding horizontal
     static void drawHeader(Rectangle panelRect, const char* title, Color color = Config::THEME_BORDER) {
         float hHeight = UIConfig::HEADER_HEIGHT;
         float vCenter = panelRect.y + hHeight / 2;
         
-        // Header background
-        DrawRectangleRec((Rectangle){ panelRect.x, panelRect.y, panelRect.width, hHeight }, Fade(color, Config::THEME_HEADER_OPACITY));
+        // Calculate the ABSOLUTE pixel radius of the original panel to ensure the bleed matches perfectly
+        float panelMin = (panelRect.width < panelRect.height) ? panelRect.width : panelRect.height;
+        float absRadius = UIConfig::PANEL_ROUNDNESS * (panelMin / 2.0f);
         
-        // Triangle indicator (centered vertically)
-        float triSize = 10.0f;
-        float triX = panelRect.x + 6;
+        // Robust Scissor: We start 15px above and around the panel to allow the 4.0f bleed 
+        // to fully overlap the top/side borders, but we cut strictly at the header bottom.
+        int scissorX = (int)floor(panelRect.x - 15);
+        int scissorY = (int)floor(panelRect.y - 15);
+        int scissorW = (int)ceil(panelRect.width + 30);
+        int scissorH = (int)ceil(hHeight + 15); // +15 to account for starting 15px above y
+        
+        BeginScissorMode(scissorX, scissorY, scissorW, scissorH);
+        
+        // Use a 4.0f bleed for robust overlap. 
+        // We MUST calculate a new 'roundness' factor for this larger rect to maintain the SAME absolute radius
+        Rectangle bleedRect = { panelRect.x - 4.0f, panelRect.y - 4.0f, panelRect.width + 8.0f, panelRect.height + 8.0f };
+        float bleedMin = (bleedRect.width < bleedRect.height) ? bleedRect.width : bleedRect.height;
+        float bleedRoundness = (absRadius * 2.0f) / bleedMin;
+        
+        DrawRectangleRounded(bleedRect, bleedRoundness, UIConfig::PANEL_SEGMENTS, Fade(color, Config::THEME_HEADER_OPACITY));
+        
+        // Redraw border lines for the header area to ensure they are on top and crisp
+        DrawRectangleRoundedLines(panelRect, UIConfig::PANEL_ROUNDNESS, UIConfig::PANEL_SEGMENTS, (float)Config::THEME_BORDER_WIDTH, color);
+        
+        EndScissorMode();
+        
+        // Triangle indicator (centered vertically, padded from left)
+        float triSize = 6.0f;
+        float triX = panelRect.x + 18;  // Generous padding from left border
         DrawTriangle(
             (Vector2){ triX, vCenter - triSize/2 },      // Top
             (Vector2){ triX, vCenter + triSize/2 },      // Bottom  
-            (Vector2){ triX + 7, vCenter },              // Right point
+            (Vector2){ triX + 6, vCenter },              // Right point
             WHITE
         );
         
-        // Title text (centered vertically)
+        // Title text (centered vertically, more padding from triangle)
         int fontSize = UIConfig::FONT_SIZE_HEADER;
-        DrawText(title, (int)panelRect.x + 18, (int)(vCenter - fontSize/2), fontSize, WHITE);
+        DrawText(title, (int)panelRect.x + 28, (int)(vCenter - fontSize/2), fontSize, WHITE);
     }
 
     // Botón interactivo centralizado

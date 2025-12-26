@@ -21,10 +21,10 @@ void Quimidex::draw(InputHandler& input) {
     UIWidgets::drawPanel(rect, input, Config::THEME_HIGHLIGHT);
     UIWidgets::drawHeader(rect, "QUIMIDEX: Enciclopedia Estelar", Config::THEME_HIGHLIGHT);
 
-    // Botón de cierre (X) - centrado verticalmente en el header
-    float closeSize = 18.0f;
+    // Botón de cierre (X) - centrado verticalmente, con padding del borde
+    float closeSize = 14.0f;
     float closeY = rect.y + (UIConfig::HEADER_HEIGHT - closeSize) / 2;
-    if (UIWidgets::drawButton({ rect.x + rect.width - closeSize - 4, closeY, closeSize, closeSize }, "X", input, RED)) {
+    if (UIWidgets::drawButton({ rect.x + rect.width - closeSize - 30, closeY, closeSize, closeSize }, "X", input, RED)) {
         isOpen = false;
     }
 

@@ -9,8 +9,8 @@
 namespace UIConfig {
     // --- LAYOUTS Y PANELES ---
     inline constexpr float PANEL_ROUNDNESS = 0.15f;
-    inline constexpr int PANEL_SEGMENTS = 10;
-    inline constexpr float HEADER_HEIGHT = 26.0f;  // Increased to contain title + triangle
+    inline constexpr int PANEL_SEGMENTS = 32;
+    inline constexpr float HEADER_HEIGHT = 25.0f;  // Compact header with centered content
     inline constexpr float MARGIN_DEFAULT = 10.0f;
     inline constexpr float INNER_PADDING = 8.0f;
     inline constexpr float SEPARATOR_THICKNESS = 1.0f;
