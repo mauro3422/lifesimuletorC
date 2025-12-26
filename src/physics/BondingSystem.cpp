@@ -322,6 +322,14 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
 
                 bool isSameMolecule = (rootI == rootJ);
                 
+                // DEBUG: Log every pair being considered
+                static int pairLogCounter = 0;
+                if (++pairLogCounter > 300) {
+                    TraceLog(LOG_DEBUG, "[BONDING FLOW] Pair %d-%d | Dist: %.1f | Roots: %d-%d | Same: %s", 
+                             i, j, dist, rootI, rootJ, isSameMolecule ? "YES" : "NO");
+                    pairLogCounter = 0;
+                }
+                
                 // If we are using the Extended Clay Range (dist > normal), we MUST only allow Cycles.
                 // Otherwise everything merges from far away.
                 bool isExtendedRange = (dist > Config::BOND_AUTO_RANGE * rangeMultiplier);
@@ -344,6 +352,8 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                         break; // One bond per atom per tick
                     }
                 } else {
+                    // SAME MOLECULE -> Log that we reached cycle detection
+                    TraceLog(LOG_INFO, "[CYCLE FLOW] Same molecule detected: %d-%d (Root: %d)", i, j, rootI);
                     // SAME MOLECULE -> POTENTIAL CYCLE CLOSURE (Membrane Logic)
                     // Rule: Only close if they are "far" in terms of graph hops (> 4 atoms away)
                     // but close in space.
