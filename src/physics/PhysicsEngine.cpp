@@ -60,18 +60,18 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         if (slotIdx >= (int)parentElem.bondingSlots.size()) continue;
 
         Vector3 slotDir = parentElem.bondingSlots[slotIdx];
-        // En un motor real rotaríamos slotDir por la rotación del padre
-        // Aquí simplificamos asumiendo rotación por ahora (o añadir rotación al Transform)
         
+        // Calcular posición objetivo en 3D (incluyendo Z para 2.5D correcto)
         float targetX = transforms[parentId].x + slotDir.x * Config::BOND_IDEAL_DIST;
         float targetY = transforms[parentId].y + slotDir.y * Config::BOND_IDEAL_DIST;
+        float targetZ = transforms[parentId].z + slotDir.z * Config::BOND_IDEAL_DIST;
 
         float dx = targetX - transforms[i].x;
         float dy = targetY - transforms[i].y;
-        float dist = std::sqrt(dx*dx + dy*dy);
+        float dz = targetZ - transforms[i].z;
+        float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
 
         // --- RUPTURA POR ESTRÉS ---
-        // EXCEPCIÓN: La molécula del jugador (ID 0) es inmune a la ruptura para permitir movimiento libre
         bool isPlayerMolecule = (states[i].moleculeId == 0 || i == 0 || parentId == 0);
         
         if (!isPlayerMolecule && dist > Config::BOND_BREAK_STRESS) {
@@ -81,15 +81,18 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             continue;
         }
 
-        // --- LEY DE HOOKE (Fuerza de Restauración) ---
+        // --- LEY DE HOOKE (Fuerza de Restauración) con Z ---
         float fx = dx * Config::BOND_SPRING_K;
         float fy = dy * Config::BOND_SPRING_K;
+        float fz = dz * Config::BOND_SPRING_K;
 
-        // Aplicar a ambos (Acción y Reacción)
+        // Aplicar a ambos (Acción y Reacción) incluyendo Z
         transforms[i].vx += fx * dt;
         transforms[i].vy += fy * dt;
+        transforms[i].vz += fz * dt;
         transforms[parentId].vx -= fx * dt;
         transforms[parentId].vy -= fy * dt;
+        transforms[parentId].vz -= fz * dt;
     }
 
     // 3. FUSIÓN DE LOOPS: Integración, Fricción y Límites en un solo paso

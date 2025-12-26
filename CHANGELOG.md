@@ -1,4 +1,31 @@
 
+## [Phase: Architecture & Chemistry Hardening] - 2025-12-26
+
+### Added
+- **JSON Chemistry Database**: Migrated hardcoded elements to `data/elements.json` for extensibility without recompilation.
+- **JsonLoader.hpp**: New loader with comprehensive validation (Z-variance, color, required fields).
+- **backgroundColor Field**: New element property for UI card styling.
+- **DockingSystem.hpp**: Extracted auto-docking logic from Player for single-responsibility.
+- **UndoManager.hpp**: Extracted hierarchical undo logic with attachment history tracking.
+- **Mandatory Z-Axis Validation**: Game fails to start if elements lack Z-variance in bondingSlots.
+- **MAX_BOND_RENDER_DIST**: Config constant to prevent visual glitches from overly stretched bonds.
+- **test_molecular_geometry.cpp**: Automated tests for VSEPR angles and Z-variance.
+
+### Changed
+- **VSEPR Geometry Fixes**: Corrected bonding slots for O (104.5°), N (107°), P (93.5°), S (92°).
+- **Player.cpp Refactoring**: Reduced from 164 → 120 lines by delegating to DockingSystem and UndoManager.
+- **updateSpontaneousBonding()**: Optimized from O(N²) → O(N*k) using SpatialGrid.
+- **Bonding Throttling**: Now runs at 10 Hz (every 6 frames) instead of every frame.
+- **PhysicsEngine.cpp**: Z-axis now included in Hooke's Law spring calculations.
+
+### Fixed
+- **Atom Visual Overlap**: Phosphorus and other elements no longer overlap in 2.5D view.
+- **Flickering Bonds**: Lowered render distance threshold to prevent valid bonds from disappearing.
+- **Long Bond Lines**: Added max distance filter to hide stretched bonds that should have broken.
+- **Game Freeze**: Reverted O(N²) Union-Find BFS implementation that caused performance regression.
+
+---
+
 ## [Phase: Tractor Beam Refinement & Undo System] - 2025-12-26
 
 ### Added

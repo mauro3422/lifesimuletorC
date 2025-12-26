@@ -12,12 +12,13 @@ namespace MathUtils {
     }
 
     // Finds the root of a molecular structure given an entity index
+    // O(depth) where depth is typically < 10
     inline int findMoleculeRoot(int entityId, const std::vector<StateComponent>& states) {
         if (entityId < 0 || entityId >= (int)states.size()) return -1;
         
         int rootId = entityId;
         int safetyCounter = 0;
-        const int MAX_DEPTH = 100; // Prevent infinite loops
+        const int MAX_DEPTH = 100;
         
         while (states[rootId].parentEntityId != -1 && safetyCounter < MAX_DEPTH) {
             rootId = states[rootId].parentEntityId;
@@ -25,6 +26,13 @@ namespace MathUtils {
         }
         
         return rootId;
+    }
+
+    // Simple propagation - just set the immediate bonded atom's moleculeId
+    // Called only when creating new bonds (not every frame)
+    inline void setMoleculeId(int entityId, int moleculeId, std::vector<StateComponent>& states) {
+        if (entityId < 0 || entityId >= (int)states.size()) return;
+        states[entityId].moleculeId = moleculeId;
     }
 
     // Scans a molecular cluster and returns its atomic composition
@@ -36,10 +44,7 @@ namespace MathUtils {
         if (rootId == -1) return composition;
 
         // Traverse all entities to find those belonging to the same root
-        // This is more robust than relying on the moleculeId field which might be out of sync.
         for (int i = 0; i < (int)states.size(); i++) {
-            // A cluster member is anyone who shares the same root ID.
-            // The root ID itself (parentEntityId == -1) must be included too.
             if (findMoleculeRoot(i, states) == rootId) {
                 composition[atoms[i].atomicNumber]++;
             }
@@ -49,3 +54,5 @@ namespace MathUtils {
 }
 
 #endif // MATH_UTILS_HPP
+
+

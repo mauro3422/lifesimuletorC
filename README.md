@@ -4,6 +4,9 @@
 
 Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo es alcanzar una simulación masiva de física química acelerada por hardware, con una estética "Nano-HD" minimalista y funcional.
 
+![Emergent Molecular Chains](screenshot_molecules.png)
+*Formación emergente de cadenas moleculares usando física VSEPR y fuerzas de Coulomb*
+
 ## 🕹️ Controles Principales
 
 - **WASD**: Navegar por el entorno.
@@ -31,12 +34,14 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - **UI**: Sistema modular de `UIWidgets` para consistencia visual.
 
 ## 📂 Estructura
-- `src/core/`: Configuración global y constantes.
+- `src/core/`: Configuración, `Config.hpp`, `JsonLoader.hpp`.
 - `src/ui/`: `Inspector`, `LabelSystem`, `UIWidgets`, `NotificationManager`.
 - `src/rendering/`: Cámara cinemática y Render 2.5D.
-- `src/chemistry/`: Base de datos de elementos y propiedades.
+- `src/chemistry/`: Base de datos de elementos (JSON-driven).
 - `src/physics/`: `BondingSystem`, `PhysicsEngine`, `SpatialGrid`.
-- `src/gameplay/`: `Player`, `TractorBeam`.
+- `src/gameplay/`: `Player`, `TractorBeam`, `DockingSystem`, `UndoManager`.
+- `data/`: `elements.json` - Definiciones de elementos extensibles.
+- `tests/`: Test suite con doctest (`test_molecular_geometry.cpp`).
 
 ## 🛠️ Roadmap Actualizado
 - [x] **Fase 5**: ECS & Render Base
@@ -46,9 +51,9 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - [x] **Fase 10**: Autonomous Molecular Evolution
 - [x] **Fase 11**: Bond Visualization Polish
 - [x] **Fase 12**: Smooth Docking & Notifications
-- [x] **Audit**: Molecular Topology & Smart Chemistry
 - [x] **Natural Chemistry**: Coulomb, Electronegativity, Elastic Bonds
-- [x] **Tractor Beam Refinement**: Valencia Shield, Sticky Capture, Hierarchical Undo
+- [x] **Tractor Refinement**: Valencia Shield, Sticky Capture, Hierarchical Undo
+- [x] **Architecture Hardening**: JSON DB, Player Refactor, VSEPR Validation
 - [ ] **Fase 13**: Bio-Génesis (ATP, Metabolismo Inicial)
 
 ---

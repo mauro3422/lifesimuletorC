@@ -1,12 +1,10 @@
 #include "Player.hpp"
+#include "DockingSystem.hpp"
 #include "../input/InputHandler.hpp"
 #include "../physics/SpatialGrid.hpp"
-#include "../physics/BondingSystem.hpp"
 #include "../core/Config.hpp"
 #include "../core/MathUtils.hpp"
-#include "../ui/NotificationManager.hpp"
 #include <cmath>
-#include <vector>
 
 Player::Player(int entityIndex) : playerIndex(entityIndex) {
     atomicNumber = 1; 
@@ -22,7 +20,7 @@ void Player::update(float dt, const InputHandler& input,
     
     auto& transform = worldTransforms[playerIndex];
 
-    // 1. MOVIMIENTO SUAVE
+    // 1. MOVEMENT (smooth acceleration)
     Vector2 dir = input.getMovementDirection();
     if (dir.x != 0 || dir.y != 0) {
         float targetVx = dir.x * speed;
@@ -34,7 +32,7 @@ void Player::update(float dt, const InputHandler& input,
         transform.vy *= Config::PLAYER_FRICTION;
     }
 
-    // 2. VIBRACIÓN
+    // 2. THERMODYNAMIC JITTER
     transform.vx += MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER;
     transform.vy += MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER;
     transform.x += transform.vx * dt;
@@ -52,57 +50,18 @@ void Player::update(float dt, const InputHandler& input,
         }
     }
 
-    // 4. AUTO-DOCKING
+    // 4. AUTO-DOCKING (delegated to DockingSystem)
     if (tractor.isActive()) {
         int targetIdx = tractor.getTargetIndex();
-        if (targetIdx != -1 && targetIdx != playerIndex) {
-            if (!states[targetIdx].isClustered) {
-                float dx = transform.x - worldTransforms[targetIdx].x;
-                float dy = transform.y - worldTransforms[targetIdx].y;
-                float dist = std::sqrt(dx*dx + dy*dy);
-
-                if (dist < Config::TRACTOR_DOCKING_RANGE * 1.2f) {
-                    if (BondingSystem::tryBond(targetIdx, playerIndex, states, atoms, worldTransforms, true) == BondingSystem::SUCCESS) {
-                        int root = MathUtils::findMoleculeRoot(targetIdx, states);
-                        states[root].isShielded = false;
-                        attachmentOrder.push_back(targetIdx); 
-                        NotificationManager::getInstance().show("¡Acoplado!", Config::THEME_SUCCESS);
-                        tractor.release();
-                    }
-                }
-            }
+        if (DockingSystem::tryAutoDock(targetIdx, playerIndex, states, atoms, 
+                                        worldTransforms, undoManager.getAttachmentOrder())) {
+            tractor.release();
         }
     }
 
-    // 5. DESACOPLAMIENTO MANUAL (Botón Derecho)
+    // 5. UNDO (delegated to UndoManager)
     if (input.isReleaseTriggered()) {
-        if (states[playerIndex].parentEntityId != -1) {
-            BondingSystem::breakBond(playerIndex, states, atoms);
-            NotificationManager::getInstance().show("Jugador liberado", Config::THEME_INFO);
-            return;
-        }
-
-        bool removed = false;
-        while (!attachmentOrder.empty()) {
-            int candidate = attachmentOrder.back();
-            attachmentOrder.pop_back();
-            if (states[candidate].isClustered && states[candidate].parentEntityId != -1) {
-                if (MathUtils::findMoleculeRoot(candidate, states) == playerIndex) {
-                    BondingSystem::breakBond(candidate, states, atoms);
-                    NotificationManager::getInstance().show("Undo: Atomo liberado", Config::THEME_INFO);
-                    removed = true;
-                    break;
-                }
-            }
-        }
-
-        if (!removed) {
-            int leafId = BondingSystem::findPrunableLeaf(playerIndex, states);
-            if (leafId != -1) {
-                BondingSystem::breakBond(leafId, states, atoms);
-                NotificationManager::getInstance().show("Hoja podada", Config::THEME_INFO);
-            }
-        }
+        undoManager.undoLast(playerIndex, states, atoms);
     }
 }
 
@@ -122,6 +81,7 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
         return;
     }
 
+    // Break bonds on first capture
     if (tractor.becameActive()) {
         if (states[idx].parentEntityId != -1 || BondingSystem::findLastChild(idx, states) != -1) {
             BondingSystem::breakAllBonds(idx, states, atoms);

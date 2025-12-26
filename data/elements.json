@@ -1,0 +1,242 @@
+{
+    "version": "1.0",
+    "elements": [
+        {
+            "atomicNumber": 1,
+            "symbol": "H",
+            "name": "Hidrógeno",
+            "atomicMass": 1.008,
+            "vdWRadius": 1.2,
+            "color": {
+                "r": 135,
+                "g": 206,
+                "b": 235,
+                "a": 255
+            },
+            "backgroundColor": {
+                "r": 30,
+                "g": 60,
+                "b": 80,
+                "a": 255
+            },
+            "category": "No metal",
+            "description": "El elemento más abundante del universo. Ligero y reactivo.",
+            "origin": "Nucleosíntesis estelar primordial desatada tras el Big Bang.",
+            "discoveryHint": "Se encuentra en nubes de gas primordiales y estrellas jóvenes.",
+            "maxBonds": 1,
+            "electronegativity": 2.20,
+            "bondingSlots": [
+                {
+                    "x": 1,
+                    "y": 0,
+                    "z": 0
+                }
+            ]
+        },
+        {
+            "atomicNumber": 6,
+            "symbol": "C",
+            "name": "Carbono",
+            "atomicMass": 12.011,
+            "vdWRadius": 1.7,
+            "color": {
+                "r": 80,
+                "g": 80,
+                "b": 80,
+                "a": 255
+            },
+            "backgroundColor": {
+                "r": 25,
+                "g": 25,
+                "b": 30,
+                "a": 255
+            },
+            "category": "No metal",
+            "description": "La base de la vida orgánica. Capaz de formar complejas cadenas infinitas y estructuras estables.",
+            "origin": "Gigantes rojas a través del proceso triple alfa.",
+            "discoveryHint": "Aparece al procesar materia orgánica densa o grafito.",
+            "maxBonds": 4,
+            "electronegativity": 2.55,
+            "bondingSlots": [
+                {
+                    "x": 1,
+                    "y": 1,
+                    "z": 1
+                },
+                {
+                    "x": 1,
+                    "y": -1,
+                    "z": -1
+                },
+                {
+                    "x": -1,
+                    "y": 1,
+                    "z": -1
+                },
+                {
+                    "x": -1,
+                    "y": -1,
+                    "z": 1
+                }
+            ]
+        },
+        {
+            "atomicNumber": 7,
+            "symbol": "N",
+            "name": "Nitrógeno",
+            "atomicMass": 14.007,
+            "vdWRadius": 1.55,
+            "color": {
+                "r": 0,
+                "g": 0,
+                "b": 255,
+                "a": 255
+            },
+            "backgroundColor": {
+                "r": 15,
+                "g": 15,
+                "b": 60,
+                "a": 255
+            },
+            "category": "No metal",
+            "description": "Vital en aminoácidos y bases nitrogenadas. Inerte como gas libre.",
+            "origin": "Ciclo CNO en el corazón de estrellas masivas.",
+            "discoveryHint": "Detección común en atmósferas estables de mundos templados.",
+            "maxBonds": 3,
+            "electronegativity": 3.04,
+            "bondingSlots": [
+                {
+                    "x": 0,
+                    "y": 0.75,
+                    "z": -0.65
+                },
+                {
+                    "x": -0.65,
+                    "y": 0.75,
+                    "z": 0.35
+                },
+                {
+                    "x": 0.65,
+                    "y": 0.75,
+                    "z": 0.35
+                }
+            ]
+        },
+        {
+            "atomicNumber": 8,
+            "symbol": "O",
+            "name": "Oxígeno",
+            "atomicMass": 15.999,
+            "vdWRadius": 1.52,
+            "color": {
+                "r": 230,
+                "g": 0,
+                "b": 0,
+                "a": 255
+            },
+            "backgroundColor": {
+                "r": 60,
+                "g": 15,
+                "b": 15,
+                "a": 255
+            },
+            "category": "No metal",
+            "description": "Oxidante potente necesario para la respiración celular y combustión.",
+            "origin": "Fusión de helio y neón en capas estelares masivas.",
+            "discoveryHint": "Presente en silicatos, agua y atmósfera respirable.",
+            "maxBonds": 2,
+            "electronegativity": 3.44,
+            "bondingSlots": [
+                {
+                    "x": -0.6,
+                    "y": 0.7,
+                    "z": -0.3
+                },
+                {
+                    "x": 0.6,
+                    "y": 0.7,
+                    "z": 0.3
+                }
+            ]
+        },
+        {
+            "atomicNumber": 15,
+            "symbol": "P",
+            "name": "Fósforo",
+            "atomicMass": 30.974,
+            "vdWRadius": 1.8,
+            "color": {
+                "r": 255,
+                "g": 165,
+                "b": 0,
+                "a": 255
+            },
+            "backgroundColor": {
+                "r": 70,
+                "g": 45,
+                "b": 10,
+                "a": 255
+            },
+            "category": "No metal",
+            "description": "Crucial para el ADN y la transferencia de energía celular (ATP).",
+            "origin": "Nucleosíntesis en supernovas de Tipo II y estrellas masivas.",
+            "discoveryHint": "Raro en estado puro, común en depósitos minerales antiguos.",
+            "maxBonds": 3,
+            "electronegativity": 2.19,
+            "bondingSlots": [
+                {
+                    "x": 0,
+                    "y": 0.8,
+                    "z": -0.6
+                },
+                {
+                    "x": -0.7,
+                    "y": 0.8,
+                    "z": 0.3
+                },
+                {
+                    "x": 0.7,
+                    "y": 0.8,
+                    "z": 0.3
+                }
+            ]
+        },
+        {
+            "atomicNumber": 16,
+            "symbol": "S",
+            "name": "Azufre",
+            "atomicMass": 32.065,
+            "vdWRadius": 1.8,
+            "color": {
+                "r": 255,
+                "g": 255,
+                "b": 0,
+                "a": 255
+            },
+            "backgroundColor": {
+                "r": 70,
+                "g": 70,
+                "b": 15,
+                "a": 255
+            },
+            "category": "No metal",
+            "description": "Participa en puentes disulfuro proteicos. Olor característico en compuestos.",
+            "origin": "Fusión de silicio en núcleos de estrellas masivas pre-supernova.",
+            "discoveryHint": "Abundante en regiones de actividad volcánica tectónica.",
+            "maxBonds": 2,
+            "electronegativity": 2.58,
+            "bondingSlots": [
+                {
+                    "x": -0.5,
+                    "y": 0.8,
+                    "z": -0.4
+                },
+                {
+                    "x": 0.5,
+                    "y": 0.8,
+                    "z": 0.4
+                }
+            ]
+        }
+    ]
+}

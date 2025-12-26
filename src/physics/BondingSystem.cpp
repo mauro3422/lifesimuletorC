@@ -1,4 +1,5 @@
 #include "BondingSystem.hpp"
+#include "SpatialGrid.hpp"
 #include "core/Config.hpp"
 #include "core/MathUtils.hpp"
 #include "gameplay/MissionManager.hpp"
@@ -99,7 +100,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
         states[sourceId].parentEntityId = bestHostId;
         states[sourceId].parentSlotIndex = bestSlotIdx;
         states[sourceId].moleculeId = molRootId;
-        states[sourceId].dockingProgress = 0.0f; 
+        states[sourceId].dockingProgress = 0.0f;
         
         // --- CÁLCULO DE POLARIDAD (Carga Parcial) ---
         float enHost = ChemistryDatabase::getInstance().getElement(atoms[bestHostId].atomicNumber).electronegativity;
@@ -291,18 +292,32 @@ void BondingSystem::updateHierarchy(std::vector<TransformComponent>& transforms,
 void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states,
                                                std::vector<AtomComponent>& atoms,
                                                const std::vector<TransformComponent>& transforms,
+                                               const SpatialGrid& grid,
                                                EnvironmentManager* env,
                                                int tractedEntityId) {
     
+    // THROTTLING: Only run every N frames for performance (10 Hz)
+    static int frameCounter = 0;
+    frameCounter++;
+    if (frameCounter < Config::BONDING_THROTTLE_FRAMES) return;
+    frameCounter = 0;
+
     int tractedRoot = (tractedEntityId != -1) ? MathUtils::findMoleculeRoot(tractedEntityId, states) : -1;
 
+    // O(N*k) OPTIMIZATION: Use SpatialGrid instead of O(N²) double loop
     for (int i = 1; i < (int)states.size(); i++) { 
         if (states[i].isClustered) continue; 
 
-        // Si el átomo i está siendo arrastrado (o es parte de una molécula arrastrada), lo ignoramos
+        // Skip atoms being dragged by tractor
         if (tractedRoot != -1 && MathUtils::findMoleculeRoot(i, states) == tractedRoot) continue;
 
-        for (int j = i + 1; j < (int)states.size(); j++) {
+        // Query only nearby atoms using spatial grid (O(k) where k ≈ 10)
+        std::vector<int> neighbors = grid.getNearby({transforms[i].x, transforms[i].y}, Config::BOND_AUTO_RANGE * 1.5f);
+
+        for (int j : neighbors) {
+            if (j <= i) continue; // Avoid duplicate pairs
+            if (j >= (int)states.size()) continue;
+
             float dx = transforms[i].x - transforms[j].x;
             float dy = transforms[i].y - transforms[j].y;
             float dz = transforms[i].z - transforms[j].z;
@@ -316,20 +331,18 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
             }
 
             if (dist < Config::BOND_AUTO_RANGE * rangeMultiplier) {
-                // EXCLUSIÓN: 
-                // 1. Ignoramos si alguno pertenece a la molécula del jugador (ID 0).
-                // 2. Ignoramos si alguno pertenece a la molécula que estamos arrastrando con el tractor.
+                // EXCLUSIÓN: Ignore player molecule (ID 0) and tracted molecules
                 int rootI = MathUtils::findMoleculeRoot(i, states);
                 int rootJ = MathUtils::findMoleculeRoot(j, states);
 
                 if (rootI == 0 || rootJ == 0) continue;
                 if (tractedRoot != -1 && (rootI == tractedRoot || rootJ == tractedRoot)) continue;
                 
-                // ESCUDO DE VALENCIA GLOBAL: Si la raíz de la molécula está protegida, nadie se une
+                // VALENCIA SHIELD: If root is shielded, no bonding allowed
                 if (states[rootI].isShielded || states[rootJ].isShielded) continue;
 
                 if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == SUCCESS) {
-                    break;
+                    break; // One bond per atom per tick
                 }
             }
         }
@@ -345,7 +358,6 @@ void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states,
     int parentId = state.parentEntityId;
 
     // --- REVERTIR POLARIDAD ---
-    // Recuperamos los elementos para recalcular la polaridad que se aplicó originalmente
     float enHost = ChemistryDatabase::getInstance().getElement(atoms[parentId].atomicNumber).electronegativity;
     float enSource = ChemistryDatabase::getInstance().getElement(atoms[entityId].atomicNumber).electronegativity;
     float polarity = (enHost - enSource) * Config::POLARITY_FACTOR; 
@@ -357,7 +369,7 @@ void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states,
     state.isClustered = false;
     state.parentEntityId = -1;
     state.parentSlotIndex = -1;
-    state.moleculeId = -1; 
+    state.moleculeId = entityId; // Becomes its own root
     state.dockingProgress = 0.0f;
 
     TraceLog(LOG_INFO, "[BOND] Enlace roto para atomo %d (liberado de %d)", entityId, parentId);

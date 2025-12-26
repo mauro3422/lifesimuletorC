@@ -9,7 +9,8 @@ namespace Config {
     inline constexpr float WORLD_BOUNCE = -0.5f;
     inline constexpr float BOND_COMPRESSION = 1.6f; 
     inline constexpr float BOND_SNAP_THRESHOLD = 0.45f;
-    inline constexpr float BOND_AUTO_RANGE = 30.0f; 
+    inline constexpr float BOND_AUTO_RANGE = 30.0f;
+    inline constexpr int BONDING_THROTTLE_FRAMES = 6;  // Execute every 6 frames (10 Hz) 
     inline constexpr float DAMPING = 0.985f;    
     inline constexpr float REBOTE = -0.8f;     
     inline constexpr float THERMODYNAMIC_JITTER = 0.5f; 
@@ -75,6 +76,7 @@ namespace Config {
     inline constexpr float BOND_DAMPING = 0.85f;        // Amortiguación de vibración molecular
     inline constexpr float BOND_BREAK_STRESS = 35.0f;   // Distancia de ruptura (estrés máximo)
     inline constexpr float BOND_IDEAL_DIST = 18.0f;     // Distancia de equilibrio del enlace
+    inline constexpr float MAX_BOND_RENDER_DIST = 40.0f; // Max distance to render bond lines (prevents visual glitches)
 
     // --- BONDING ANIMATION ---
     inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Mitad de velocidad para suavidad

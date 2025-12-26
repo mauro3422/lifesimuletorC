@@ -18,7 +18,10 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
             float dx = trChild.x - trParent.x;
             float dy = trChild.y - trParent.y;
             float dist = std::sqrt(dx*dx + dy*dy);
-            if (dist < 0.1f) continue;
+            
+            // Skip drawing if atoms are too close (degenerate) OR too far (broken state)
+            if (dist < 0.01f) continue;
+            if (dist > Config::MAX_BOND_RENDER_DIST) continue; // Hide overly stretched bonds
             
             float dirX = dx / dist;
             float dirY = dy / dist;

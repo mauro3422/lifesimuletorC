@@ -6,6 +6,7 @@
 #include <vector>
 
 class EnvironmentManager;
+class SpatialGrid;
 
 /**
  * SISTEMA DE ENLACES (Deterministic)
@@ -37,9 +38,11 @@ public:
                                const std::vector<AtomComponent>& atoms);
 
     // Evolución molecular autónoma: Permite que los NPCs se unan espontáneamente
+    // Uses SpatialGrid for O(N*k) performance instead of O(N²)
     static void updateSpontaneousBonding(std::vector<StateComponent>& states,
                                          std::vector<AtomComponent>& atoms,
                                          const std::vector<TransformComponent>& transforms,
+                                         const class SpatialGrid& grid,
                                          EnvironmentManager* env = nullptr,
                                          int tractedEntityId = -1);
 

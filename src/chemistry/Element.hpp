@@ -16,6 +16,7 @@ struct Element {
     float atomicMass;
     float vdWRadius;  // Radio de Van der Waals (en picómetros o unidades de juego)
     Color color;
+    Color backgroundColor;  // Background color for UI element cards
     
     // Datos para el Quimidex / Lore
     std::string category;     // Ej: "No metal", "Gas noble"

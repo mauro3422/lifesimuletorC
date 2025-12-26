@@ -118,7 +118,7 @@ int main() {
             player.applyPhysics(world.transforms, world.states, world.atoms);
             physics.step(fixedDeltaTime, world.transforms, world.atoms, world.states);
             BondingSystem::updateHierarchy(world.transforms, world.states, world.atoms);
-            BondingSystem::updateSpontaneousBonding(world.states, world.atoms, world.transforms, &physics.getEnvironment(), player.getTractor().getTargetIndex());
+            BondingSystem::updateSpontaneousBonding(world.states, world.atoms, world.transforms, physics.getGrid(), &physics.getEnvironment(), player.getTractor().getTargetIndex());
             NotificationManager::getInstance().update(fixedDeltaTime);
             MissionManager::getInstance().update(fixedDeltaTime);
             accumulator -= fixedDeltaTime;
@@ -158,12 +158,12 @@ int main() {
 
         if (inspectingMolecule) {
             int targetIdx = player.getTractor().getTargetIndex();
-            // Fallback: Si no tenemos target, inspeccionamos la molécula del jugador (Entity 0)
-            if (targetIdx == -1) targetIdx = 0; 
+            if (targetIdx == -1) targetIdx = 0; // Fallback to player molecule
 
-            if (targetIdx != -1 && targetIdx < (int)world.atoms.size()) {
+            if (targetIdx >= 0 && targetIdx < (int)world.atoms.size()) {
                 auto composition = MathUtils::scanMoleculeComposition(targetIdx, world.states, world.atoms);
                 const Molecule* detected = ChemistryDatabase::getInstance().findMoleculeByComposition(composition);
+                
                 inspector.setMolecule(detected);
                 inspector.setComposition(composition);
                 

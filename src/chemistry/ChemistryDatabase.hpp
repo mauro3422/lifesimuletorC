@@ -52,6 +52,9 @@ private:
     
     void addElement(Element e);
     void addMolecule(Molecule m);
+    
+    // VALIDATION: Ensures all elements have proper 2.5D Z-axis variance
+    void validateElements() const;
 };
 
 #endif

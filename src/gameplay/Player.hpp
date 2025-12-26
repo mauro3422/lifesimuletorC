@@ -4,19 +4,24 @@
 #include "raylib.h"
 #include "../ecs/components.hpp"
 #include "TractorBeam.hpp"
+#include "UndoManager.hpp"
 
-// Forward declaration para evitar circulares
+// Forward declarations
 class SpatialGrid;
+class InputHandler;
 
 /**
- * CLASE JUGADOR
+ * PLAYER CLASS
+ * Refactored for single responsibility: controls player movement.
+ * Docking delegated to DockingSystem.
+ * Undo delegated to UndoManager.
+ * Tractor physics delegated to TractorBeam.
  */
 class Player {
 public:
     Player(int entityIndex);
 
-    // Ahora recibe la grilla para sus herramientas
-    void update(float dt, const class InputHandler& input, 
+    void update(float dt, const InputHandler& input, 
                 std::vector<TransformComponent>& worldTransforms, 
                 const Camera2D& camera,
                 const SpatialGrid& grid,
@@ -28,6 +33,7 @@ public:
                       std::vector<AtomComponent>& atoms); 
     
     TractorBeam& getTractor() { return tractor; }
+    UndoManager& getUndoManager() { return undoManager; }
     int getAtomicNumber() const { return atomicNumber; }
     float getZoomTarget() const { return 2.5f; }
     int getEntityIndex() const { return playerIndex; }
@@ -35,9 +41,9 @@ public:
 private:
     int playerIndex;
     TractorBeam tractor;
+    UndoManager undoManager;
     int atomicNumber;
     float speed;
-    std::vector<int> attachmentOrder; // Pila cronológica de átomos unidos
 };
 
 #endif
