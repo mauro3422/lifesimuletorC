@@ -67,15 +67,9 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input, 
     }
 
     float curX = rect.x + UIConfig::INNER_PADDING;
-    float curY = rect.y + UIConfig::HEADER_HEIGHT + UIConfig::SPACING_TINY;
+    float curY = rect.y + UIConfig::HEADER_HEIGHT + UIConfig::SPACING_SMALL;
 
-    // 2. ID y Separador
-    DrawText(TextFormat(">> %s (ID: %d)", element.name.c_str(), entityID), (int)curX, (int)curY, UIConfig::FONT_SIZE_LABEL, SKYBLUE);
-    curY += UIConfig::SPACING_LARGE;
-    UIWidgets::drawSeparator(curX, curY, innerWidth);
-    curY += UIConfig::SPACING_SMALL;
-
-    // 3. Tarjeta de Elemento y Valencias
+    // 2. Tarjeta de Elemento y Valencias (Sin línea de ID redundante)
     UIWidgets::drawElementCard(element, curX, curY, UIConfig::INSPECTOR_CARD_SIZE, input);
     
     int infoX = (int)curX + (int)UIConfig::INSPECTOR_CARD_SIZE + 7;
