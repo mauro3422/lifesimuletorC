@@ -49,6 +49,48 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
         }
     }
 
+    // --- PHASE 18: DRAW CYCLE BONDS (Membrane loops) ---
+    for (int i = 0; i < (int)states.size(); i++) {
+        const StateComponent& state = states[i];
+        if (state.cycleBondId != -1) {
+             // Only draw if i < cycleBondId to avoid double drawing
+             if (i > state.cycleBondId) continue;
+
+             int partnerId = state.cycleBondId;
+             const TransformComponent& trA = transforms[i];
+             const TransformComponent& trB = transforms[partnerId];
+             
+             float dist = MathUtils::dist(trA.x, trA.y, trB.x, trB.y);
+             if (dist < 0.01f || dist > Config::MAX_BOND_RENDER_DIST) continue;
+
+             Vector2 dir = MathUtils::normalize(Vector2{trA.x - trB.x, trA.y - trB.y});
+             float dirX = dir.x;
+             float dirY = dir.y;
+
+             const Element& elA = db.getElement(atoms[i].atomicNumber);
+             const Element& elB = db.getElement(atoms[partnerId].atomicNumber);
+             float rA = elA.vdWRadius * Config::BASE_ATOM_RADIUS;
+             float rB = elB.vdWRadius * Config::BASE_ATOM_RADIUS;
+
+             Vector2 start = { trB.x + dirX * rB, trB.y + dirY * rB };
+             Vector2 end = { trA.x - dirX * rA, trA.y - dirY * rA };
+             
+             float scale = 1.0f + (((trA.z + trB.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
+             if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
+
+             // Unique color for Cycle Bonds (Slightly darker or specialized)
+             Color bondColor = { 
+                (unsigned char)((elA.color.r + elB.color.r) / 2),
+                (unsigned char)((elA.color.g + elB.color.g) / 2),
+                (unsigned char)((elA.color.b + elB.color.b) / 2),
+                200 // Slightly transparent to distinguish internal structure
+             };
+             
+             DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale, BLACK);
+             DrawLineEx(start, end, (Config::RENDER_BOND_THICKNESS_FG - 1.0f) * scale, bondColor);
+        }
+    }
+
     // 2. DRAW ATOMS (rendered on top of bonds)
     static std::vector<int> indices;
     if (indices.size() != transforms.size()) {

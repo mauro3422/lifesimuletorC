@@ -26,7 +26,7 @@ public:
         // 1. PLAYER (Always ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({1, 0.0f}); // Initial Hydrogen
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0}); // childCount=0, occupiedSlots=0
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1}); // childCount=0, occupiedSlots=0, cycleBondId=-1
         TraceLog(LOG_INFO, "[World] Player initialized at (0,0)");
 
         // 2. WORLD POPULATION
@@ -49,7 +49,7 @@ public:
 
             transforms.push_back(tr);
             atoms.push_back({atomicNum, 0.0f});
-            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0}); 
+            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1}); 
         }
     }
 

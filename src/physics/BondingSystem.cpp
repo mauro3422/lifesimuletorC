@@ -317,8 +317,54 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                 // VALENCY SHIELD: If root is shielded, no bonding allowed
                 if (states[rootI].isShielded || states[rootJ].isShielded) continue;
 
-                if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == SUCCESS) {
-                    break; // One bond per atom per tick
+                if (rootI != rootJ) {
+                    // DIFFERENT MOLECULES -> NORMAL BOND (Merge)
+                    if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == SUCCESS) {
+                        break; // One bond per atom per tick
+                    }
+                } else {
+                    // SAME MOLECULE -> POTENTIAL CYCLE CLOSURE (Membrane Logic)
+                    // Rule: Only close if they are "far" in terms of graph hops (> 4 atoms away)
+                    // but close in space.
+                    
+                    // Simple BFS or limited traversal to check hop distance
+                    // (Optimization: In a tree, unique path exists. We can trace upwards to LCA)
+                    
+                    // QUICK CHECK: Are they already directly bonded?
+                    if (states[i].parentEntityId == j || states[j].parentEntityId == i) continue;
+                    if (states[i].cycleBondId == j || states[j].cycleBondId == i) continue; // Already cycle bonded
+
+                    // DISTANCE CHECK (Graph Hops) - Simplified "Tracer"
+                    // Trace parents up to root or until meeting
+                    int pI = i; 
+                    int hopsI = 0;
+                    while (states[pI].parentEntityId != -1 && hopsI < 8) {
+                        pI = states[pI].parentEntityId;
+                        hopsI++;
+                    }
+                    
+                    int pJ = j;
+                    int hopsJ = 0;
+                    while (states[pJ].parentEntityId != -1 && hopsJ < 8) {
+                        pJ = states[pJ].parentEntityId;
+                        hopsJ++;
+                    }
+
+                    // Strict C4Si Rule: Need at least 4 atoms in the chain to loop.
+                    // If total graph distance (approx) > 4
+                    // Note: This is a heuristic. For exact, we'd need full LCA.
+                    // Assuming balanced chains or long tail.
+                    
+                    if (hopsI + hopsJ >= 4) {
+                        // CLOSE THE RING
+                        states[i].cycleBondId = j;
+                        // states[j].cycleBondId = i; // Optional: One-way reference is enough for spring physics, simpler to manage.
+                        
+                        TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Ring Closure)", i, j);
+                        
+                        // NOTIFY MISSION or ACHIEVEMENT here
+                        break; 
+                    }
                 }
             }
         }

@@ -113,6 +113,38 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         transforms[parentId].vz -= (fz / mP) * dt;
     }
 
+    // --- PHASE 18: CYCLE BONDS (Non-Hierarchical Springs) ---
+    for (int i = 0; i < (int)transforms.size(); i++) {
+        if (states[i].cycleBondId == -1) continue;
+
+        int partnerId = states[i].cycleBondId;
+        // Avoid double processing (process only if i < partnerId)
+        if (i > partnerId) continue; 
+
+        float dx = transforms[partnerId].x - transforms[i].x;
+        float dy = transforms[partnerId].y - transforms[i].y;
+        float dz = transforms[partnerId].z - transforms[i].z;
+        float dist = MathUtils::length(dx, dy, dz);
+
+        // Apply same Hooke's Law as normal bonds
+        float fx = dx * Config::BOND_SPRING_K;
+        float fy = dy * Config::BOND_SPRING_K;
+        float fz = dz * Config::BOND_SPRING_K;
+
+        float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
+        float m2 = ChemistryDatabase::getInstance().getElement(atoms[partnerId].atomicNumber).atomicMass;
+        if (m1 < 0.01f) m1 = 1.0f;
+        if (m2 < 0.01f) m2 = 1.0f;
+
+        transforms[i].vx += (fx / m1) * dt;
+        transforms[i].vy += (fy / m1) * dt;
+        transforms[i].vz += (fz / m1) * dt;
+
+        transforms[partnerId].vx -= (fx / m2) * dt;
+        transforms[partnerId].vy -= (fy / m2) * dt;
+        transforms[partnerId].vz -= (fz / m2) * dt;
+    }
+
     // 3. LOOP FUSION: Integration, Friction, and Boundaries in one step
     for (TransformComponent& tr : transforms) {
         // 1. Integration

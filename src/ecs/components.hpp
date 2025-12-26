@@ -31,6 +31,9 @@ struct StateComponent {
     // --- OPTIMIZATIONS (Phase 17) ---
     int childCount;      // Number of atoms bonded to this one (as children)
     unsigned char occupiedSlots; // Bitset (1 bit per slot index) to find free slots in O(1)
+    
+    // --- PHASE 18: CYCLES & MEMBRANES ---
+    int cycleBondId;     // Entity ID for closing a loop (Non-hierarchical bond)
 };
 
 
