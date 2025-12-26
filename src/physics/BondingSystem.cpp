@@ -99,7 +99,8 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
         atoms[bestHostId].partialCharge += polarity;
         atoms[sourceId].partialCharge -= polarity;
 
-        TraceLog(LOG_INFO, "[BOND] GLOBAL SUCCESS: %d -> %d (Molecule %d) Polarity: %.2f", sourceId, bestHostId, molRootId, polarity);
+        // TraceLog(LOG_INFO, "[BOND] GLOBAL SUCCESS: %d -> %d (Molecule %d) Polarity: %.2f", sourceId, bestHostId, molRootId, polarity);
+        (void)polarity; // Silence unused warning
         
         // Notify mission system
         MissionManager::getInstance().notifyBondCreated(atoms[sourceId].atomicNumber, atoms[bestHostId].atomicNumber);
@@ -181,7 +182,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
                         states[sourceId].dockingProgress = 0.0f;
                     }
                     
-                    TraceLog(LOG_INFO, "[BOND] UNIVERSAL SPLICE: Atom %d inserted as bridge in molecule %d", sourceId, molRootId);
+                    if (isCycle) TraceLog(LOG_INFO, "[BOND] SPLICE: Atom %d used as bridge for %d", sourceId, molRootId);
                     
                     // --- POLARITY CALCULATION (Partial Charge) ---
                     float enHost = ChemistryDatabase::getInstance().getElement(atoms[closestHost].atomicNumber).electronegativity;

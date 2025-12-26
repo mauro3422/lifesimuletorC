@@ -16,6 +16,8 @@ public:
     // Ahora recibe la grilla para una búsqueda veloz O(1)
     void update(const Vector2& mouseWorldPos, bool isInputActive, 
                 const std::vector<TransformComponent>& transforms,
+                const std::vector<StateComponent>& states,
+                const std::vector<AtomComponent>& atoms,
                 const SpatialGrid& grid);
     
     int getTargetIndex() const { return targetIndex; }

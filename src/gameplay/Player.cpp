@@ -41,7 +41,7 @@ void Player::update(float dt, const InputHandler& input,
     // 3. TRACTOR BEAM UPDATE
     int lastTarget = tractor.getTargetIndex();
     Vector2 mouseWorld = GetScreenToWorld2D(input.getMousePosition(), camera);
-    tractor.update(mouseWorld, input.isTractorBeamActive(), worldTransforms, grid);
+    tractor.update(mouseWorld, input.isTractorBeamActive(), worldTransforms, states, atoms, grid);
     
     int currentTarget = tractor.getTargetIndex();
     if (lastTarget != -1 && lastTarget != currentTarget) {
