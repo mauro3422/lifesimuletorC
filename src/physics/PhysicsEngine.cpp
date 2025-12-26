@@ -25,10 +25,11 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             float q2 = atoms[j].partialCharge;
             if (std::abs(q2) < Config::CHARGE_THRESHOLD) continue;
 
-            float dx = transforms[j].x - transforms[i].x;
-            float dy = transforms[j].y - transforms[i].y;
-            float distSq = dx*dx + dy*dy + (Config::PHYSICS_EPSILON * Config::PHYSICS_EPSILON);
-            float dist = std::sqrt(distSq);
+            float distSq = MathUtils::distSq(transforms[i].x, transforms[i].y, transforms[j].x, transforms[j].y);
+            // Pre-check squared distance to avoid sqrt if not needed (optimization)
+            if (distSq > Config::EM_REACH * Config::EM_REACH) continue;
+            
+            float dist = std::sqrt(distSq + (Config::PHYSICS_EPSILON * Config::PHYSICS_EPSILON));
 
             if (dist > Config::EM_REACH) continue;
 
@@ -37,6 +38,8 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             float effectiveDist = std::max(dist, Config::MIN_COULOMB_DIST);
             float forceMag = (Config::COULOMB_CONSTANT * q1 * q2) / (effectiveDist * effectiveDist);
             
+            float dx = transforms[j].x - transforms[i].x;
+            float dy = transforms[j].y - transforms[i].y;
             // Force unit vector
             float fx = (dx / dist) * forceMag;
             float fy = (dy / dist) * forceMag;

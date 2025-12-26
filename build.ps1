@@ -9,6 +9,7 @@ $LIB_DIR = "$RAYLIB_DIR/lib"
 # 2. Compilacion
 g++ src/main.cpp `
     src/core/LocalizationManager.cpp `
+    src/core/JsonLoader.cpp `
     src/physics/PhysicsEngine.cpp `
     src/physics/SpatialGrid.cpp `
     src/physics/BondingSystem.cpp `
@@ -20,6 +21,7 @@ g++ src/main.cpp `
     src/ui/LabelSystem.cpp `
     src/ui/Inspector.cpp `
     src/ui/HUD.cpp `
+    src/ui/UIWidgets.cpp `
     src/ui/Quimidex.cpp `
     src/gameplay/MissionManager.cpp `
     -I"$INCLUDE_DIR" `

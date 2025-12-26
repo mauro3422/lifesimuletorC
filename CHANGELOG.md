@@ -1,4 +1,17 @@
 
+## [Phase 17.5: Codebase Hygiene & Architectual Refactor] - 2025-12-26
+
+### Refactored
+- **Header Separation**: Extracted implementations from `UIWidgets.hpp` and `JsonLoader.hpp` into their own `.cpp` files to reduce compilation dependency bloat.
+- **Math Unification**: Replaced duplicated distance/vector calculations in `PhysicsEngine` and `BondingSystem` with standardized `MathUtils` calls.
+- **Build System**: Updated `build.ps1` to compile the new separated source files (`UIWidgets.cpp`, `JsonLoader.cpp`).
+
+### Fixed
+- **Physics Regressions**: Addressed variable scope issues in `PhysicsEngine` during the math refactor.
+- **Code Duplication**: Eliminated 5+ instances of repeated vector math logic across the codebase.
+
+---
+
 ## [Phase 17: Deep Codebase Audit & Optimization] - 2025-12-26
 
 ### Added

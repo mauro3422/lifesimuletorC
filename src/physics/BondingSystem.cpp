@@ -118,9 +118,7 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
             int closestHost = -1;
             float minDist = Config::FLOAT_MAX;
             for (int hostId : candidates) {
-                float dx = transforms[sourceId].x - transforms[hostId].x;
-                float dy = transforms[sourceId].y - transforms[hostId].y;
-                float dist = std::sqrt(dx*dx + dy*dy);
+                float dist = MathUtils::dist(transforms[sourceId].x, transforms[sourceId].y, transforms[hostId].x, transforms[hostId].y);
                 if (dist < minDist) {
                     minDist = dist;
                     closestHost = hostId;
@@ -209,7 +207,7 @@ int BondingSystem::getBestAvailableSlot(int parentId, Vector3 relativePos,
     ChemistryDatabase& db = ChemistryDatabase::getInstance();
     const Element& element = db.getElement(atoms[parentId].atomicNumber);
     
-    float len = std::sqrt(relativePos.x*relativePos.x + relativePos.y*relativePos.y + relativePos.z*relativePos.z);
+    float len = MathUtils::length(relativePos.x, relativePos.y, relativePos.z);
     if (len < 0.001f) return -1;
     Vector3 dir = { relativePos.x/len, relativePos.y/len, relativePos.z/len };
 
@@ -299,7 +297,7 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
             float dx = transforms[i].x - transforms[j].x;
             float dy = transforms[i].y - transforms[j].y;
             float dz = transforms[i].z - transforms[j].z;
-            float dist = std::sqrt(dx*dx + dy*dy + dz*dz);
+            float dist = MathUtils::length(dx, dy, dz);
 
             float rangeMultiplier = 1.0f;
             float angleMultiplier = 1.0f;
