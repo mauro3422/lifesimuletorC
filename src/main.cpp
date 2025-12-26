@@ -210,6 +210,16 @@ int main() {
                     DrawLineEx({world.transforms[0].x, world.transforms[0].y}, {targetTr.x, targetTr.y}, Config::TRACTOR_BEAM_WIDTH, Fade(Config::THEME_BORDER, 0.6f));
                     DrawCircleLines((int)targetTr.x, (int)targetTr.y, Config::TRACTOR_TARGET_CIRCLE, Config::THEME_BORDER);
                 }
+                
+                // DEBUG: Draw Slots for Selected Entity (Player or Tractor Target)
+                if (inspectingPlayer) {
+                    Renderer25D::drawDebugSlots(0, world.transforms, world.atoms);
+                } else if (inspectingMolecule || selectedEntityIndex != -1) {
+                    int target = (selectedEntityIndex != -1) ? selectedEntityIndex : player.getTractor().getTargetIndex();
+                    if (target != -1) {
+                        Renderer25D::drawDebugSlots(target, world.transforms, world.atoms);
+                    }
+                }
             EndMode2D();
 
             HUD::draw(camera, cameraSys.getMode() == CameraSystem::FREE_LOOK, input);

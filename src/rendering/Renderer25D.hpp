@@ -14,6 +14,11 @@ public:
     static void drawAtoms(const std::vector<TransformComponent>& transforms, 
                          const std::vector<AtomComponent>& atoms,
                          const std::vector<StateComponent>& states);
+
+    // DEBUG: Visualize bonding slots for an atom
+    static void drawDebugSlots(int atomId, 
+                             const std::vector<TransformComponent>& transforms, 
+                             const std::vector<AtomComponent>& atoms);
 };
 
 #endif

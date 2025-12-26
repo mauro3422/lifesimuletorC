@@ -121,3 +121,25 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
         DrawCircleGradient((int)tr.x, (int)tr.y, radius, finalColor, BLACK);
     }
 }
+
+void Renderer25D::drawDebugSlots(int atomId, 
+                               const std::vector<TransformComponent>& transforms, 
+                               const std::vector<AtomComponent>& atoms) {
+    if (atomId < 0 || atomId >= (int)atoms.size()) return;
+
+    ChemistryDatabase& db = ChemistryDatabase::getInstance();
+    const Element& el = db.getElement(atoms[atomId].atomicNumber);
+    const TransformComponent& tr = transforms[atomId];
+
+    // Draw lines for each available slot
+    // NOTE: This visualizes the EXACT vectors the Physics Engine uses (lines 73-78)
+    for (const Vector3& slot : el.bondingSlots) {
+        float targetX = tr.x + slot.x * Config::BOND_IDEAL_DIST;
+        float targetY = tr.y + slot.y * Config::BOND_IDEAL_DIST;
+        
+        // Draw dashed line or simple line to target
+        // Color Yellow to indicate "Potential Bond"
+        DrawLineEx({tr.x, tr.y}, {targetX, targetY}, 2.0f, Fade(YELLOW, 0.6f));
+        DrawCircle((int)targetX, (int)targetY, 3.0f, YELLOW);
+    }
+}
