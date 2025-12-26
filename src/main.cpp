@@ -63,7 +63,8 @@ int main() {
     PhysicsEngine physics;
     
     // 0. INITIALIZE ENVIRONMENTAL ZONES (ISLANDS)
-    auto clayIsland = std::make_shared<ClayZone>((Rectangle){ -1500, -800, 2000, 1600 });
+    // Clay Zone: Offset to the left, acting as a catalyst station (800x800)
+    auto clayIsland = std::make_shared<ClayZone>((Rectangle){ -1200, -400, 800, 800 });
     physics.getEnvironment().addZone(clayIsland);
     InputHandler input;
     Inspector inspector;

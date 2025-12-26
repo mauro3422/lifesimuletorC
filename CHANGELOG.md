@@ -5,8 +5,17 @@
 - **Cycle Bond System**: Implemented non-hierarchical structural bonds to allow ring formation (membranes) without breaking the ECS tree.
 - **Ring Closure Logic**: "Pure Ring Rule" - Any chain of 4+ atoms (including pure Carbon) now spontaneously fuses ends into stable loops if spatially close.
 - **Cycle Physics**: `PhysicsEngine` now applies Hooke's Law to cycle bonds, maintaining ring shape dynamically.
-- **Cycle Rendering**: Visual support for displaying cycle bonds with a unique semi-transparent style.
 - **StateComponent Upgrade**: Added `cycleBondId` to track loop closures.
+
+---
+
+## [Phase 19: Environment & Balance Audit] - 2025-12-26
+
+### Environment Fixes
+- **Solved "Clay Black Hole"**: `ClayZone` was swallowing the entire spawn area.
+- **Resized Clay Zone**: Reduced from 2000x1600 to 800x800 and moved to `(-1200, -400)`. It is now a distinct island you must travel to.
+- **Physics Tuning**: Reduced Clay adsorption force (5.0 -> 1.0) and drag stickiness (0.95 -> 0.98).
+- **Spawn Distribution**: Increased `SPAWN_RANGE_XY` from 250 -> 1500 to disperse atoms widely across the void.
 
 ---
 

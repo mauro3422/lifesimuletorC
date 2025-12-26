@@ -24,7 +24,7 @@ namespace Config {
     inline constexpr int WORLD_WIDTH_MAX = 5000;
     inline constexpr int WORLD_HEIGHT_MIN = -5000;
     inline constexpr int WORLD_HEIGHT_MAX = 5000;
-    inline constexpr float SPAWN_RANGE_XY = 250.0f;
+    inline constexpr float SPAWN_RANGE_XY = 1500.0f;
     inline constexpr float SPAWN_RANGE_Z = 40.0f;
     inline constexpr float INITIAL_VEL_RANGE = 2.0f;
     inline constexpr int WORLD_DEPTH_MIN = -300;

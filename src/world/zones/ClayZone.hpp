@@ -22,14 +22,14 @@ public:
         float dist = std::sqrt(dx*dx + dy*dy);
         
         if (dist > 1.0f) {
-            float force = 5.0f; // Low adsorption force
+            float force = 1.0f; // Low adsorption force (Gentle pull)
             transform.vx += (dx / dist) * force * dt;
             transform.vy += (dy / dist) * force * dt;
         }
 
         // 2. INCREASED DRAG (Stickiness)
-        transform.vx *= 0.95f; 
-        transform.vy *= 0.95f;
+        transform.vx *= 0.98f; 
+        transform.vy *= 0.98f;
 
         // 3. THERMODYNAMIC AGITATION (Local heat)
         transform.vx += MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER * 2.0f;
