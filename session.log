@@ -53,55 +53,20 @@
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
 [INFO] [World] Player initialized at (0,0)
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
-[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 2397]
-[INFO] [BOND] Bond broken for atom 2397 (released from 341)
-[INFO] [BOND] Full Isolation: Atom 2397 released from all bonds
-[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 1907]
-[INFO] [BOND] Bond broken for atom 1907 (released from 2455)
-[INFO] [BOND] Full Isolation: Atom 1907 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2323]
-[INFO] [BOND] Bond broken for atom 2323 (released from 1542)
-[INFO] [BOND] Bond broken for atom 1648 (released from 2323)
-[INFO] [BOND] Full Isolation: Atom 2323 released from all bonds
-[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 1454]
-[INFO] [BOND] Bond broken for atom 1454 (released from 341)
-[INFO] [BOND] Bond broken for atom 552 (released from 1454)
-[INFO] [BOND] Bond broken for atom 1542 (released from 1454)
-[INFO] [BOND] Full Isolation: Atom 1454 released from all bonds
-[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 2026]
-[INFO] [BOND] Bond broken for atom 2026 (released from 697)
-[INFO] [BOND] Bond broken for atom 1454 (released from 2026)
-[INFO] [BOND] Bond broken for atom 1542 (released from 2026)
-[INFO] [BOND] Full Isolation: Atom 2026 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1542]
-[INFO] [BOND] Bond broken for atom 54 (released from 1542)
-[INFO] [BOND] Bond broken for atom 1648 (released from 1542)
-[INFO] [BOND] Bond broken for atom 1765 (released from 1542)
-[INFO] [BOND] Full Isolation: Atom 1542 released from all bonds
-[INFO] [TRACTOR] Captured H (in Hidrógeno Diatómico) [ID: 1648]
-[INFO] [BOND] Bond broken for atom 1648 (released from 1837)
-[INFO] [BOND] Full Isolation: Atom 1648 released from all bonds
-[INFO] [TRACTOR] Captured H (in Hidrógeno Diatómico) [ID: 1837]
-[INFO] [BOND] Bond broken for atom 1648 (released from 1837)
-[INFO] [BOND] Full Isolation: Atom 1837 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1641]
-[INFO] [BOND] Bond broken for atom 1641 (released from 2294)
-[INFO] [BOND] Bond broken for atom 1635 (released from 1641)
-[INFO] [BOND] Bond broken for atom 2026 (released from 1641)
-[INFO] [BOND] Full Isolation: Atom 1641 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1641]
-[INFO] [BOND] Bond broken for atom 1641 (released from 2323)
-[INFO] [BOND] Full Isolation: Atom 1641 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 341]
-[INFO] [BOND] Bond broken for atom 341 (released from 910)
-[INFO] [BOND] Full Isolation: Atom 341 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 341]
-[INFO] [BOND] Bond broken for atom 341 (released from 910)
-[INFO] [BOND] Full Isolation: Atom 341 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 341]
-[INFO] [BOND] Bond broken for atom 341 (released from 910)
-[INFO] [BOND] Full Isolation: Atom 341 released from all bonds
-[INFO] TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
-[INFO] SHADER: [ID 3] Default shader unloaded successfully
-[INFO] TEXTURE: [ID 1] Default texture unloaded successfully
-[INFO] Window closed successfully
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 2004 separated from 660
+[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 361]
+[INFO] [BOND] Bond broken for atom 361 (released from 2173)
+[INFO] [BOND] Full Isolation: Atom 361 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2173]
+[INFO] [BOND] Bond broken for atom 1620 (released from 2173)
+[INFO] [BOND] Full Isolation: Atom 2173 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 803]
+[INFO] [BOND] Bond broken for atom 803 (released from 1620)
+[INFO] [BOND] Bond broken for atom 478 (released from 803)
+[INFO] [BOND] Full Isolation: Atom 803 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 478]
+[INFO] [BOND] Bond broken for atom 478 (released from 803)
+[INFO] [BOND] Full Isolation: Atom 478 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 478]
+[INFO] [BOND] Bond broken for atom 478 (released from 803)
+[INFO] [BOND] Full Isolation: Atom 478 released from all bonds

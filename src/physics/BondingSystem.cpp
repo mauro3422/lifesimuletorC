@@ -307,12 +307,25 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                 angleMultiplier = env->getBondAngleMultiplier({transforms[i].x, transforms[i].y});
             }
 
-            if (dist < Config::BOND_AUTO_RANGE * rangeMultiplier) {
+            // CATALYSIS BOOST: If on active surface (Clay), extend range mostly for Ring Closures
+            float currentRange = Config::BOND_AUTO_RANGE * rangeMultiplier;
+            
+            // Check potential cycle early to decide effective range
+            // We can't know for sure without checking molecule root, but if range is boosted, we process more pairs.
+            // Simplified: We accept checks up to 3x range if on Clay, filter later.
+            if (rangeMultiplier > 1.2f) currentRange *= 3.0f; // Massive boost for Clay
+
+            if (dist < currentRange) {
                 // EXCLUSION: Ignore player molecule (ID 0) and tracted molecules for MERGES
                 int rootI = MathUtils::findMoleculeRoot(i, states);
                 int rootJ = MathUtils::findMoleculeRoot(j, states);
 
                 bool isSameMolecule = (rootI == rootJ);
+                
+                // If we are using the Extended Clay Range (dist > normal), we MUST only allow Cycles.
+                // Otherwise everything merges from far away.
+                bool isExtendedRange = (dist > Config::BOND_AUTO_RANGE * rangeMultiplier);
+                if (isExtendedRange && (!isSameMolecule)) continue; // Don't merge from far away, only close rings.
 
                 // If bonding different molecules (Merging), enforce safety checks (don't merge what I'm holding)
                 if (!isSameMolecule) {
@@ -454,6 +467,42 @@ int BondingSystem::findPrunableLeaf(int parentId, const std::vector<StateCompone
         }
     }
     return bestLeaf;
+}
+
+// --- CYCLE BONDING (Ring Closure) ---
+BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j, 
+                               std::vector<StateComponent>& states, 
+                               std::vector<AtomComponent>& atoms, 
+                               const std::vector<TransformComponent>& transforms) {
+    
+    if (i < 0 || j < 0 || i == j) return INTERNAL_ERROR;
+    
+    // 1. Check if already cycle bonded
+    if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return ALREADY_BONDED;
+
+    // 2. Find Slots for BOTH atoms (They must face each other)
+    // Relative pos for I -> J
+    Vector3 vecIJ = { transforms[j].x - transforms[i].x, transforms[j].y - transforms[i].y, transforms[j].z - transforms[i].z };
+    int slotI = getBestAvailableSlot(i, vecIJ, states, atoms, true, 1.0f); // Forced (Ignore Angle)
+
+    // Relative pos for J -> I
+    Vector3 vecJI = { transforms[i].x - transforms[j].x, transforms[i].y - transforms[j].y, transforms[i].z - transforms[j].z };
+    int slotJ = getBestAvailableSlot(j, vecJI, states, atoms, true, 1.0f); // Forced
+
+    if (slotI != -1 && slotJ != -1) {
+        // SUCCESS: Establish Cycle Bond
+        states[i].cycleBondId = j;
+        states[j].cycleBondId = i;
+        
+        // OCCUPY SLOTS
+        states[i].occupiedSlots |= (1 << slotI);
+        states[j].occupiedSlots |= (1 << slotJ);
+        
+        TraceLog(LOG_INFO, "[BOND] Cycle Bond Created: %d(Slot %d) <-> %d(Slot %d)", i, slotI, j, slotJ);
+        return SUCCESS;
+    }
+    
+    return VALENCY_FULL;
 }
 
 void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& states, 

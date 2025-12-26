@@ -3,6 +3,7 @@
 
 #include "../ecs/components.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
+#include "raylib.h"
 #include <vector>
 
 class EnvironmentManager;
@@ -20,6 +21,7 @@ public:
         DISTANCE_TOO_FAR,
         ANGLE_INCOMPATIBLE,
         ALREADY_CLUSTERED,
+        ALREADY_BONDED,
         INTERNAL_ERROR
     };
 
@@ -60,6 +62,13 @@ public:
     // Finds a terminal atom (leaf) in a parent's hierarchy
     static int findPrunableLeaf(int parentId, const std::vector<StateComponent>& states);
 
+    // Returns the index of the free slot closest to a relative position
+    static int getBestAvailableSlot(int parentId, Vector3 relativePos,
+                                   const std::vector<StateComponent>& states,
+                                   const std::vector<AtomComponent>& atoms,
+                                   bool ignoreAngle = false,
+                                   float angleMultiplier = 1.0f);
+
     // Returns the first free slot index (used for magnetic docking)
     static int getFirstFreeSlot(int parentId, const std::vector<StateComponent>& states,
                                 const std::vector<AtomComponent>& atoms);
@@ -70,12 +79,6 @@ public:
                                  const std::vector<TransformComponent>& transforms);
 
 private:
-    // Returns the index of the free slot closest to a relative position
-    static int getBestAvailableSlot(int parentId, Vector3 relativePos,
-                                   const std::vector<StateComponent>& states,
-                                   const std::vector<AtomComponent>& atoms,
-                                   bool ignoreAngle = false,
-                                   float angleMultiplier = 1.0f);
 };
 
 #endif

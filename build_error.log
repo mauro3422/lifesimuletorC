@@ -1,0 +1,5 @@
+src/physics/BondingSystem.cpp: In static member function 'static BondingSystem::BondError BondingSystem::tryCycleBond(int, int, std::vector<StateComponent>&, std::vector<AtomComponent>&, const std::vector<TransformComponent>&)':
+src/physics/BondingSystem.cpp:481:76: error: 'ALREADY_BONDED' was not declared in this scope
+  481 |     if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return ALREADY_BONDED;
+      |                                                                            ^~~~~~~~~~~~~~
+Error en la compilacion.
