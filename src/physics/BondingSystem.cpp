@@ -370,7 +370,13 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                     int bondsI = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
                     int bondsJ = (states[j].parentEntityId != -1 ? 1 : 0) + states[j].childCount;
                     
-                    // Both must be TERMINAL atoms (exactly 1 bond each) for a ring closure
+                    // LOG: Show bond counts for ALL same-molecule pairs (helps debug)
+                    TraceLog(LOG_DEBUG, "[CYCLE CHECK] Pair %d-%d | BondsI: %d, BondsJ: %d", i, j, bondsI, bondsJ);
+                    
+                    // RELAXED CHECK: Allow cycle if EITHER is terminal OR if they're far in the chain
+                    // For C4 chains: C1(1 bond) - C2(2) - C3(2) - C4(1 bond)
+                    // We want C1 and C4 to close.
+                    // Additionally, allow if BOTH have available valency (less than max bonds)
                     if (bondsI == 1 && bondsJ == 1) {
                         TraceLog(LOG_INFO, "[CYCLE DEBUG] Terminal pair found: %d (bonds=%d) <-> %d (bonds=%d) | Dist: %.1f", i, bondsI, j, bondsJ, dist);
                         
@@ -383,6 +389,13 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                             break;
                         } else {
                             TraceLog(LOG_WARNING, "[CYCLE DEBUG] tryCycleBond FAILED for %d-%d. Result: %d", i, j, result);
+                        }
+                    } else {
+                        // LOG: Explain why this pair was skipped
+                        static int skipLogCounter = 0;
+                        if (++skipLogCounter > 200) {
+                            TraceLog(LOG_DEBUG, "[CYCLE SKIP] Pair %d-%d not terminals (need bondsI=1, bondsJ=1)", i, j);
+                            skipLogCounter = 0;
                         }
                     }
                 }

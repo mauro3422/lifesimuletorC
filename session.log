@@ -53,88 +53,106 @@
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
 [INFO] [World] Player initialized at (0,0)
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
-[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 2342 separated from 692
-[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 441]
-[INFO] [BOND] Bond broken for atom 441 (released from 640)
-[INFO] [BOND] Full Isolation: Atom 441 released from all bonds
-[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 594]
-[INFO] [BOND] Bond broken for atom 594 (released from 640)
-[INFO] [BOND] Full Isolation: Atom 594 released from all bonds
-[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 1736]
-[INFO] [BOND] Bond broken for atom 1736 (released from 626)
-[INFO] [BOND] Full Isolation: Atom 1736 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2141]
-[INFO] [BOND] Bond broken for atom 553 (released from 2141)
-[INFO] [BOND] Bond broken for atom 809 (released from 2141)
-[INFO] [BOND] Bond broken for atom 1581 (released from 2141)
-[INFO] [BOND] Full Isolation: Atom 2141 released from all bonds
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [CYCLE FLOW] Same molecule detected: 1581-1652 (Root: 1581)
-[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 1652]
-[INFO] [BOND] Bond broken for atom 1652 (released from 626)
-[INFO] [BOND] Full Isolation: Atom 1652 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 626]
-[INFO] [BOND] Bond broken for atom 626 (released from 673)
-[INFO] [BOND] Bond broken for atom 594 (released from 626)
-[INFO] [BOND] Full Isolation: Atom 626 released from all bonds
-[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 388]
-[INFO] [BOND] Bond broken for atom 388 (released from 809)
-[INFO] [BOND] Full Isolation: Atom 388 released from all bonds
-[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 594]
-[INFO] [BOND] Bond broken for atom 594 (released from 553)
-[INFO] [BOND] Full Isolation: Atom 594 released from all bonds
-[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 2374]
-[INFO] [BOND] Bond broken for atom 690 (released from 2374)
-[INFO] [BOND] Bond broken for atom 1736 (released from 2374)
-[INFO] [BOND] Full Isolation: Atom 2374 released from all bonds
-[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 505 separated from 593
-[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 690]
-[INFO] [BOND] Bond broken for atom 690 (released from 1804)
-[INFO] [BOND] Bond broken for atom 2141 (released from 690)
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 1747 separated from 568
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 2107 separated from 1112
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 2107 separated from 29
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 2090]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1007]
+[INFO] [BOND] Bond broken for atom 1007 (released from 2299)
+[INFO] [BOND] Bond broken for atom 87 (released from 1007)
+[INFO] [BOND] Bond broken for atom 506 (released from 1007)
+[INFO] [BOND] Full Isolation: Atom 1007 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 690]
+[INFO] [BOND] Bond broken for atom 690 (released from 396)
+[INFO] [BOND] Bond broken for atom 278 (released from 690)
 [INFO] [BOND] Full Isolation: Atom 690 released from all bonds
-[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 1736]
-[INFO] [BOND] Bond broken for atom 1736 (released from 1804)
-[INFO] [BOND] Bond broken for atom 845 (released from 1736)
-[INFO] [BOND] Full Isolation: Atom 1736 released from all bonds
-[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 388]
-[INFO] [BOND] Bond broken for atom 388 (released from 626)
-[INFO] [BOND] Bond broken for atom 594 (released from 388)
-[INFO] [BOND] Full Isolation: Atom 388 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 640]
-[INFO] [BOND] Bond broken for atom 640 (released from 1024)
-[INFO] [BOND] Full Isolation: Atom 640 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1581]
-[INFO] [BOND] Bond broken for atom 553 (released from 1581)
-[INFO] [BOND] Bond broken for atom 673 (released from 1581)
-[INFO] [BOND] Bond broken for atom 1226 (released from 1581)
-[INFO] [BOND] Full Isolation: Atom 1581 released from all bonds
-[INFO] [CYCLE FLOW] Same molecule detected: 673-809 (Root: 673)
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 640]
-[INFO] [BOND] Bond broken for atom 640 (released from 673)
-[INFO] [BOND] Full Isolation: Atom 640 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 553]
-[INFO] [BOND] Bond broken for atom 553 (released from 673)
-[INFO] [BOND] Full Isolation: Atom 553 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 809]
-[INFO] [BOND] Bond broken for atom 809 (released from 673)
-[INFO] [BOND] Bond broken for atom 553 (released from 809)
-[INFO] [BOND] Full Isolation: Atom 809 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 673]
-[INFO] [BOND] Bond broken for atom 673 (released from 1024)
-[INFO] [BOND] Bond broken for atom 626 (released from 673)
-[INFO] [BOND] Full Isolation: Atom 673 released from all bonds
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 626]
-[INFO] [BOND] Bond broken for atom 626 (released from 553)
-[INFO] [BOND] Bond broken for atom 673 (released from 626)
-[INFO] [BOND] Full Isolation: Atom 626 released from all bonds
-[INFO] [TRACTOR] Captured N (in Unknown Structure) [ID: 568]
-[INFO] [BOND] Bond broken for atom 568 (released from 1953)
-[INFO] [BOND] Bond broken for atom 344 (released from 568)
-[INFO] [BOND] Full Isolation: Atom 568 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 396]
+[INFO] [BOND] Bond broken for atom 396 (released from 762)
+[INFO] [BOND] Bond broken for atom 258 (released from 396)
+[INFO] [BOND] Bond broken for atom 278 (released from 396)
+[INFO] [BOND] Full Isolation: Atom 396 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1102]
+[INFO] [BOND] Bond broken for atom 1102 (released from 646)
+[INFO] [BOND] Bond broken for atom 869 (released from 1102)
+[INFO] [BOND] Full Isolation: Atom 1102 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 198]
+[INFO] [BOND] Bond broken for atom 198 (released from 1655)
+[INFO] [BOND] Bond broken for atom 646 (released from 198)
+[INFO] [BOND] Bond broken for atom 683 (released from 198)
+[INFO] [BOND] Bond broken for atom 911 (released from 198)
+[INFO] [BOND] Full Isolation: Atom 198 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 1349]
+[INFO] [BOND] Bond broken for atom 1349 (released from 1907)
+[INFO] [BOND] Bond broken for atom 869 (released from 1349)
+[INFO] [BOND] Bond broken for atom 1286 (released from 1349)
+[INFO] [BOND] Full Isolation: Atom 1349 released from all bonds
+[INFO] [CYCLE FLOW] Same molecule detected: 869-1007 (Root: 869)
+[INFO] [CYCLE FLOW] Same molecule detected: 869-1102 (Root: 869)
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 869]
+[INFO] [BOND] Bond broken for atom 869 (released from 646)
+[INFO] [BOND] Bond broken for atom 271 (released from 869)
+[INFO] [BOND] Full Isolation: Atom 869 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 1907]
+[INFO] [BOND] Bond broken for atom 1286 (released from 1907)
+[INFO] [BOND] Full Isolation: Atom 1907 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 646]
+[INFO] [BOND] Bond broken for atom 646 (released from 1655)
+[INFO] [BOND] Bond broken for atom 271 (released from 646)
+[INFO] [BOND] Bond broken for atom 911 (released from 646)
+[INFO] [BOND] Full Isolation: Atom 646 released from all bonds
+[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 972]
+[INFO] [BOND] Bond broken for atom 972 (released from 1422)
+[INFO] [BOND] Full Isolation: Atom 972 released from all bonds
+[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 911]
+[INFO] [BOND] Bond broken for atom 911 (released from 271)
+[INFO] [BOND] Full Isolation: Atom 911 released from all bonds
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 1655]
+[INFO] [BOND] Bond broken for atom 271 (released from 1655)
+[INFO] [BOND] Bond broken for atom 683 (released from 1655)
+[INFO] [BOND] Bond broken for atom 1422 (released from 1655)
+[INFO] [BOND] Full Isolation: Atom 1655 released from all bonds
+[INFO] [CYCLE FLOW] Same molecule detected: 683-911 (Root: 683)
+[INFO] [TRACTOR] Captured P (in Unknown Structure) [ID: 683]
+[INFO] [BOND] Bond broken for atom 683 (released from 271)
+[INFO] [BOND] Bond broken for atom 327 (released from 683)
+[INFO] [BOND] Bond broken for atom 911 (released from 683)
+[INFO] [BOND] Full Isolation: Atom 683 released from all bonds
+[INFO] [CYCLE FLOW] Same molecule detected: 327-646 (Root: 327)
+[INFO] [CYCLE FLOW] Same molecule detected: 327-869 (Root: 327)
+[INFO] [TRACTOR] Captured O (in Unknown Structure) [ID: 1422]
+[INFO] [BOND] Bond broken for atom 1422 (released from 1655)
+[INFO] [BOND] Bond broken for atom 271 (released from 1422)
+[INFO] [BOND] Bond broken for atom 972 (released from 1422)
+[INFO] [BOND] Full Isolation: Atom 1422 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 396]
+[INFO] [BOND] Bond broken for atom 396 (released from 690)
+[INFO] [BOND] Full Isolation: Atom 396 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 271]
+[INFO] [BOND] Bond broken for atom 271 (released from 646)
+[INFO] [BOND] Bond broken for atom 1102 (released from 271)
+[INFO] [BOND] Full Isolation: Atom 271 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1102]
+[INFO] [BOND] Bond broken for atom 1007 (released from 1102)
+[INFO] [BOND] Full Isolation: Atom 1102 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 396]
+[INFO] [BOND] Bond broken for atom 396 (released from 690)
+[INFO] [BOND] Full Isolation: Atom 396 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 690]
+[INFO] [BOND] Bond broken for atom 690 (released from 1007)
+[INFO] [BOND] Bond broken for atom 271 (released from 690)
+[INFO] [BOND] Full Isolation: Atom 690 released from all bonds
+[INFO] [TRACTOR] Captured H (in Unknown Structure) [ID: 64]
+[INFO] [BOND] Bond broken for atom 64 (released from 2097)
+[INFO] [BOND] Bond broken for atom 39 (released from 64)
+[INFO] [BOND] Full Isolation: Atom 64 released from all bonds
+[INFO] [CYCLE FLOW] Same molecule detected: 39-1557 (Root: 39)
+[INFO] [CYCLE FLOW] Same molecule detected: 39-198 (Root: 39)
+[INFO] [CYCLE DEBUG] Terminal pair found: 39 (bonds=1) <-> 198 (bonds=1) | Dist: 47.9
+[INFO] [BOND] Cycle Bond Created: 39(Slot 0) <-> 198(Slot 1)
+[INFO] [MEMBRANE] CYCLE FORMED: Atom 39 - 198 (Phys + Visual)
+[INFO] [CYCLE FLOW] Same molecule detected: 39-1557 (Root: 39)
+[INFO] [CYCLE FLOW] Same molecule detected: 64-1557 (Root: 64)
+[INFO] [CYCLE FLOW] Same molecule detected: 64-198 (Root: 64)
+[INFO] [CYCLE DEBUG] Terminal pair found: 64 (bonds=1) <-> 198 (bonds=1) | Dist: 36.0
+[WARNING] [CYCLE DEBUG] tryCycleBond FAILED for 64-198. Result: 5
+[INFO] [CYCLE FLOW] Same molecule detected: 64-281 (Root: 64)
