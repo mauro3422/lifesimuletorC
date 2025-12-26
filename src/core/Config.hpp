@@ -72,11 +72,11 @@ namespace Config {
     inline constexpr float POLARITY_FACTOR = 0.15f;     // Electronegativity -> Partial charge factor
     
     // --- ELASTICITY & RUPTURE (Dynamic Geometry) ---
-    inline constexpr float BOND_SPRING_K = 15.0f;       // Bond "spring" constant
-    inline constexpr float BOND_DAMPING = 0.85f;        // Vibration damping
-    inline constexpr float BOND_BREAK_STRESS = 60.0f;   // Increased from 35.0 to prevent brittle breaking
-    inline constexpr float BOND_IDEAL_DIST = 24.0f;     // Increased from 18.0f to reduce overlap and show bonds
-    inline constexpr float MAX_BOND_RENDER_DIST = 40.0f; // Max distance to render bond lines (prevents visual glitches)
+    inline constexpr float BOND_SPRING_K = 8.0f;        // Softer springs (was 15.0) to allow ring bending
+    inline constexpr float BOND_DAMPING = 0.92f;        // Higher damping (was 0.85) to stabilize soft springs
+    inline constexpr float BOND_BREAK_STRESS = 150.0f;  // Massive increase (was 60.0) to prevent breakage during formation
+    inline constexpr float BOND_IDEAL_DIST = 24.0f;     
+    inline constexpr float MAX_BOND_RENDER_DIST = 40.0f;
 
     // --- BONDING ANIMATION ---
     inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Slower speed for smoother docking
