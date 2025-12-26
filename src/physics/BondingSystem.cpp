@@ -362,14 +362,38 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                     // If total graph distance (approx) >= 3 (e.g. A-B-C-D has 3 hops).
                     
                     if (hopsI + hopsJ >= 3) {
-                        // CLOSE THE RING (Pure Carbon / Simple Cycle)
-                        states[i].cycleBondId = j;
+                        // CLOSE THE RING: Attempt actual bond first!
+                        // Previously we just set cycleBondId without creating the physics bond.
+                        // We MUST run tryBond to update occupancy, parent/child refs (if applicable), or just established connectivity.
                         
-                        TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Pure Ring Closure)", i, j);
+                        // Wait, cycleBondId in existing logic (lines 359) was SETTING it but NOT calling tryBond?
+                        // YES! The previous code was: "states[i].cycleBondId = j;" and then notified.
+                        // It NEVER called tryBond(). So the Atoms weren't actually physically bonded (no spring force)!
+                        // They were just "visually" cycled.
                         
-                        // NOTIFY MISSION
-                        MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
-                        break; 
+                        // FIX: Actually bond them physically using tryBond(forced=true).
+                        // Note: tryBond might fail if valency is full.
+                        // If successful, THEN set cycleBondId.
+                         
+                         BondError result = tryBond(i, j, states, atoms, transforms, true, angleMultiplier);
+                         
+                         // Note: tryBond typically sets parent/child. For cycles, we might want a "Soft Bond" or "Peer Bond"?
+                         // Current system relies on Parent-Child for main bonds.
+                         // PhysicsEngine uses "states[i].cycleBondId" to add a spring force (Phase 18).
+                         // So we technically DON'T need tryBond for the physics to work, IF PhysicsEngine respects cycleBondId.
+                         // BUT we DO need tryBond to update "occupiedSlots" and check valency!
+                         
+                         if (result == SUCCESS) {
+                             // The atoms are now bonded in the hierarchy (or spliced).
+                             // We ALSO mark it as a cycle for visual styling.
+                             states[i].cycleBondId = j;
+                             TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Phys + Visual)", i, j);
+                             MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
+                             break;
+                         } else {
+                             // If standard bond failed (e.g. Valency Full), checking if we can just do a visual/weak cycle bond?
+                             // No, Carbon Valency 4 must be respected.
+                         }
                     }
                 }
             }
