@@ -67,7 +67,7 @@ void Inspector::draw(const Element& element, int entityID, InputHandler& input, 
     }
 
     float curX = rect.x + UIConfig::INNER_PADDING;
-    float curY = rect.y + UIConfig::HEADER_HEIGHT + UIConfig::SPACING_SMALL;
+    float curY = rect.y + UIConfig::HEADER_HEIGHT + UIConfig::SPACING_MEDIUM + 5.0f; // Padding extra para no quedar pegado al header
 
     // 2. Tarjeta de Elemento y Valencias (Sin línea de ID redundante)
     UIWidgets::drawElementCard(element, curX, curY, UIConfig::INSPECTOR_CARD_SIZE, input);
