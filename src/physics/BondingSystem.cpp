@@ -308,15 +308,22 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
             }
 
             if (dist < Config::BOND_AUTO_RANGE * rangeMultiplier) {
-                // EXCLUSION: Ignore player molecule (ID 0) and tracted molecules
+                // EXCLUSION: Ignore player molecule (ID 0) and tracted molecules for MERGES
                 int rootI = MathUtils::findMoleculeRoot(i, states);
                 int rootJ = MathUtils::findMoleculeRoot(j, states);
 
-                if (rootI == 0 || rootJ == 0) continue;
-                if (tractedRoot != -1 && (rootI == tractedRoot || rootJ == tractedRoot)) continue;
-                
-                // VALENCY SHIELD: If root is shielded, no bonding allowed
-                if (states[rootI].isShielded || states[rootJ].isShielded) continue;
+                bool isSameMolecule = (rootI == rootJ);
+
+                // If bonding different molecules (Merging), enforce safety checks (don't merge what I'm holding)
+                if (!isSameMolecule) {
+                    if (rootI == 0 || rootJ == 0) continue;
+                    if (tractedRoot != -1 && (rootI == tractedRoot || rootJ == tractedRoot)) continue;
+                    
+                    // VALENCY SHIELD: If root is shielded, no bonding allowed
+                    if (states[rootI].isShielded || states[rootJ].isShielded) continue;
+                }
+                // However, if isSameMolecule (Ring Closure), we ALLOW it even if tracked/held.
+                // This lets the player manualy bend a chain to close it.
 
                 if (rootI != rootJ) {
                     // DIFFERENT MOLECULES -> NORMAL BOND (Merge)
