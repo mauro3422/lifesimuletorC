@@ -371,28 +371,15 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                         // It NEVER called tryBond(). So the Atoms weren't actually physically bonded (no spring force)!
                         // They were just "visually" cycled.
                         
-                        // FIX: Actually bond them physically using tryBond(forced=true).
-                        // Note: tryBond might fail if valency is full.
-                        // If successful, THEN set cycleBondId.
+                        // FIX: Actually bond them physically using tryCycleBond
+                        // This ignores hierarchy checks (isClustered) and just occupies slots + sets cycleBondId.
                          
-                         BondError result = tryBond(i, j, states, atoms, transforms, true, angleMultiplier);
-                         
-                         // Note: tryBond typically sets parent/child. For cycles, we might want a "Soft Bond" or "Peer Bond"?
-                         // Current system relies on Parent-Child for main bonds.
-                         // PhysicsEngine uses "states[i].cycleBondId" to add a spring force (Phase 18).
-                         // So we technically DON'T need tryBond for the physics to work, IF PhysicsEngine respects cycleBondId.
-                         // BUT we DO need tryBond to update "occupiedSlots" and check valency!
+                         BondError result = tryCycleBond(i, j, states, atoms, transforms);
                          
                          if (result == SUCCESS) {
-                             // The atoms are now bonded in the hierarchy (or spliced).
-                             // We ALSO mark it as a cycle for visual styling.
-                             states[i].cycleBondId = j;
                              TraceLog(LOG_INFO, "[MEMBRANE] CYCLE FORMED: Atom %d - %d (Phys + Visual)", i, j);
                              MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
                              break;
-                         } else {
-                             // If standard bond failed (e.g. Valency Full), checking if we can just do a visual/weak cycle bond?
-                             // No, Carbon Valency 4 must be respected.
                          }
                     }
                 }

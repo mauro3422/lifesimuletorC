@@ -64,6 +64,11 @@ public:
     static int getFirstFreeSlot(int parentId, const std::vector<StateComponent>& states,
                                 const std::vector<AtomComponent>& atoms);
 
+    // Force-bond two atoms as a cycle (Visual + Physics) without changing hierarchy.
+    static BondError tryCycleBond(int i, int j, std::vector<StateComponent>& states, 
+                                 std::vector<AtomComponent>& atoms, 
+                                 const std::vector<TransformComponent>& transforms);
+
 private:
     // Returns the index of the free slot closest to a relative position
     static int getBestAvailableSlot(int parentId, Vector3 relativePos,
