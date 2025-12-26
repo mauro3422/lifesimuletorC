@@ -75,7 +75,7 @@ namespace Config {
     inline constexpr float BOND_SPRING_K = 15.0f;       // Bond "spring" constant
     inline constexpr float BOND_DAMPING = 0.85f;        // Vibration damping
     inline constexpr float BOND_BREAK_STRESS = 60.0f;   // Increased from 35.0 to prevent brittle breaking
-    inline constexpr float BOND_IDEAL_DIST = 18.0f;     // Ideal bond length (rest position)
+    inline constexpr float BOND_IDEAL_DIST = 24.0f;     // Increased from 18.0f to reduce overlap and show bonds
     inline constexpr float MAX_BOND_RENDER_DIST = 40.0f; // Max distance to render bond lines (prevents visual glitches)
 
     // --- BONDING ANIMATION ---

@@ -78,16 +78,12 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
              float scale = 1.0f + (((trA.z + trB.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
              if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
 
-             // Unique color for Cycle Bonds (Slightly darker or specialized)
-             Color bondColor = { 
-                (unsigned char)((elA.color.r + elB.color.r) / 2),
-                (unsigned char)((elA.color.g + elB.color.g) / 2),
-                (unsigned char)((elA.color.b + elB.color.b) / 2),
-                200 // Slightly transparent to distinguish internal structure
-             };
+             // MEMBRANE VISUALIZATION: "Border" Style
+             // Thicker, brighter, and solid opacity to act as a clear perimeter.
+             Color bondColor = SKYBLUE; 
              
-             DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale, BLACK);
-             DrawLineEx(start, end, (Config::RENDER_BOND_THICKNESS_FG - 1.0f) * scale, bondColor);
+             DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * 2.0f * scale, BLACK);
+             DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * 2.0f * scale, bondColor);
         }
     }
 

@@ -53,3 +53,14 @@
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
 [INFO] [World] Player initialized at (0,0)
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 369 separated from 765
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 430 separated from 575
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 600]
+[INFO] [TRACTOR] Captured S (in Unknown Structure) [ID: 600]
+[INFO] [TRACTOR] Captured N (in Nitrógeno Diatómico) [ID: 504]
+[INFO] [BOND] Bond broken for atom 504 (released from 1315)
+[INFO] [BOND] Full Isolation: Atom 504 released from all bonds
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 1545 separated from 1212
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 1545 separated from 1212
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 1545 separated from 256
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 1545 separated from 2222
