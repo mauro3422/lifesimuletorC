@@ -43,7 +43,7 @@ public:
     // Uses SpatialGrid for O(N*k) performance instead of O(N²)
     static void updateSpontaneousBonding(std::vector<StateComponent>& states,
                                          std::vector<AtomComponent>& atoms,
-                                         const std::vector<TransformComponent>& transforms,
+                                         std::vector<TransformComponent>& transforms,
                                          const class SpatialGrid& grid,
                                          EnvironmentManager* env = nullptr,
                                          int tractedEntityId = -1);
@@ -74,9 +74,10 @@ public:
                                 const std::vector<AtomComponent>& atoms);
 
     // Force-bond two atoms as a cycle (Visual + Physics) without changing hierarchy.
+    // Repositions atoms into square formation when ring forms.
     static BondError tryCycleBond(int i, int j, std::vector<StateComponent>& states, 
                                  std::vector<AtomComponent>& atoms, 
-                                 const std::vector<TransformComponent>& transforms);
+                                 std::vector<TransformComponent>& transforms);
 
 private:
 };

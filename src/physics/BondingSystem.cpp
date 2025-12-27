@@ -4,7 +4,9 @@
 #include "core/MathUtils.hpp"
 #include "gameplay/MissionManager.hpp"
 #include "world/EnvironmentManager.hpp"
+#include <algorithm>
 #include <cmath>
+#include <functional>
 
 int BondingSystem::getFirstFreeSlot(int parentId, const std::vector<StateComponent>& states, const std::vector<AtomComponent>& atoms) {
     if (parentId < 0 || parentId >= (int)states.size()) return -1;
@@ -81,7 +83,6 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
     }
 
     if (bestHostId != -1) { // 4. PERFORM BOND
-        states[sourceId].isClustered = true;
         states[sourceId].isClustered = true;
         states[sourceId].parentEntityId = bestHostId; 
         states[sourceId].parentSlotIndex = bestSlotIdx;
@@ -268,7 +269,7 @@ void BondingSystem::updateHierarchy(std::vector<TransformComponent>& transforms,
 
 void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states,
                                                std::vector<AtomComponent>& atoms,
-                                               const std::vector<TransformComponent>& transforms,
+                                               std::vector<TransformComponent>& transforms,
                                                const SpatialGrid& grid,
                                                EnvironmentManager* env,
                                                int tractedEntityId) {
@@ -283,7 +284,9 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
 
     // O(N*k) OPTIMIZATION: Use SpatialGrid instead of O(N²) double loop
     for (int i = 1; i < (int)states.size(); i++) { 
-        if (states[i].isClustered) continue; 
+        // REMOVED: `if (states[i].isClustered) continue;`
+        // This was preventing mid-chain atoms from attracting new neighbors.
+        // Now ALL atoms can participate in bonding (the tryBond function handles valency limits).
 
         // Skip atoms being dragged by tractor
         if (tractedRoot != -1 && MathUtils::findMoleculeRoot(i, states) == tractedRoot) continue;
@@ -348,12 +351,27 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
 
                 if (rootI != rootJ) {
                     // DIFFERENT MOLECULES -> NORMAL BOND (Merge)
+                    
+                    // PHASE 37: LINEAR CHAIN PREFERENCE (STRICT)
+                    // To force true linear chains (not branching/star):
+                    // Both atoms must be terminal (1 bond) or isolated (0 bonds)
+                    // This ensures: A-B, then C joins B (end), then D joins C (end), etc.
+                    int bondsI = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
+                    int bondsJ = (states[j].parentEntityId != -1 ? 1 : 0) + states[j].childCount;
+                    
+                    // STRICT: Both must be terminal/isolated for linear chain
+                    // One can have 1 bond (end of chain), but if one has 2+, skip entirely
+                    if (bondsI >= 2 || bondsJ >= 2) continue; // Either is saturated - skip
+                    
+                    // REMOVED: Previous logic prevented isolated atoms from bonding to roots.
+                    // This was too restrictive and blocked chain growth.
+                    // Now ANY carbon with available valency can bond to any other.
+                    
                     if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == SUCCESS) {
                         break; // One bond per atom per tick
                     }
                 } else {
-                    // SAME MOLECULE -> Log that we reached cycle detection
-                    TraceLog(LOG_INFO, "[CYCLE FLOW] Same molecule detected: %d-%d (Root: %d)", i, j, rootI);
+                    // SAME MOLECULE -> cycle detection (logs removed for performance)
                     // SAME MOLECULE -> POTENTIAL CYCLE CLOSURE (Membrane Logic)
                     // Rule: Only close if they are "far" in terms of graph hops (> 4 atoms away)
                     // but close in space.
@@ -365,20 +383,58 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                     if (states[i].parentEntityId == j || states[j].parentEntityId == i) continue;
                     if (states[i].cycleBondId == j || states[j].cycleBondId == i) continue; // Already cycle bonded
 
+                    // CHEMISTRY FILTER: Only Carbon (C, atomicNumber=6) can form membrane cycles
+                    // This prevents phosphates, hydrogens, and other atoms from creating false membranes
+                    if (atoms[i].atomicNumber != 6 || atoms[j].atomicNumber != 6) continue;
+                    
+                    // CLAY FILTER: Membranes can ONLY form on catalytic surfaces (rangeMultiplier > 1.2)
+                    if (rangeMultiplier <= 1.2f) continue;
+
                     // SIMPLIFIED CYCLE CHECK: Just check if both atoms have exactly 1 bond (terminals)
                     // This is much simpler than hop counting and directly matches our Phase 32 logic.
                     int bondsI = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
                     int bondsJ = (states[j].parentEntityId != -1 ? 1 : 0) + states[j].childCount;
-                    
-                    // LOG: Show bond counts for ALL same-molecule pairs (helps debug)
-                    TraceLog(LOG_DEBUG, "[CYCLE CHECK] Pair %d-%d | BondsI: %d, BondsJ: %d", i, j, bondsI, bondsJ);
                     
                     // RELAXED CHECK: Allow cycle if EITHER is terminal OR if they're far in the chain
                     // For C4 chains: C1(1 bond) - C2(2) - C3(2) - C4(1 bond)
                     // We want C1 and C4 to close.
                     // Additionally, allow if BOTH have available valency (less than max bonds)
                     if (bondsI == 1 && bondsJ == 1) {
-                        TraceLog(LOG_INFO, "[CYCLE DEBUG] Terminal pair found: %d (bonds=%d) <-> %d (bonds=%d) | Dist: %.1f", i, bondsI, j, bondsJ, dist);
+                        // PHASE 38: MINIMUM RING SIZE CHECK (PATH HOPS)
+                        // A valid ring needs at least 4 atoms. In a tree, the path
+                        // between two terminals must be at least 3 hops (A-B-C-D).
+                        
+                        int hopDistance = 0;
+                        int current = i;
+                        std::vector<int> pathI;
+                        while (current != -1) {
+                            pathI.push_back(current);
+                            current = states[current].parentEntityId;
+                        }
+                        
+                        current = j;
+                        bool foundConnection = false;
+                        while (current != -1) {
+                            for (size_t p = 0; p < pathI.size(); p++) {
+                                if (pathI[p] == current) {
+                                    hopDistance = p + hopDistance;
+                                    foundConnection = true;
+                                    break;
+                                }
+                            }
+                            if (foundConnection) break;
+                            hopDistance++;
+                            current = states[current].parentEntityId;
+                        }
+                        
+                        if (hopDistance < 3) {
+                            // Ring too small (e.g. triangle = 2 hops between terminals).
+                            // Skip to force larger rings.
+                            continue;
+                        }
+                        
+                        TraceLog(LOG_INFO, "[CYCLE TRY] Terminals: %d <-> %d | Dist: %.1f | PathHops: %d", 
+                                 i, j, dist, hopDistance);
                         
                         // FIX: Actually bond them physically using tryCycleBond
                         BondError result = tryCycleBond(i, j, states, atoms, transforms);
@@ -388,15 +444,10 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                             MissionManager::getInstance().notifyBondCreated(atoms[i].atomicNumber, atoms[j].atomicNumber);
                             break;
                         } else {
-                            TraceLog(LOG_WARNING, "[CYCLE DEBUG] tryCycleBond FAILED for %d-%d. Result: %d", i, j, result);
+                            // tryCycleBond failed silently (performance)
                         }
                     } else {
-                        // LOG: Explain why this pair was skipped
-                        static int skipLogCounter = 0;
-                        if (++skipLogCounter > 200) {
-                            TraceLog(LOG_DEBUG, "[CYCLE SKIP] Pair %d-%d not terminals (need bondsI=1, bondsJ=1)", i, j);
-                            skipLogCounter = 0;
-                        }
+                        // Skip non-terminal pairs silently (performance)
                     }
                 }
             }
@@ -411,6 +462,43 @@ void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states,
     if (!state.isClustered || state.parentEntityId == -1) return;
 
     int parentId = state.parentEntityId;
+
+    // --- FIX: CLEAR isInRing FOR ALL RING ATOMS WHEN RING BREAKS ---
+    // When any bond in the ring breaks, the entire ring structure is destroyed
+    if (state.isInRing) {
+        // Clear isInRing for all atoms that were in this ring
+        for (int k = 0; k < (int)states.size(); k++) {
+            if (states[k].isInRing) {
+                // Check if this atom is connected to the breaking bond
+                // by walking the parent chain
+                int walker = k;
+                bool connected = false;
+                while (walker != -1) {
+                    if (walker == entityId || walker == parentId) {
+                        connected = true;
+                        break;
+                    }
+                    walker = states[walker].parentEntityId;
+                }
+                if (connected) {
+                    states[k].isInRing = false;
+                    if (states[k].cycleBondId != -1) {
+                        int partner = states[k].cycleBondId;
+                        if (partner >= 0 && partner < (int)states.size()) {
+                            states[partner].cycleBondId = -1;
+                            states[partner].isInRing = false;
+                        }
+                        states[k].cycleBondId = -1;
+                    }
+                }
+            }
+        }
+        TraceLog(LOG_INFO, "[RING] Ring structure broken - cleared isInRing for all connected atoms");
+    }
+
+    // Reset current atom's ring state
+    state.cycleBondId = -1;
+    state.isInRing = false;
 
     // --- REVERT POLARITY ---
     float enHost = ChemistryDatabase::getInstance().getElement(atoms[parentId].atomicNumber).electronegativity;
@@ -476,7 +564,7 @@ int BondingSystem::findPrunableLeaf(int parentId, const std::vector<StateCompone
 BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j, 
                                std::vector<StateComponent>& states, 
                                std::vector<AtomComponent>& atoms, 
-                               const std::vector<TransformComponent>& transforms) {
+                               std::vector<TransformComponent>& transforms) {
     
     if (i < 0 || j < 0 || i == j) return INTERNAL_ERROR;
     
@@ -497,9 +585,87 @@ BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j,
         states[i].cycleBondId = j;
         states[j].cycleBondId = i;
         
+        // COLLECT RING ATOMS IN CHAIN ORDER
+        // For a proper square, atoms must be ordered: A-B-C-D where A-B, B-C, C-D, D-A are bonds
+        // The chain is: i is terminal, follow parents until we hit j's chain
+        std::vector<int> chainFromI;
+        std::vector<int> chainFromJ;
+        
+        // Walk from i to root
+        int current = i;
+        while (current != -1) {
+            chainFromI.push_back(current);
+            states[current].isInRing = true;
+            current = states[current].parentEntityId;
+        }
+        
+        // Walk from j to root
+        current = j;
+        while (current != -1) {
+            chainFromJ.push_back(current);
+            states[current].isInRing = true;
+            current = states[current].parentEntityId;
+        }
+        
+        // Find common ancestor and build ring in order
+        // For 4-atom ring: i -> parent(i) -> ... -> common -> ... -> j
+        // The ring order should be: i, then follow chain to j
+        std::vector<int> ringAtoms;
+        ringAtoms.push_back(i);
+        
+        // Add atoms from i's parent chain (excluding i, already added)
+        for (int k = 1; k < (int)chainFromI.size(); k++) {
+            if (std::find(chainFromJ.begin(), chainFromJ.end(), chainFromI[k]) != chainFromJ.end()) {
+                // Found common ancestor, now add j's chain in reverse back to j
+                int commonIdx = -1;
+                for (int m = 0; m < (int)chainFromJ.size(); m++) {
+                    if (chainFromJ[m] == chainFromI[k]) { commonIdx = m; break; }
+                }
+                // Add from common back to j (reverse order)
+                for (int m = commonIdx; m >= 0; m--) {
+                    if (chainFromJ[m] != i && std::find(ringAtoms.begin(), ringAtoms.end(), chainFromJ[m]) == ringAtoms.end()) {
+                        ringAtoms.push_back(chainFromJ[m]);
+                    }
+                }
+                break;
+            }
+            ringAtoms.push_back(chainFromI[k]);
+        }
+
         // OCCUPY SLOTS
         states[i].occupiedSlots |= (1 << slotI);
         states[j].occupiedSlots |= (1 << slotJ);
+        
+        // --- REPOSITION ATOMS INTO SQUARE FORMATION ---
+        if (ringAtoms.size() == 4) {
+            // Calculate centroid of all ring atoms
+            float cx = 0, cy = 0, cz = 0;
+            for (int idx : ringAtoms) {
+                cx += transforms[idx].x;
+                cy += transforms[idx].y;
+                cz += transforms[idx].z;
+            }
+            cx /= 4.0f; cy /= 4.0f; cz /= 4.0f;
+            
+            // Place atoms at corners of a square around centroid
+            // Order them so bonds go: 0-1 (top), 1-2 (right), 2-3 (bottom), 3-0 (left)
+            float halfSide = Config::BOND_IDEAL_DIST * 0.5f;
+            
+            // Position 4 atoms at square corners FOLLOWING chain order
+            transforms[ringAtoms[0]].x = cx - halfSide; transforms[ringAtoms[0]].y = cy - halfSide; // Top-left
+            transforms[ringAtoms[1]].x = cx + halfSide; transforms[ringAtoms[1]].y = cy - halfSide; // Top-right
+            transforms[ringAtoms[2]].x = cx + halfSide; transforms[ringAtoms[2]].y = cy + halfSide; // Bottom-right
+            transforms[ringAtoms[3]].x = cx - halfSide; transforms[ringAtoms[3]].y = cy + halfSide; // Bottom-left
+            
+            // Flatten Z for all
+            for (int idx : ringAtoms) {
+                transforms[idx].z = 0;
+                transforms[idx].vx = 0; transforms[idx].vy = 0; transforms[idx].vz = 0;
+            }
+            
+            TraceLog(LOG_INFO, "[RING] Repositioned atoms [%d,%d,%d,%d] into square at (%.0f, %.0f)", 
+                     ringAtoms[0], ringAtoms[1], ringAtoms[2], ringAtoms[3], cx, cy);
+        }
         
         TraceLog(LOG_INFO, "[BOND] Cycle Bond Created: %d(Slot %d) <-> %d(Slot %d)", i, slotI, j, slotJ);
         return SUCCESS;
@@ -511,6 +677,17 @@ BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j,
 void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& states, 
                                   std::vector<AtomComponent>& atoms) {
     if (entityId < 0 || entityId >= (int)states.size()) return;
+
+    // 0. FIX: Break cycle bond if exists (must be done BEFORE breaking parent)
+    if (states[entityId].cycleBondId != -1) {
+        int partnerId = states[entityId].cycleBondId;
+        if (partnerId >= 0 && partnerId < (int)states.size()) {
+            states[partnerId].cycleBondId = -1;
+            states[partnerId].isInRing = false;
+        }
+        states[entityId].cycleBondId = -1;
+        states[entityId].isInRing = false;
+    }
 
     // 1. Break connection with parent
     if (states[entityId].parentEntityId != -1) {

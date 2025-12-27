@@ -1,4 +1,61 @@
 
+## [Phase 24: Stable Ring Formation & Chain Growth] - 2025-12-27
+
+### Fixed
+- **Ring Atom Oscillation**: Removed angular forces that caused feedback loop oscillation. Ring stability now achieved through damping (0.30) instead of active forces.
+- **Uneven Ring Movement**: Fixed Phase 32/36 still affecting 2 of 4 ring atoms by changing `cycleBondId != -1` check to `isInRing` check.
+- **Bond Hierarchy Order**: Fixed ring atom reordering - now collects atoms in chain order before positioning, so bonds connect adjacent corners.
+- **isInRing Cleanup Bug**: Enhanced `breakBond()` to clear isInRing for ALL connected atoms when any ring bond breaks, not just the breaking atom.
+- **Carbon Chain Growth**: Removed restrictive "root-with-child" logic that prevented 3rd+ atoms from joining chains.
+
+### Added
+- **Instant Square Repositioning**: When 4-atom ring forms, atoms immediately snap to perfect square corners around centroid.
+- **Visual Ring Vibration**: Added subtle sin/cos oscillation (0.08 speed, 0.6px amplitude) to ring atom borders for "alive" appearance.
+- **Cycle Bond Distance Physics**: Unified cycle bond physics with regular ring bonds (K=6.0, distance-based).
+
+### Changed
+- **Ring Damping**: Increased from 0.50 to very heavy 0.30 to nearly freeze ring atoms.
+- **Z-Flatten Force**: Increased to 20.0 with 0.5 damping for flat 2D rings.
+- `updateSpontaneousBonding` and `tryCycleBond` now accept non-const transforms for repositioning.
+
+### Technical Learnings
+> **Key Discovery**: Angular forces + spring forces create oscillation feedback loops.
+> **Solution**: Position atoms correctly at formation time, then use heavy damping to maintain.
+> **Generalization**: For any stable structure, the pattern is:
+> 1. Detect structure completion (e.g., cycle closure)
+> 2. Calculate ideal target positions based on geometry
+> 3. Instantly reposition atoms to target
+> 4. Apply heavy damping to maintain shape
+> 5. Use `isInRing`/`isInStructure` flags to exclude from dynamic forces
+
+---
+
+## [Phase 22: Ring System Bug Fixes] - 2025-12-27
+
+### Fixed
+- **Ghost Ring Highlight Bug**: Fixed issue where atoms retained blue ring highlight after cycle bond was broken. Added `cycleBondId` and `isInRing` cleanup in `breakBond()`.
+- **Duplicate Code**: Removed duplicate `isClustered = true` line in `tryBond()`.
+- **Full Isolation Cycle Cleanup**: Added cycle bond cleanup in `breakAllBonds()` to ensure complete isolation.
+
+### Changed
+- **Reduced Terminal Oscillation**: Lowered ring folding strength from 25.0 to 18.0 to prevent visual vibration while still allowing ring closure.
+
+---
+
+## [Phase 23: Ring Angular Forces] - 2025-12-27
+
+### Added
+- **Ring Angular Forces**: Implemented angular bending forces for atoms in rings to maintain proper geometry. Rings now form squares (4 atoms) instead of collapsing into a ball.
+- **90° Target Angle**: For 4-atom rings, forces push neighbors to maintain ~90° angles at each vertex.
+- **Tangential Force Application**: Angular correction is applied as tangential forces to the two neighbors of each ring atom.
+- **Distance-Only Forces for Rings**: Ring atoms now use pure distance springs instead of VSEPR directional forces, allowing angular forces to control geometry.
+- **Ring-Specific Damping**: Added 0.92 damping factor specifically for ring atoms to reduce oscillation and stabilize shape faster.
+
+### Changed
+- Increased angular spring constant from 3.0 to 6.0 for stronger shape correction.
+
+---
+
 ## [Phase 18: Proto-Membranes & Cycle Bonds] - 2025-12-26
 
 ### Added

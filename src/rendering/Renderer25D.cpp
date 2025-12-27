@@ -37,53 +37,49 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
             float scale = 1.0f + (((trChild.z + trParent.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
             if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
 
-            Color bondColor = { 
-                (unsigned char)((parentEl.color.r + childEl.color.r) / 2),
-                (unsigned char)((parentEl.color.g + childEl.color.g) / 2),
-                (unsigned char)((parentEl.color.b + childEl.color.b) / 2),
-                255 
-            };
+            // A bond is part of the ring perimeter if BOTH atoms are marked as being in a ring
+            bool isRingBond = states[pId].isInRing && states[i].isInRing;
             
-            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale, BLACK);
-            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * scale, bondColor);
+            Color bondColor;
+            if (isRingBond) {
+                bondColor = SKYBLUE; // Membrane border color
+            } else {
+                bondColor = { 
+                    (unsigned char)((parentEl.color.r + childEl.color.r) / 2),
+                    (unsigned char)((parentEl.color.g + childEl.color.g) / 2),
+                    (unsigned char)((parentEl.color.b + childEl.color.b) / 2),
+                    255 
+                };
+            }
+            
+            float thickness = isRingBond ? 2.0f : 1.0f; 
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale * thickness, BLACK);
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * scale * thickness, bondColor);
         }
-    }
 
-    // --- PHASE 18: DRAW CYCLE BONDS (Membrane loops) ---
-    for (int i = 0; i < (int)states.size(); i++) {
-        const StateComponent& state = states[i];
-        if (state.cycleBondId != -1) {
-             // Only draw if i < cycleBondId to avoid double drawing
-             if (i > state.cycleBondId) continue;
+        // --- PHASE 41: DRAW CYCLE BONDS (Closing the loop) ---
+        if (states[i].cycleBondId != -1 && states[i].cycleBondId > i) {
+            int j = states[i].cycleBondId;
+            const TransformComponent& trI = transforms[i];
+            const TransformComponent& trJ = transforms[j];
+            
+            float dist = sqrtf(powf(trI.x - trJ.x, 2) + powf(trI.y - trJ.y, 2));
+            float dirX = (trJ.x - trI.x) / dist;
+            float dirY = (trJ.y - trI.y) / dist;
+            
+            const Element& elI = db.getElement(atoms[i].atomicNumber);
+            const Element& elJ = db.getElement(atoms[j].atomicNumber);
+            float radI = elI.vdWRadius * Config::BASE_ATOM_RADIUS;
+            float radJ = elJ.vdWRadius * Config::BASE_ATOM_RADIUS;
+            
+            Vector2 start = { trI.x + dirX * radI, trI.y + dirY * radI };
+            Vector2 end = { trJ.x - dirX * radJ, trJ.y - dirY * radJ };
+            
+            float scale = 1.0f + (((trI.z + trJ.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
+            if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
 
-             int partnerId = state.cycleBondId;
-             const TransformComponent& trA = transforms[i];
-             const TransformComponent& trB = transforms[partnerId];
-             
-             float dist = MathUtils::dist(trA.x, trA.y, trB.x, trB.y);
-             if (dist < 0.01f || dist > Config::MAX_BOND_RENDER_DIST) continue;
-
-             Vector2 dir = MathUtils::normalize(Vector2{trA.x - trB.x, trA.y - trB.y});
-             float dirX = dir.x;
-             float dirY = dir.y;
-
-             const Element& elA = db.getElement(atoms[i].atomicNumber);
-             const Element& elB = db.getElement(atoms[partnerId].atomicNumber);
-             float rA = elA.vdWRadius * Config::BASE_ATOM_RADIUS;
-             float rB = elB.vdWRadius * Config::BASE_ATOM_RADIUS;
-
-             Vector2 start = { trB.x + dirX * rB, trB.y + dirY * rB };
-             Vector2 end = { trA.x - dirX * rA, trA.y - dirY * rA };
-             
-             float scale = 1.0f + (((trA.z + trB.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
-             if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
-
-             // MEMBRANE VISUALIZATION: "Border" Style
-             // Thicker, brighter, and solid opacity to act as a clear perimeter.
-             Color bondColor = SKYBLUE; 
-             
-             DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * 2.0f * scale, BLACK);
-             DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * 2.0f * scale, bondColor);
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale * 2.0f, BLACK);
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * scale * 2.0f, SKYBLUE);
         }
     }
 
@@ -119,6 +115,18 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
         };
 
         DrawCircleGradient((int)tr.x, (int)tr.y, radius, finalColor, BLACK);
+        
+        // --- PHASE 41: PERIMETER HIGHLIGHTING with VISUAL VIBRATION ---
+        if (states[idx].isInRing) {
+            // Add subtle visual vibration (render-only, doesn't affect physics)
+            static int vibFrame = 0;
+            vibFrame++;
+            float vibX = std::sin(vibFrame * 0.08f + idx * 1.5f) * 0.6f;  // Slow + subtle
+            float vibY = std::cos(vibFrame * 0.06f + idx * 1.7f) * 0.6f;
+            
+            DrawCircleLines((int)(tr.x + vibX), (int)(tr.y + vibY), radius + 1.0f, SKYBLUE);
+            DrawCircleLines((int)(tr.x + vibX), (int)(tr.y + vibY), radius + 2.0f, SKYBLUE);
+        }
     }
 }
 

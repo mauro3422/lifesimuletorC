@@ -81,7 +81,8 @@ int main() {
     // Step 2: World Generation (Primordial Density)
     loading.draw(0.5f, lang.get("ui.loading.world_gen").c_str());
     World world;
-    world.initialize();
+    // TEMPORARY: Using test mode for ring formation debugging
+    world.initializeTestMode(); // Change back to world.initialize() when done testing
 
     // Step 3: Missions and Gameplay
     loading.draw(0.8f, lang.get("ui.loading.missions").c_str());

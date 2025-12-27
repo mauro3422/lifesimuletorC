@@ -93,10 +93,42 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             continue;
         }
 
-        // --- HOOKE'S LAW (Restoration Force) with Z ---
-        float fx = dx * Config::BOND_SPRING_K;
-        float fy = dy * Config::BOND_SPRING_K;
-        float fz = dz * Config::BOND_SPRING_K;
+        // --- RING vs NORMAL BOND PHYSICS ---
+        float fx, fy, fz;
+        
+        if (states[i].isInRing && states[parentId].isInRing) {
+            // RING BONDS: Use DISTANCE-ONLY forces (no VSEPR direction)
+            // This lets the angular forces control geometry instead
+            float actualDx = transforms[parentId].x - transforms[i].x;
+            float actualDy = transforms[parentId].y - transforms[i].y;
+            float actualDz = transforms[parentId].z - transforms[i].z;
+            float actualDist = MathUtils::length(actualDx, actualDy, actualDz);
+            
+            if (actualDist > 0.1f) {
+                // Calculate spring force based on distance deviation only
+                // Lower spring since square is positioned correctly at formation
+                float strain = actualDist - Config::BOND_IDEAL_DIST;
+                float ringSpringK = 6.0f; // Gentle - just maintain, don't pull hard
+                float forceMag = strain * ringSpringK;
+                
+                // Normalize direction
+                float nx = actualDx / actualDist;
+                float ny = actualDy / actualDist;
+                float nz = actualDz / actualDist;
+                
+                fx = nx * forceMag;
+                fy = ny * forceMag;
+                fz = nz * forceMag;
+            } else {
+                fx = fy = fz = 0;
+            }
+        } else {
+            // NORMAL BONDS: Use VSEPR slot direction (original behavior)
+            // --- HOOKE'S LAW (Restoration Force) with Z ---
+            fx = dx * Config::BOND_SPRING_K;
+            fy = dy * Config::BOND_SPRING_K;
+            fz = dz * Config::BOND_SPRING_K;
+        }
 
         // Apply acceleration based on mass
         float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
@@ -128,6 +160,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     }
 
     // --- PHASE 18: CYCLE BONDS (Non-Hierarchical Springs) ---
+    // Uses SAME gentle physics as other ring bonds for uniform behavior
     for (int i = 0; i < (int)transforms.size(); i++) {
         if (states[i].cycleBondId == -1) continue;
 
@@ -138,12 +171,22 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         float dx = transforms[partnerId].x - transforms[i].x;
         float dy = transforms[partnerId].y - transforms[i].y;
         float dz = transforms[partnerId].z - transforms[i].z;
+        float dist = MathUtils::length(dx, dy, dz);
 
+        if (dist < 0.1f) continue;
 
-        // Apply same Hooke's Law as normal bonds
-        float fx = dx * Config::BOND_SPRING_K;
-        float fy = dy * Config::BOND_SPRING_K;
-        float fz = dz * Config::BOND_SPRING_K;
+        // Use SAME gentle spring as other ring bonds (distance-based)
+        float strain = dist - Config::BOND_IDEAL_DIST;
+        float ringSpringK = 6.0f; // Same as other ring bonds
+        float forceMag = strain * ringSpringK;
+        
+        float nx = dx / dist;
+        float ny = dy / dist;
+        float nz = dz / dist;
+        
+        float fx = nx * forceMag;
+        float fy = ny * forceMag;
+        float fz = nz * forceMag;
 
         float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
         float m2 = ChemistryDatabase::getInstance().getElement(atoms[partnerId].atomicNumber).atomicMass;
@@ -159,14 +202,80 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         transforms[partnerId].vz -= (fz / m2) * dt;
     }
 
+    // --- PHASE 23: RING STABILITY (Keep ring shape) ---
+    // Angular forces were causing oscillation - instead, just use very strong damping
+    // Since the ring is positioned correctly at formation time, we just need to keep it stable
+    for (int i = 0; i < (int)transforms.size(); i++) {
+        if (!states[i].isInRing) continue;
+        
+        // --- Z-AXIS FLATTENING: Keep all ring atoms on the same plane ---
+        transforms[i].vz -= transforms[i].z * 20.0f * dt;
+        transforms[i].vz *= 0.5f;
+        
+        // FREEZE ring atoms almost completely
+        // The square was positioned correctly at formation - just maintain it
+        float ringDamping = 0.30f; // Very heavy damping - almost frozen
+        transforms[i].vx *= ringDamping;
+        transforms[i].vy *= ringDamping;
+    }
+
     // --- PHASE 32: ACTIVE RING FOLDING (Clay Catalysis) ---
     // Find TERMINAL atoms (exactly 1 bond) in chains on Clay and pull them together.
     // A terminal atom has: (parent but no children) OR (children but no parent).
     // We collect all terminals per molecule, then apply folding force between them.
     
-    std::vector<int> terminals; // Collect terminal atoms on Clay
+    // PHASE 36: CARBON AFFINITY - Isolated/terminal carbons seek each other
+    // This creates "intelligent" chain formation where carbons actively find partners
+    std::vector<int> seekingCarbons; // Carbons that need bonds
     for (int i = 0; i < (int)transforms.size(); i++) {
-        if (states[i].cycleBondId != -1) continue; // Skip closed rings
+        if (states[i].isInRing) continue; // Skip ALL ring atoms, not just those with cycleBondId
+        if (atoms[i].atomicNumber != 6) continue; // Only Carbon
+        
+        // Check if on Clay
+        float rangeMultiplier = environment.getBondRangeMultiplier({transforms[i].x, transforms[i].y});
+        if (rangeMultiplier < 1.2f) continue;
+        
+        // Count bonds
+        int bondCount = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
+        
+        // Carbons with available valency (less than 4 bonds) can seek partners
+        if (bondCount < 4) {
+            seekingCarbons.push_back(i);
+        }
+    }
+    
+    // Apply attraction between seeking carbons
+    for (size_t a = 0; a < seekingCarbons.size(); a++) {
+        for (size_t b = a + 1; b < seekingCarbons.size(); b++) {
+            int c1 = seekingCarbons[a];
+            int c2 = seekingCarbons[b];
+            
+            float dx = transforms[c2].x - transforms[c1].x;
+            float dy = transforms[c2].y - transforms[c1].y;
+            float dist = std::sqrt(dx*dx + dy*dy);
+            
+            // Only attract if within reasonable range but not too close
+            if (dist > 30.0f && dist < 150.0f) {
+                // Check if different molecules - this encourages chain GROWTH
+                int root1 = MathUtils::findMoleculeRoot(c1, states);
+                int root2 = MathUtils::findMoleculeRoot(c2, states);
+                
+                float affinityStrength = (root1 != root2) ? 15.0f : 10.0f; // Stronger for chain building
+                float nx = dx / dist;
+                float ny = dy / dist;
+                
+                transforms[c1].vx += nx * affinityStrength * dt;
+                transforms[c1].vy += ny * affinityStrength * dt;
+                transforms[c2].vx -= nx * affinityStrength * dt;
+                transforms[c2].vy -= ny * affinityStrength * dt;
+            }
+        }
+    }
+    
+    // Now collect terminals for RING CLOSING (same molecule only)
+    std::vector<int> terminals; // Terminal atoms on Clay
+    for (int i = 0; i < (int)transforms.size(); i++) {
+        if (states[i].isInRing) continue; // Skip ALL ring atoms
         
         // Check if on Clay
         float rangeMultiplier = environment.getBondRangeMultiplier({transforms[i].x, transforms[i].y});
@@ -200,7 +309,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             
             if (dist > 20.0f && dist < 300.0f) {
                 // Apply magnetic folding force - pull terminals toward each other
-                float foldingStrength = 25.0f;
+                float foldingStrength = 18.0f; // Reduced from 25.0 to prevent oscillation
                 float nx = dx / dist;
                 float ny = dy / dist;
                 float nz = dz / dist;

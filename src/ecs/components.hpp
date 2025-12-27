@@ -34,6 +34,7 @@ struct StateComponent {
     
     // --- PHASE 18: CYCLES & MEMBRANES ---
     int cycleBondId;     // Entity ID for closing a loop (Non-hierarchical bond)
+    bool isInRing;       // True if this atom is part of the closed perimeter
 };
 
 
