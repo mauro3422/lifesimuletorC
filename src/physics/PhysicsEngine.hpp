@@ -15,8 +15,9 @@ public:
     
     // El paso de simulación principal
     void step(float dt, std::vector<TransformComponent>& transforms,
-              const std::vector<AtomComponent>& atoms,
-              std::vector<StateComponent>& states);
+              std::vector<AtomComponent>& atoms,
+              std::vector<StateComponent>& states,
+              int tractedEntityId = -1);
 
     // Acceso a la grilla para otros sistemas (como el TractorBeam)
     const SpatialGrid& getGrid() const { return grid; }

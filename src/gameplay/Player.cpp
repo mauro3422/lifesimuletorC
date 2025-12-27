@@ -95,7 +95,7 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
     
     float dx = tPos.x - targetTr.x;
     float dy = tPos.y - targetTr.y;
-    float dist = MathUtils::dist({tPos.x, tPos.y}, {targetTr.x, targetTr.y});
+    float dist = MathUtils::dist(tPos, Vector2{targetTr.x, targetTr.y});
 
     if (dist > 5.0f) {
         targetTr.vx *= Config::TRACTOR_DAMPING; 

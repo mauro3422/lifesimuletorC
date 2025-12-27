@@ -1,3 +1,4 @@
+﻿#include <cassert>
 #include "BondingSystem.hpp"
 #include "SpatialGrid.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
@@ -290,14 +291,14 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
     if (frameCounter < Config::BONDING_THROTTLE_FRAMES) return;
     frameCounter = 0;
 
-    int (tractedRoot) = -1;
+    int tractedRoot = -1;
     if (tractedEntityId != -1) {
         if (tractedEntityId < (int)rootCache.size()) {
             tractedRoot = rootCache[tractedEntityId];
         }
     }
 
-    // O(N*k) OPTIMIZATION: Use SpatialGrid instead of O(N²) double loop
+    // O(N*k) OPTIMIZATION: Use SpatialGrid instead of O(NÂ²) double loop
     for (int i = 1; i < (int)states.size(); i++) { 
         // REMOVED: `if (states[i].isClustered) continue;`
         // This was preventing mid-chain atoms from attracting new neighbors.
@@ -306,7 +307,7 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
         // Skip atoms being dragged by tractor
         if (tractedRoot != -1 && MathUtils::findMoleculeRoot(i, states) == tractedRoot) continue;
 
-        // Query only nearby atoms using spatial grid (O(k) where k ≈ 10)
+        // Query only nearby atoms using spatial grid (O(k) where k â‰ˆ 10)
         std::vector<int> neighbors = grid.getNearby({transforms[i].x, transforms[i].y}, Config::BOND_AUTO_RANGE * 1.5f);
 
         for (int j : neighbors) {
@@ -741,3 +742,12 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
     TraceLog(LOG_INFO, "[BOND] Full Isolation: Atom %d released from all bonds", entityId);
 }
 
+bool BondingSystem::canAcceptBond(int entityId, const std::vector<StateComponent>& states, const Element& element) {
+    if (entityId < 0 || entityId >= (int)states.size()) return false;
+    
+    // Count existing bonds (Parent + Children)
+    int parentBond = (states[entityId].parentEntityId != -1 ? 1 : 0);
+    int currentBonds = parentBond + states[entityId].childCount;
+
+    return currentBonds < element.maxBonds;
+}

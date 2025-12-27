@@ -13,7 +13,8 @@ namespace StructuralPhysics {
 void applyRingDynamics(float dt, 
                       std::vector<TransformComponent>& transforms,
                       const std::vector<AtomComponent>& atoms,
-                      std::vector<StateComponent>& states) {
+                      std::vector<StateComponent>& states,
+                      const std::vector<int>& rootCache) {
     
     // Phase 28: Small optimization, stack.reserve
     static std::vector<int> stack;
@@ -61,7 +62,8 @@ void applyRingDynamics(float dt,
         avgVy /= ringIndices.size();
 
         // 3. Sub-grouping for specific Ring logic (using ringInstanceId)
-        std::map<int, std::vector<int>> subRings;
+        std::unordered_map<int, std::vector<int>> subRings;
+        subRings.reserve(8); // Optimization Phase 28
         for (int idx : ringIndices) {
             if (states[idx].isInRing && states[idx].ringInstanceId != -1) {
                 subRings[states[idx].ringInstanceId].push_back(idx);
@@ -168,7 +170,8 @@ void applyFoldingAndAffinity(float dt,
                             std::vector<TransformComponent>& transforms,
                             const std::vector<AtomComponent>& atoms,
                             std::vector<StateComponent>& states,
-                            EnvironmentManager& environment) {
+                            EnvironmentManager& environment,
+                            const std::vector<int>& rootCache) {
     
     // --- CARBON AFFINITY ---
     std::vector<int> seekingCarbons;
@@ -189,12 +192,14 @@ void applyFoldingAndAffinity(float dt,
             int c2 = seekingCarbons[b];
             
             // Phase 28: Use centralized distSq
-            float d2 = MathUtils::distSq(transforms[c1].x, transforms[c1].y, transforms[c2].x, transforms[c2].y);
+            float dx = transforms[c2].x - transforms[c1].x;
+            float dy = transforms[c2].y - transforms[c1].y;
+            float d2 = dx*dx + dy*dy;
             
             if (d2 > 30.0f*30.0f && d2 < 150.0f*150.0f) {
                 float dist = std::sqrt(d2);
-                int root1 = MathUtils::findMoleculeRoot(c1, states);
-                int root2 = MathUtils::findMoleculeRoot(c2, states);
+                int root1 = rootCache[c1];
+                int root2 = rootCache[c2];
                 float affinityStrength = (root1 != root2) ? 15.0f : 10.0f;
                 float nx = dx / dist;
                 float ny = dy / dist;
@@ -221,8 +226,8 @@ void applyFoldingAndAffinity(float dt,
         for (size_t b = a + 1; b < terminals.size(); b++) {
             int t1 = terminals[a];
             int t2 = terminals[b];
-            int root1 = MathUtils::findMoleculeRoot(t1, states);
-            int root2 = MathUtils::findMoleculeRoot(t2, states);
+            int root1 = rootCache[t1];
+            int root2 = rootCache[t2];
             if (root1 != root2) continue; 
             
             float dx = transforms[t2].x - transforms[t1].x;

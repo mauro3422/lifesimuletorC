@@ -1,6 +1,8 @@
 #ifndef COMPONENTS_HPP
 #define COMPONENTS_HPP
 
+#include <cstdint>
+
 /**
  * DATA REPRESENTATION (ECS)
  * Minimum data required for maximum caching and simulation speed.

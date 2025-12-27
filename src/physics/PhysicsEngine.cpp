@@ -1,4 +1,5 @@
 #include "PhysicsEngine.hpp"
+#include "BondingSystem.hpp"
 #include "StructuralPhysics.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
 #include "../chemistry/StructureRegistry.hpp"
@@ -12,8 +13,9 @@
 PhysicsEngine::PhysicsEngine() : grid(Config::GRID_CELL_SIZE) {}
 
 void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
-                        const std::vector<AtomComponent>& atoms,
-                        std::vector<StateComponent>& states) {
+                        std::vector<AtomComponent>& atoms,
+                        std::vector<StateComponent>& states,
+                        int tractedEntityId) {
     // 0. UPDATE ENVIRONMENT (The grid will be updated at the end of the step)
     static int diagCounter = 0;
     environment.update(transforms, states, dt); 
@@ -222,14 +224,14 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
     // --- PHASE 23: STRUCTURAL DYNAMICS (Rings & Rigid Groups) ---
     // Offloaded to specialized module for code hygiene
-    StructuralPhysics::applyRingDynamics(dt, transforms, atoms, states);
+    StructuralPhysics::applyRingDynamics(dt, transforms, atoms, states, rootCache);
 
     // --- PHASE 32: FOLDING & AFFINITY (Catalytic Synthesis) ---
-    StructuralPhysics::applyFoldingAndAffinity(dt, transforms, atoms, states, environment);
+    StructuralPhysics::applyFoldingAndAffinity(dt, transforms, atoms, states, environment, rootCache);
 
     // --- PHASE 27+: SPONTANEOUS BONDING (Autonomous Evolution) ---
     // Pass rootCache to optimize molecule detection
-    BondingSystem::updateSpontaneousBonding(states, atoms, transforms, grid, rootCache, &environment, -1);
+    BondingSystem::updateSpontaneousBonding(states, atoms, transforms, grid, rootCache, &environment, tractedEntityId);
 
     // 3. LOOP FUSION: Integration, Friction, and Boundaries in one step
     for (TransformComponent& tr : transforms) {
