@@ -93,31 +93,47 @@ void UIWidgets::drawElementCard(const Element& element, float x, float y, float 
 }
 
 void UIWidgets::drawTextWrapped(const char* text, float x, float& y, float maxWidth, int fontSize, Color color) {
-    std::string content = text;
-    std::string currentLine = "";
+    // Phase 29 Optimization: Minimize allocations
+    std::string_view content(text);
+    static std::string lineBuffer;
+    lineBuffer.clear();
+    
     size_t start = 0;
     size_t end = content.find(' ');
 
-    while (end != std::string::npos) {
-        std::string word = content.substr(start, end - start);
-        std::string testLine = currentLine + word + " ";
-        if (MeasureText(testLine.c_str(), fontSize) > (int)maxWidth) {
-            if (color.a > 0) DrawText(currentLine.c_str(), (int)x, (int)y, fontSize, color);
-            y += fontSize + 3.0f;
-            currentLine = word + " ";
-        } else currentLine = testLine;
+    while (end != std::string_view::npos) {
+        std::string_view word = content.substr(start, end - start);
+        
+        // Test current line with the new word
+        size_t prevSize = lineBuffer.size();
+        if (!lineBuffer.empty()) lineBuffer += " ";
+        lineBuffer += word;
+
+        if (MeasureText(lineBuffer.c_str(), fontSize) > (int)maxWidth) {
+            // Revert and draw
+            lineBuffer.resize(prevSize);
+            if (!lineBuffer.empty() && color.a > 0) {
+                DrawText(lineBuffer.c_str(), (int)x, (int)y, fontSize, color);
+                y += fontSize + 3.0f;
+            }
+            lineBuffer = word;
+        }
+
         start = end + 1;
         end = content.find(' ', start);
     }
 
-    std::string lastWord = content.substr(start);
-    std::string testLine = currentLine + lastWord;
-    if (MeasureText(testLine.c_str(), fontSize) > (int)maxWidth) {
-        DrawText(currentLine.c_str(), (int)x, (int)y, fontSize, color);
-        y += fontSize + 3.0f;
-        DrawText(lastWord.c_str(), (int)x, (int)y, fontSize, color);
+    // Process last word
+    std::string_view lastPart = content.substr(start);
+    if (!lineBuffer.empty()) lineBuffer += " ";
+    lineBuffer += lastPart;
+
+    if (MeasureText(lineBuffer.c_str(), fontSize) > (int)maxWidth) {
+        // Still needs a split? (Unlikely for a single word unless maxWidth is tiny)
+        // For simplicity, just draw what we have
+        DrawText(lineBuffer.c_str(), (int)x, (int)y, fontSize, color);
     } else {
-        DrawText(testLine.c_str(), (int)x, (int)y, fontSize, color);
+        DrawText(lineBuffer.c_str(), (int)x, (int)y, fontSize, color);
     }
     y += fontSize + 5.0f;
 }

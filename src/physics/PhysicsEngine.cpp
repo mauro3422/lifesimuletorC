@@ -9,6 +9,7 @@
 #include <cmath>
 #include <algorithm>
 #include <map>
+#include "../core/ErrorHandling.hpp"
 
 PhysicsEngine::PhysicsEngine() : grid(Config::GRID_CELL_SIZE) {}
 
@@ -16,6 +17,11 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                         std::vector<AtomComponent>& atoms,
                         std::vector<StateComponent>& states,
                         int tractedEntityId) {
+    if (atoms.size() != transforms.size() || atoms.size() != states.size()) {
+        ErrorHandler::handle(ErrorSeverity::FATAL, "Component size mismatch: atoms=%zu, transforms=%zu, states=%zu", 
+                             atoms.size(), transforms.size(), states.size());
+        return;
+    }
     // 0. UPDATE ENVIRONMENT (The grid will be updated at the end of the step)
     static int diagCounter = 0;
     environment.update(transforms, states, dt); 
@@ -128,7 +134,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                 // Calculate spring force based on distance deviation only
                 // Lower spring since square is positioned correctly at formation
                 float strain = actualDist - Config::BOND_IDEAL_DIST;
-                float ringSpringK = Config::BOND_SPRING_K * 2.0f; // Strongly maintain ideal distance
+                float ringSpringK = Config::BOND_SPRING_K * Config::Physics::RING_SPRING_MULTIPLIER; 
                 float forceMag = strain * ringSpringK;
                 
                 // Normalize direction
@@ -195,9 +201,9 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
         if (dist < 0.1f) continue;
 
-        // Use STRONGER spring for structural stability (2x normal)
+        // Use STRONGER spring for structural stability
         float strain = dist - Config::BOND_IDEAL_DIST;
-        float ringSpringK = Config::BOND_SPRING_K * 2.0f; 
+        float ringSpringK = Config::BOND_SPRING_K * Config::Physics::RING_SPRING_MULTIPLIER; 
         float forceMag = strain * ringSpringK;
         
         float nx = dx / dist;
@@ -248,6 +254,12 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         tr.y += tr.vy * dt;
         tr.z += tr.vz * dt;
 
+        // Phase 29: Hard Snap Z=0 for established rings to prevent drift
+        if (states[&tr - &transforms[0]].isInRing && states[&tr - &transforms[0]].isLocked()) {
+            tr.z = 0.0f;
+            tr.vz = 0.0f;
+        }
+
         // 2. Ambient Friction (Configurable)
         tr.vx *= Config::DRAG_COEFFICIENT;
         tr.vy *= Config::DRAG_COEFFICIENT;
@@ -267,4 +279,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     diagCounter++;
     if (diagCounter > 120) diagCounter = 0;
     grid.update(transforms);
+
+    // Phase 29: Reset frame-local flags
+    for (auto& s : states) s.justBonded = false;
 }

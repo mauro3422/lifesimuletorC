@@ -1,10 +1,27 @@
 #include "SpatialGrid.hpp"
 #include <cmath>
+#include "../core/ErrorHandling.hpp"
 
 SpatialGrid::SpatialGrid(float size) : cellSize(size) {}
 
 void SpatialGrid::update(const std::vector<TransformComponent>& transforms) {
-    cells.clear();
+    if (transforms.empty()) {
+        ErrorHandler::handle(ErrorSeverity::WARNING, "SpatialGrid::update received empty transforms");
+        return;
+    }
+    // Phase 29: Memory Reuse Optimization
+    // Instead of destroying everything, clear vectors to keep capacity
+    for (auto& pair : cells) {
+        pair.second.entityIndices.clear();
+    }
+
+    // Periodic map reset to prevent stale bucket bloat
+    static int frameCounter = 0;
+    if (++frameCounter > 300) { // Every ~5 seconds
+        cells.clear();
+        frameCounter = 0;
+    }
+
     for (int i = 0; i < (int)transforms.size(); i++) {
         int cx = (int)std::floor(transforms[i].x / cellSize);
         int cy = (int)std::floor(transforms[i].y / cellSize);

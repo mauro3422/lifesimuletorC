@@ -149,6 +149,25 @@ namespace Config {
     inline constexpr bool DEBUG_INSTANT_FORMATION = true;
     inline constexpr bool DEBUG_STRUCTURE_LOGS = true;
     inline constexpr bool DEBUG_DISABLE_STRUCTURE_DAMPING = false;
+
+    // --- PHASE 30: ARCHITECTURAL STANDARDIZATION ---
+    namespace Physics {
+        inline constexpr float FORMATION_PULL_MULTIPLIER = 80.0f;
+        inline constexpr float CARBON_AFFINITY_MIN_DIST = 30.0f;
+        inline constexpr float CARBON_AFFINITY_MAX_DIST = 150.0f;
+        inline constexpr float CARBON_AFFINITY_STRENGTH_EXTERNAL = 15.0f;
+        inline constexpr float CARBON_AFFINITY_STRENGTH_INTERNAL = 10.0f;
+        
+        inline constexpr float RING_FOLDING_MIN_DIST = 20.0f;
+        inline constexpr float RING_FOLDING_MAX_DIST = 300.0f;
+        inline constexpr float RING_FOLDING_STRENGTH = 18.0f;
+
+        inline constexpr float Z_FLATTEN_STRENGTH = 20.0f;
+        inline constexpr float Z_DAMPING = 0.5f;
+        inline constexpr float RING_SPRING_MULTIPLIER = 2.0f;
+
+        inline constexpr float DRIFT_DAMPING_FALLBACK = 0.2f;
+    }
 }
 
 #endif // CONFIG_HPP

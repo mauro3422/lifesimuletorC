@@ -40,6 +40,10 @@ struct StateComponent {
     int ringSize;        // Number of atoms in the ring
     int ringIndex;       // Position in the ring (0 to ringSize-1) for geometric mapping
     int ringInstanceId;  // Unique ID for this specific ring instance
+
+    // Phase 29: Hardening & Optimization
+    bool justBonded;     // Frame-local flag to prioritize one bond per atom per tick
+    bool isLocked() const { return isClustered && dockingProgress >= 0.99f; }
 };
 
 

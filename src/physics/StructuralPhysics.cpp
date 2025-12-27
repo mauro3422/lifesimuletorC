@@ -141,7 +141,7 @@ void applyRingDynamics(float dt,
                         float dx = targetX - transforms[idx].x;
                         float dy = targetY - transforms[idx].y;
 
-                        float pullForce = def->formationSpeed * 80.0f; 
+                        float pullForce = def->formationSpeed * Config::Physics::FORMATION_PULL_MULTIPLIER; 
                         relVx += dx * pullForce * dt;
                         relVy += dy * pullForce * dt;
 
@@ -159,8 +159,8 @@ void applyRingDynamics(float dt,
                 transforms[idx].vx = (avgVx * globalDriftDamping) + (relVx * currentDamping);
                 transforms[idx].vy = (avgVy * globalDriftDamping) + (relVy * currentDamping);
                 
-                transforms[idx].vz -= transforms[idx].z * 20.0f * dt;
-                transforms[idx].vz *= 0.5f;
+                transforms[idx].vz -= transforms[idx].z * Config::Physics::Z_FLATTEN_STRENGTH * dt;
+                transforms[idx].vz *= Config::Physics::Z_DAMPING;
             }
         }
     }
@@ -196,11 +196,12 @@ void applyFoldingAndAffinity(float dt,
             float dy = transforms[c2].y - transforms[c1].y;
             float d2 = dx*dx + dy*dy;
             
-            if (d2 > 30.0f*30.0f && d2 < 150.0f*150.0f) {
+            if (d2 > Config::Physics::CARBON_AFFINITY_MIN_DIST * Config::Physics::CARBON_AFFINITY_MIN_DIST && 
+                d2 < Config::Physics::CARBON_AFFINITY_MAX_DIST * Config::Physics::CARBON_AFFINITY_MAX_DIST) {
                 float dist = std::sqrt(d2);
                 int root1 = rootCache[c1];
                 int root2 = rootCache[c2];
-                float affinityStrength = (root1 != root2) ? 15.0f : 10.0f;
+                float affinityStrength = (root1 != root2) ? Config::Physics::CARBON_AFFINITY_STRENGTH_EXTERNAL : Config::Physics::CARBON_AFFINITY_STRENGTH_INTERNAL;
                 float nx = dx / dist;
                 float ny = dy / dist;
                 
@@ -235,9 +236,10 @@ void applyFoldingAndAffinity(float dt,
             float dz = transforms[t2].z - transforms[t1].z;
             float distSq = dx*dx + dy*dy + dz*dz;
             
-            if (distSq > 20.0f*20.0f && distSq < 300.0f*300.0f) {
+            if (distSq > Config::Physics::RING_FOLDING_MIN_DIST * Config::Physics::RING_FOLDING_MIN_DIST && 
+                distSq < Config::Physics::RING_FOLDING_MAX_DIST * Config::Physics::RING_FOLDING_MAX_DIST) {
                 float dist = std::sqrt(distSq);
-                float foldingStrength = 18.0f;
+                float foldingStrength = Config::Physics::RING_FOLDING_STRENGTH;
                 float nx = dx / dist;
                 float ny = dy / dist;
                 float nz = dz / dist;

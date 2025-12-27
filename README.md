@@ -41,10 +41,10 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - `src/ui/`: `Inspector`, `LabelSystem`, `UIWidgets`, `NotificationManager`.
 - `src/rendering/`: Cámara cinemática y Render 2.5D.
 - `src/chemistry/`: Base de datos de elementos (JSON-driven).
-- `src/physics/`: `BondingSystem`, `PhysicsEngine`, `SpatialGrid`.
+- `src/physics/`: `BondingSystem` (Facade), `BondingCore`, `RingChemistry`, `PhysicsEngine`, `SpatialGrid`.
 - `src/gameplay/`: `Player`, `TractorBeam`, `DockingSystem`, `UndoManager`.
-- `data/`: `elements.json`, `lang_es.json`, `lang_en.json` - Definiciones de datos externales.
-- `tests/`: Test suite con doctest (`test_molecular_geometry.cpp`).
+- `data/`: `elements.json`, `structures.json`, `lang_es.json`, `lang_en.json`.
+- `tests/`: Verification Suite (`test_edge_cases.cpp`).
 
 ## 🛠️ Roadmap Actualizado
 - [x] **Fase 5**: ECS & Render Base
@@ -58,6 +58,7 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - [x] **Tractor Refinement**: Valencia Shield, Sticky Capture, Hierarchical Undo
 - [x] **Architecture Hardening**: JSON DB, Player Refactor, VSEPR Validation
 - [x] **Fase 17**: Deep Audit (Mass Physics, O(1) Bonding, Bilingual UI)
+- [x] **Fase 30**: Architectural Standardization (De-God-Class, ErrorHandler)
 - [ ] **Fase 18**: Chemical Expansion (Transition Metals, Complex Organics)
 - [ ] **Fase 19**: Exotic States (Plasma, Supercritical Fluids)
 - [ ] **Fase 20**: Bio-Genesis (ATP, Metabolismo Inicial)

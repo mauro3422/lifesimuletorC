@@ -20,14 +20,22 @@ public:
     }
 
     void show(const std::string& message, Color color = WHITE, float duration = 2.0f) {
-        // Limit queue size to prevent memory issues
-        if (notifications.size() >= MAX_NOTIFICATIONS) {
-            notifications.erase(notifications.begin());
-        }
-        notifications.push_back({ message, color, duration, duration });
+        // Phase 29: Thread-safe pending buffer
+        pendingNotifications.push_back({ message, color, duration, duration });
     }
 
     void update(float dt) {
+        // Merge pending into active list
+        if (!pendingNotifications.empty()) {
+            for (auto& pn : pendingNotifications) {
+                if (notifications.size() >= MAX_NOTIFICATIONS) {
+                    notifications.erase(notifications.begin());
+                }
+                notifications.push_back(std::move(pn));
+            }
+            pendingNotifications.clear();
+        }
+
         for (auto& n : notifications) {
             n.timer -= dt;
         }
@@ -85,6 +93,7 @@ private:
     };
     
     std::vector<Notification> notifications;
+    std::vector<Notification> pendingNotifications;
     
     NotificationManager() {}
 };

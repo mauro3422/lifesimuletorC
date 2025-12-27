@@ -149,6 +149,48 @@ namespace MathUtils {
         return composition;
     }
 
+    // Calculates the number of hops between two connected atoms in the hierarchy
+    // Returns -1 if they are not connected or if an error occurs
+    inline int getHierarchyDistance(int i, int j, const std::vector<StateComponent>& states) {
+        if (i < 0 || j < 0 || i >= (int)states.size() || j >= (int)states.size()) return -1;
+        if (i == j) return 0;
+
+        // Trace path from i to root
+        std::vector<int> pathI;
+        int currI = i;
+        int safetyI = 0;
+        const int MAX_DEPTH = 100;
+        
+        while (currI != -1 && safetyI < MAX_DEPTH) {
+            pathI.push_back(currI);
+            currI = states[currI].parentEntityId;
+            safetyI++;
+        }
+
+        // Trace path from j to root
+        std::vector<int> pathJ;
+        int currJ = j;
+        int safetyJ = 0;
+        
+        while (currJ != -1 && safetyJ < MAX_DEPTH) {
+            pathJ.push_back(currJ);
+            currJ = states[currJ].parentEntityId;
+            safetyJ++;
+        }
+
+        // Find Least Common Ancestor
+        for (int disI = 0; disI < (int)pathI.size(); disI++) {
+            for (int disJ = 0; disJ < (int)pathJ.size(); disJ++) {
+                if (pathI[disI] == pathJ[disJ]) {
+                    // Distance is sum of steps to LCA
+                    return disI + disJ;
+                }
+            }
+        }
+
+        return -1; // Not connected in hierarchy
+    }
+
 }
 
 #endif // MATH_UTILS_HPP

@@ -58,20 +58,10 @@
 [INFO] [World] TEST MODE - Carbon IDs: 1, 2, 3, 4
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
 [INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
 [INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
 [INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
-[INFO] [CYCLE TRY] Terminals: 2 <-> 3 | Dist: 17.9 | PathHops: 3
-[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
-[INFO] [BOND] Cycle Bond Created: 2(Slot 2) <-> 3(Slot 3)
-[INFO] [MEMBRANE] CYCLE FORMED: Atom 2 - 3 (Phys + Visual)
 [INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
-[INFO] [BOND] Bond broken for atom 2 (released from 1)
-[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
-[INFO] [CYCLE TRY] Terminals: 1 <-> 2 | Dist: 64.8 | PathHops: 3
-[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
-[INFO] [BOND] Cycle Bond Created: 1(Slot 3) <-> 2(Slot 0)
-[INFO] [MEMBRANE] CYCLE FORMED: Atom 1 - 2 (Phys + Visual)
 [INFO] TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
 [INFO] SHADER: [ID 3] Default shader unloaded successfully
 [INFO] TEXTURE: [ID 1] Default texture unloaded successfully

@@ -1,4 +1,41 @@
-# Changelog
+## [Phase 30: Architectural Refactoring & Standardization] - 2025-12-27
+### Added
+- **Unified Error Handling**: Implemented `ErrorHandler` class for consistent logging (INFO, WARNING, FATAL) across all systems.
+- **Verification Suite**: Added `src/tests/test_edge_cases.cpp` and `build_tests.ps1` to verify core physics and bonding logic.
+- **Module Facades**:
+    - `BondingCore`: Handles atomic-level slot management and validation.
+    - `MolecularHierarchy`: Manages tree traversal and root finding.
+    - `RingChemistry`: Specialized logic for cycle detection and ring formation.
+    - `AutonomousBonding`: Orchestrates spontaneous bonding rules.
+    - `UndoMechanism`: Helper for undo/redo state logic.
+
+### Changed
+- **De-God-Classing**: Refactored monolithic `BondingSystem` into a Facade pattern delegating to the new specialized modules.
+- **Config Standardization**: Moved 100% of physics and bonding "magic numbers" to `Config::Physics` namespace in `Config.hpp`.
+- **Test Build**: Validation system now compiles a lightweight version of the engine with mock dependencies for faster iteration.
+
+### Fixed
+- **Triangle Cycle Rejection**: Verified and refined the logic to prevent unstable 3-atom rings from forming.
+- **Stress Test Logic**: Corrected test cases to ensure bonds break under stress for non-player molecules.
+
+## [Phase 28: Hardening & Optimization] - 2025-12-27
+### Added
+- **rootCache Optimization**: Per-frame molecule root calculation reduces hierarchy traversal from O(N*depth) to O(1) in hot loops.
+- **Unified Valency Check**: `BondingSystem::canAcceptBond` centralizes bonding rules for consistency across systems.
+- **Player Force Clamping**: Prevents runaway EM acceleration by limiting maximum physics forces applied to the player atom.
+- **MathUtils::AtomPair**: New utility for lazy and centralized distance evaluation.
+
+### Fixed
+- **isInRing Race Condition**: Fixed potential crash in `BondingSystem::breakBond` by deferring state changes to a temporary list.
+- **occupiedSlots Overflow**: Upgraded bitmask from 8rd to 32rd bit (`uint32_t`) to support complex molecular geometries.
+- **Redundant Spontaneous Bonding**: Consolidated all autonomous bonding into `PhysicsEngine::step`, removing double-processing in `main.cpp`.
+
+### Changed
+- **O(1) Structural Dynamics**: `StructuralPhysics` now uses `std::unordered_map` and `.reserve()` for sub-ring grouping.
+- **Centralized Math**: Standardized on `MathUtils::distSq` and `MathUtils::dist` to avoid manual `sqrt` drift and redundancy.
+
+### Removed
+- **Dead Code**: Deleted `BondingModule.hpp` and the `src/physics/modules/` directory to improve codebase hygiene.
 
 ## [Phase 27: Thermodynamic Movement] - 2025-12-27
 ### Added
