@@ -11,6 +11,7 @@ g++ src/main.cpp `
     src/core/LocalizationManager.cpp `
     src/core/JsonLoader.cpp `
     src/physics/PhysicsEngine.cpp `
+    src/physics/StructuralPhysics.cpp `
     src/physics/SpatialGrid.cpp `
     src/physics/BondingSystem.cpp `
     src/rendering/Renderer25D.cpp `

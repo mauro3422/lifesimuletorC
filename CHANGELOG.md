@@ -1,5 +1,17 @@
+# Changelog
 
-## [Phase 25: Structural Symmetry & Normalized Physics] - 2025-12-27
+## [Phase 26: Structural Modularity & Symmetry Generalization] - 2025-12-27
+
+### Added
+- **StructuralPhysics Module**: Successfully extracted all specialized ring formation, rigid dynamics, and folding logic into `src/physics/StructuralPhysics.hpp/cpp`.
+- **Architectural Polish**: Refactored `PhysicsEngine.cpp` to act as a clean orchestrator, removing "code contamination" from specialized structural rules.
+- **Generalized Structural Lifecycle**: Any new structure in `structures.json` automatically inherits "Collaborative Handshake" synchronization and "Geometric Calibration" (Hard Snap).
+- **Catalytic Folding Extraction**: Offloaded folding and affinity pulls to the dedicated module, isolating synthesis logic.
+
+### Fixed
+- **Namespace Collision**: Resolved forward declaration issues between `StructuralPhysics` and `EnvironmentManager`.
+- **Geometric Inconsistency**: Finalized the "Hard Snap" implementation to ensure perfect mathematical symmetry (e.g. 90° for squares) and zero Z-drift.
+
 
 ### Added
 - **Ring Instance ID (`ringInstanceId`)**: Added unique identification for individual rings within complex molecules.
