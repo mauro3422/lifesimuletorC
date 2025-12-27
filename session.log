@@ -59,3 +59,11 @@
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
 [INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
 [INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [CYCLE TRY] Terminals: 3 <-> 4 | Dist: 35.2 | PathHops: 3
+[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
+[INFO] [BOND] Cycle Bond Created: 3(Slot 3) <-> 4(Slot 1)
+[INFO] [MEMBRANE] CYCLE FORMED: Atom 3 - 4 (Phys + Visual)

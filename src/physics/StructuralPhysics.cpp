@@ -4,6 +4,7 @@
 #include "../core/Config.hpp"
 #include "../core/MathUtils.hpp"
 #include "../world/EnvironmentManager.hpp"
+#include <unordered_map>
 #include <map>
 #include <cmath>
 
@@ -14,13 +15,18 @@ void applyRingDynamics(float dt,
                       const std::vector<AtomComponent>& atoms,
                       std::vector<StateComponent>& states) {
     
+    // Phase 28: Small optimization, stack.reserve
+    static std::vector<int> stack;
+    stack.clear();
+    stack.reserve(64);
+
     std::vector<bool> processed(transforms.size(), false);
     for (int i = 0; i < (int)transforms.size(); i++) {
         if (!states[i].isInRing || processed[i]) continue;
 
         // 1. Collect all atoms in this specific ring structure (connected component)
         std::vector<int> ringIndices;
-        std::vector<int> stack = {i};
+        stack.push_back(i);
         processed[i] = true;
         
         while(!stack.empty()){
@@ -181,12 +187,12 @@ void applyFoldingAndAffinity(float dt,
         for (size_t b = a + 1; b < seekingCarbons.size(); b++) {
             int c1 = seekingCarbons[a];
             int c2 = seekingCarbons[b];
-            float dx = transforms[c2].x - transforms[c1].x;
-            float dy = transforms[c2].y - transforms[c1].y;
-            float distSq = dx*dx + dy*dy;
             
-            if (distSq > 30.0f*30.0f && distSq < 150.0f*150.0f) {
-                float dist = std::sqrt(distSq);
+            // Phase 28: Use centralized distSq
+            float d2 = MathUtils::distSq(transforms[c1].x, transforms[c1].y, transforms[c2].x, transforms[c2].y);
+            
+            if (d2 > 30.0f*30.0f && d2 < 150.0f*150.0f) {
+                float dist = std::sqrt(d2);
                 int root1 = MathUtils::findMoleculeRoot(c1, states);
                 int root2 = MathUtils::findMoleculeRoot(c2, states);
                 float affinityStrength = (root1 != root2) ? 15.0f : 10.0f;

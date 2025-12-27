@@ -25,6 +25,9 @@ public:
         INTERNAL_ERROR
     };
 
+    // Helper to check if an atom can accept more bonds based on its element's valency
+    static bool canAcceptBond(int entityId, const std::vector<StateComponent>& states, const Element& element);
+
     // Attempts to bond one entity to another in a free slot
     // If forced is true, ignores angle threshold (player-initiated)
     static BondError tryBond(int sourceId, int targetId, 
@@ -45,6 +48,7 @@ public:
                                          std::vector<AtomComponent>& atoms,
                                          std::vector<TransformComponent>& transforms,
                                          const class SpatialGrid& grid,
+                                         const std::vector<int>& rootCache,
                                          EnvironmentManager* env = nullptr,
                                          int tractedEntityId = -1);
 

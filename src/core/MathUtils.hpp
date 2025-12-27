@@ -8,6 +8,34 @@
 #include "../ecs/components.hpp"
 
 namespace MathUtils {
+
+    /**
+     * ATOM PAIR (Phase 28 Optimization)
+     * Encapsulates two entities and allows for lazy evaluation of their distance.
+     */
+    struct AtomPair {
+        int i, j;
+        mutable float cachedDistSq = -1.0f;
+        mutable float cachedDist = -1.0f;
+
+        float distSq(const std::vector<TransformComponent>& tr) const {
+            if (cachedDistSq < 0) {
+                float dx = tr[j].x - tr[i].x;
+                float dy = tr[j].y - tr[i].y;
+                float dz = tr[j].z - tr[i].z;
+                cachedDistSq = dx*dx + dy*dy + dz*dz;
+            }
+            return cachedDistSq;
+        }
+
+        float dist(const std::vector<TransformComponent>& tr) const {
+            if (cachedDist < 0) {
+                cachedDist = std::sqrt(distSq(tr));
+            }
+            return cachedDist;
+        }
+    };
+
     // Generates a random jitter between -1.0 and 1.0
     inline float getJitter() {
         return (float)GetRandomValue(-100, 100) / 100.0f;
@@ -30,6 +58,13 @@ namespace MathUtils {
 
     inline float dist(Vector2 v1, Vector2 v2) {
         return dist(v1.x, v1.y, v2.x, v2.y);
+    }
+
+    inline float dist(const TransformComponent& t1, const TransformComponent& t2) {
+        float dx = t2.x - t1.x;
+        float dy = t2.y - t1.y;
+        float dz = t2.z - t1.z;
+        return std::sqrt(dx*dx + dy*dy + dz*dz);
     }
 
     inline float length(float x, float y, float z = 0.0f) {

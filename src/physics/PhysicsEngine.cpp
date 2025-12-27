@@ -18,6 +18,13 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     static int diagCounter = 0;
     environment.update(transforms, states, dt); 
 
+    // 0.5 PRECALCULATE ROOTS (Phase 28 Optimization)
+    // Avoids redundant findMoleculeRoot calls in hot loops
+    std::vector<int> rootCache(transforms.size());
+    for (int i = 0; i < (int)transforms.size(); i++) {
+        rootCache[i] = MathUtils::findMoleculeRoot(i, states);
+    }
+
     // 1. APPLY ELECTROMAGNETIC FORCES (Coulomb O(N))
     for (int i = 0; i < (int)transforms.size(); i++) {
         float q1 = atoms[i].partialCharge;
@@ -56,6 +63,13 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             // Handle potentially zero mass from JSON (fallback to 1.0)
             if (m1 < 0.01f) m1 = 1.0f;
             if (m2 < 0.01f) m2 = 1.0f;
+
+            // BUGFIX: Player Force Clamping (Prevent runaway EM acceleration)
+            if (i == 0) { 
+                float maxF = 150.0f; 
+                fx = std::clamp(fx, -maxF, maxF);
+                fy = std::clamp(fy, -maxF, maxF);
+            }
 
             transforms[i].vx -= (fx / m1) * dt;
             transforms[i].vy -= (fy / m1) * dt;
@@ -212,6 +226,10 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
     // --- PHASE 32: FOLDING & AFFINITY (Catalytic Synthesis) ---
     StructuralPhysics::applyFoldingAndAffinity(dt, transforms, atoms, states, environment);
+
+    // --- PHASE 27+: SPONTANEOUS BONDING (Autonomous Evolution) ---
+    // Pass rootCache to optimize molecule detection
+    BondingSystem::updateSpontaneousBonding(states, atoms, transforms, grid, rootCache, &environment, -1);
 
     // 3. LOOP FUSION: Integration, Friction, and Boundaries in one step
     for (TransformComponent& tr : transforms) {

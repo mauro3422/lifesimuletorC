@@ -27,7 +27,8 @@ int BondingSystem::getFirstFreeSlot(int parentId, const std::vector<StateCompone
 
     // Find first bit not set in occupiedSlots
     for (int i = 0; i < (int)element.bondingSlots.size(); i++) {
-        if (!(states[parentId].occupiedSlots & (1 << i))) return i;
+        assert(i < 32 && "Slot index out of range for uint32_t occupiedSlots");
+        if (!(states[parentId].occupiedSlots & (1u << i))) return i;
     }
     return -1;
 }
@@ -97,7 +98,8 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
 
         // Update Optimization Fields (O(1))
         states[bestHostId].childCount++;
-        states[bestHostId].occupiedSlots |= (1 << bestSlotIdx);
+        assert(bestSlotIdx < 32);
+        states[bestHostId].occupiedSlots |= (1u << bestSlotIdx);
         
         // --- POLARITY CALCULATION (Partial Charge) ---
         float enHost = ChemistryDatabase::getInstance().getElement(atoms[bestHostId].atomicNumber).electronegativity;
@@ -227,7 +229,8 @@ int BondingSystem::getBestAvailableSlot(int parentId, Vector3 relativePos,
     float maxDot = -Config::FLOAT_MAX; 
 
     for (int i = 0; i < (int)element.bondingSlots.size(); i++) {
-        if (states[parentId].occupiedSlots & (1 << i)) continue; // Already occupied
+        assert(i < 32);
+        if (states[parentId].occupiedSlots & (1u << i)) continue; // Already occupied
 
         Vector3 slotDir = element.bondingSlots[i];
         float dot = dir.x*slotDir.x + dir.y*slotDir.y + dir.z*slotDir.z;
@@ -277,6 +280,7 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                                                std::vector<AtomComponent>& atoms,
                                                std::vector<TransformComponent>& transforms,
                                                const SpatialGrid& grid,
+                                               const std::vector<int>& rootCache,
                                                EnvironmentManager* env,
                                                int tractedEntityId) {
     
@@ -286,7 +290,12 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
     if (frameCounter < Config::BONDING_THROTTLE_FRAMES) return;
     frameCounter = 0;
 
-    int tractedRoot = (tractedEntityId != -1) ? MathUtils::findMoleculeRoot(tractedEntityId, states) : -1;
+    int (tractedRoot) = -1;
+    if (tractedEntityId != -1) {
+        if (tractedEntityId < (int)rootCache.size()) {
+            tractedRoot = rootCache[tractedEntityId];
+        }
+    }
 
     // O(N*k) OPTIMIZATION: Use SpatialGrid instead of O(N²) double loop
     for (int i = 1; i < (int)states.size(); i++) { 
@@ -326,8 +335,8 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
 
             if (dist < currentRange) {
                 // EXCLUSION: Ignore player molecule (ID 0) and tracted molecules for MERGES
-                int rootI = MathUtils::findMoleculeRoot(i, states);
-                int rootJ = MathUtils::findMoleculeRoot(j, states);
+                int rootI = rootCache[i];
+                int rootJ = rootCache[j];
 
                 bool isSameMolecule = (rootI == rootJ);
                 
@@ -358,16 +367,11 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                 if (rootI != rootJ) {
                     // DIFFERENT MOLECULES -> NORMAL BOND (Merge)
                     
-                    // PHASE 37: LINEAR CHAIN PREFERENCE (STRICT)
-                    // To force true linear chains (not branching/star):
-                    // Both atoms must be terminal (1 bond) or isolated (0 bonds)
-                    // This ensures: A-B, then C joins B (end), then D joins C (end), etc.
-                    int bondsI = (states[i].parentEntityId != -1 ? 1 : 0) + states[i].childCount;
-                    int bondsJ = (states[j].parentEntityId != -1 ? 1 : 0) + states[j].childCount;
+                    // NEW LOGIC: Use unified valency check
+                    const Element& elI = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber);
+                    const Element& elJ = ChemistryDatabase::getInstance().getElement(atoms[j].atomicNumber);
                     
-                    // STRICT: Both must be terminal/isolated for linear chain
-                    // One can have 1 bond (end of chain), but if one has 2+, skip entirely
-                    if (bondsI >= 2 || bondsJ >= 2) continue; // Either is saturated - skip
+                    if (!canAcceptBond(i, states, elI) || !canAcceptBond(j, states, elJ)) continue;
                     
                     // REMOVED: Previous logic prevented isolated atoms from bonding to roots.
                     // This was too restrictive and blocked chain growth.
@@ -472,35 +476,34 @@ void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states,
     // --- FIX: CLEAR isInRing FOR ALL RING ATOMS WHEN RING BREAKS ---
     // When any bond in the ring breaks, the entire ring structure is destroyed
     if (state.isInRing) {
-        // Clear isInRing for all atoms that were in this ring
+        std::vector<int> atomsToClean;
         for (int k = 0; k < (int)states.size(); k++) {
             if (states[k].isInRing) {
-                // Check if this atom is connected to the breaking bond
-                // by walking the parent chain
+                // Check if this atom is connected to the breaking bond by walking lineage
                 int walker = k;
                 bool connected = false;
                 while (walker != -1) {
-                    if (walker == entityId || walker == parentId) {
-                        connected = true;
-                        break;
-                    }
+                    if (walker == entityId || walker == parentId) { connected = true; break; }
                     walker = states[walker].parentEntityId;
                 }
-                if (connected) {
-                    states[k].isInRing = false;
-                    if (states[k].cycleBondId != -1) {
-                        int partner = states[k].cycleBondId;
-                        if (partner >= 0 && partner < (int)states.size()) {
-                            states[partner].cycleBondId = -1;
-                            states[partner].isInRing = false;
-                        }
-                        states[k].cycleBondId = -1;
-                        states[k].ringSize = 0;
-                    }
-                }
+                if (connected) atomsToClean.push_back(k);
             }
         }
-        TraceLog(LOG_INFO, "[RING] Ring structure broken - cleared isInRing for all connected atoms");
+        
+        for (int k : atomsToClean) {
+            states[k].isInRing = false;
+            if (states[k].cycleBondId != -1) {
+                int partner = states[k].cycleBondId;
+                if (partner >= 0 && partner < (int)states.size()) {
+                    states[partner].cycleBondId = -1;
+                    states[partner].isInRing = false;
+                    states[partner].ringSize = 0;
+                }
+                states[k].cycleBondId = -1;
+                states[k].ringSize = 0;
+            }
+        }
+        TraceLog(LOG_INFO, "[RING] Ring structure broken - sanitized %d atoms", (int)atomsToClean.size());
     }
 
     // Reset current atom's ring state
@@ -656,8 +659,9 @@ BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j,
         }
 
         // OCCUPY SLOTS
-        states[i].occupiedSlots |= (1 << slotI);
-        states[j].occupiedSlots |= (1 << slotJ);
+        assert(slotI < 32 && slotJ < 32);
+        states[i].occupiedSlots |= (1u << slotI);
+        states[j].occupiedSlots |= (1u << slotJ);
         
         // --- GENERALIZED REPOSITIONING ---
         const StructureDefinition* def = StructureRegistry::getInstance().findMatch((int)ringAtoms.size(), atoms[i].atomicNumber);
