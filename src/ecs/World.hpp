@@ -26,7 +26,7 @@ public:
         // 1. PLAYER (Always ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({1, 0.0f}); // Initial Hydrogen
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false}); // childCount=0, occupiedSlots=0, cycleBondId=-1, isInRing=false
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1}); // ringSize=0, ringInstanceId=-1
         TraceLog(LOG_INFO, "[World] Player initialized at (0,0)");
 
         // 2. WORLD POPULATION
@@ -49,7 +49,7 @@ public:
 
             transforms.push_back(tr);
             atoms.push_back({atomicNum, 0.0f});
-            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false}); 
+            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1}); 
         }
     }
 
@@ -65,7 +65,7 @@ public:
         // 1. PLAYER (Always ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({1, 0.0f}); // Hydrogen
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1});
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1});
         TraceLog(LOG_INFO, "[World] TEST MODE - Player initialized at (0,0)");
 
         // 2. Four Carbon atoms in clay zone (spread out, will need to be moved by player)
@@ -76,22 +76,22 @@ public:
         // Carbon 1
         transforms.push_back({ clayX - 30.0f, clayY - 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false});
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1});
         
         // Carbon 2
         transforms.push_back({ clayX + 30.0f, clayY - 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false});
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1});
         
         // Carbon 3
         transforms.push_back({ clayX + 30.0f, clayY + 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false});
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1});
         
         // Carbon 4
         transforms.push_back({ clayX - 30.0f, clayY + 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false});
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1});
         
         TraceLog(LOG_INFO, "[World] TEST MODE - Created 4 Carbons at clay zone (%.0f, %.0f)", clayX, clayY);
         TraceLog(LOG_INFO, "[World] TEST MODE - Carbon IDs: 1, 2, 3, 4");

@@ -10,7 +10,7 @@ namespace Config {
     inline constexpr float WORLD_BOUNCE = -0.5f;
     inline constexpr float BOND_COMPRESSION = 1.2f; 
     inline constexpr float BOND_SNAP_THRESHOLD = 0.45f;
-    inline constexpr float BOND_AUTO_RANGE = 50.0f; // Increased to match new Ideal Dist (was 30.0)
+    inline constexpr float BOND_AUTO_RANGE = 55.0f; // Increased for better "grab" (was 50.0)
     inline constexpr int BONDING_THROTTLE_FRAMES = 6;  // Execute every 6 frames (10 Hz) 
     inline constexpr float THERMODYNAMIC_JITTER = 2.5f; // Increased from 0.5 to promote bending/mixing
     inline constexpr float GRID_CELL_SIZE = 100.0f;     
@@ -144,6 +144,11 @@ namespace Config {
     inline constexpr float RENDER_BOND_THICKNESS_BG = 4.0f;
     inline constexpr float RENDER_BOND_THICKNESS_FG = 2.5f;
     inline constexpr float RENDER_MIN_SCALE = 0.1f;
+
+    // --- DEBUG: STRUCTURE FORMATION ---
+    inline constexpr bool DEBUG_INSTANT_FORMATION = true;
+    inline constexpr bool DEBUG_STRUCTURE_LOGS = true;
+    inline constexpr bool DEBUG_DISABLE_STRUCTURE_DAMPING = false;
 }
 
 #endif // CONFIG_HPP

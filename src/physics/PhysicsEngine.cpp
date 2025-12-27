@@ -1,4 +1,7 @@
 #include "PhysicsEngine.hpp"
+#include "../chemistry/ChemistryDatabase.hpp"
+#include "../chemistry/StructureRegistry.hpp"
+#include "../chemistry/StructureDefinition.hpp"
 #include "../core/Config.hpp"
 #include <cmath>
 #include <algorithm>
@@ -108,7 +111,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                 // Calculate spring force based on distance deviation only
                 // Lower spring since square is positioned correctly at formation
                 float strain = actualDist - Config::BOND_IDEAL_DIST;
-                float ringSpringK = 6.0f; // Gentle - just maintain, don't pull hard
+                float ringSpringK = Config::BOND_SPRING_K * 2.0f; // Strongly maintain ideal distance
                 float forceMag = strain * ringSpringK;
                 
                 // Normalize direction
@@ -175,9 +178,9 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
         if (dist < 0.1f) continue;
 
-        // Use SAME gentle spring as other ring bonds (distance-based)
+        // Use STRONGER spring for structural stability (2x normal)
         float strain = dist - Config::BOND_IDEAL_DIST;
-        float ringSpringK = 6.0f; // Same as other ring bonds
+        float ringSpringK = Config::BOND_SPRING_K * 2.0f; 
         float forceMag = strain * ringSpringK;
         
         float nx = dx / dist;
@@ -202,24 +205,142 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         transforms[partnerId].vz -= (fz / m2) * dt;
     }
 
-    // --- PHASE 23: RING STABILITY (Keep ring shape) ---
-    // Angular forces were causing oscillation - instead, just use very strong damping
-    // Since the ring is positioned correctly at formation time, we just need to keep it stable
+    // --- PHASE 23: RING STABILITY (Rigid Motion) ---
+    // Instead of absolute damping, we apply damping to RELATIVE velocities
+    // to allow the structure to move as a single unit while staying stable.
+    std::vector<bool> processed(transforms.size(), false);
     for (int i = 0; i < (int)transforms.size(); i++) {
-        if (!states[i].isInRing) continue;
-        
-        // --- Z-AXIS FLATTENING: Keep all ring atoms on the same plane ---
-        transforms[i].vz -= transforms[i].z * 20.0f * dt;
-        transforms[i].vz *= 0.5f;
-        
-        // FREEZE ring atoms almost completely
-        // The square was positioned correctly at formation - just maintain it
-        float ringDamping = 0.30f; // Very heavy damping - almost frozen
-        transforms[i].vx *= ringDamping;
-        transforms[i].vy *= ringDamping;
-    }
+        if (!states[i].isInRing || processed[i]) continue;
 
-    // --- PHASE 32: ACTIVE RING FOLDING (Clay Catalysis) ---
+        // 1. Collect all atoms in this specific ring structure (connected component)
+        std::vector<int> ringIndices;
+        std::vector<int> stack = {i};
+        processed[i] = true;
+        
+        while(!stack.empty()){
+            int curr = stack.back(); stack.pop_back();
+            ringIndices.push_back(curr);
+            
+            // Check connected atoms (Parent)
+            int p = states[curr].parentEntityId;
+            if (p != -1 && states[p].isInRing && !processed[p]) {
+                processed[p] = true; stack.push_back(p);
+            }
+            // Check children (O(N) search per group start, but amortized O(N) total)
+            for(int k=0; k < (int)transforms.size(); k++) {
+                if (states[k].parentEntityId == curr && states[k].isInRing && !processed[k]) {
+                    processed[k] = true; stack.push_back(k);
+                }
+            }
+            // Check Cycle Bond
+            int c = states[curr].cycleBondId;
+            if (c != -1 && states[c].isInRing && !processed[c]) {
+                processed[c] = true; stack.push_back(c);
+            }
+        }
+
+        // 2. Calculate average DRIFT velocity for the entire molecule
+        float avgVx = 0, avgVy = 0;
+        for (int idx : ringIndices) {
+            avgVx += transforms[idx].vx;
+            avgVy += transforms[idx].vy;
+        }
+        avgVx /= ringIndices.size();
+        avgVy /= ringIndices.size();
+
+        // 3. Sub-grouping for specific Ring logic
+        std::map<int, std::vector<int>> subRings;
+        for (int idx : ringIndices) {
+            if (states[idx].isInRing && states[idx].ringInstanceId != -1) {
+                subRings[states[idx].ringInstanceId].push_back(idx);
+            }
+        }
+
+        // Process each sub-ring independently
+        for (auto const& [rId, subIndices] : subRings) {
+            // Need a sample index for definitions
+            int sampleIdx = subIndices[0];
+            const StructureDefinition* def = StructureRegistry::getInstance().findMatch(states[sampleIdx].ringSize, atoms[sampleIdx].atomicNumber);
+            if (!def) continue;
+
+            float internalDamping = def->damping;
+            float globalDriftDamping = def->globalDamping;
+            std::vector<Vector2> offsets = def->getIdealOffsets(Config::BOND_IDEAL_DIST);
+
+            // Calculate sub-ring centroid
+            float scx = 0, scy = 0;
+            for (int idx : subIndices) {
+                scx += transforms[idx].x;
+                scy += transforms[idx].y;
+            }
+            scx /= subIndices.size();
+            scy /= subIndices.size();
+
+            // Collaborative Check for this specific ring
+            bool ringReady = true;
+            for (int idx : subIndices) {
+                if (states[idx].dockingProgress < 1.0f) {
+                    int rIdx = states[idx].ringIndex;
+                    if (rIdx >= 0 && rIdx < (int)offsets.size()) {
+                        float dx = (scx + offsets[rIdx].x) - transforms[idx].x;
+                        float dy = (scy + offsets[rIdx].y) - transforms[idx].y;
+                        if (std::sqrt(dx*dx + dy*dy) > def->completionThreshold) {
+                            ringReady = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Apply forces to sub-ring members
+            for (int idx : subIndices) {
+                if (ringReady) states[idx].dockingProgress = 1.0f;
+
+                // Use relaxed damping during formation, strict damping when stable
+                float currentDamping = (states[idx].dockingProgress < 1.0f) ? def->formationDamping : internalDamping;
+                
+                // Split velocity into Drift + Relative
+                float relVx = transforms[idx].vx - avgVx;
+                float relVy = transforms[idx].vy - avgVy;
+
+                if (states[idx].dockingProgress < 1.0f) {
+                    int rIdx = states[idx].ringIndex;
+                    if (rIdx >= 0 && rIdx < (int)offsets.size()) {
+                        float targetX = scx + offsets[rIdx].x;
+                        float targetY = scy + offsets[rIdx].y;
+                        
+                        float dx = targetX - transforms[idx].x;
+                        float dy = targetY - transforms[idx].y;
+
+                        // SMOOTH FORCE (Force-based pull with dt)
+                        float pullForce = def->formationSpeed * 80.0f; 
+                        relVx += dx * pullForce * dt;
+                        relVy += dy * pullForce * dt;
+
+                        // Clamp relative speed during formation to prevent "explosions"
+                        float relSpeedSq = relVx*relVx + relVy*relVy;
+                        float maxRelSpeed = def->maxFormationSpeed;
+                        if (relSpeedSq > maxRelSpeed * maxRelSpeed) {
+                            float scale = maxRelSpeed / std::sqrt(relSpeedSq);
+                            relVx *= scale;
+                            relVy *= scale;
+                        }
+                    }
+                    states[idx].dockingProgress += dt * (def->formationSpeed * 0.2f); // Visual time
+                }
+
+                // Apply Mixed Damping
+                transforms[idx].vx = (avgVx * globalDriftDamping) + (relVx * currentDamping);
+                transforms[idx].vy = (avgVy * globalDriftDamping) + (relVy * currentDamping);
+                
+                // Z-Axis flattening for rings
+                transforms[idx].vz -= transforms[idx].z * 20.0f * dt;
+                transforms[idx].vz *= 0.5f;
+            }
+        }
+}
+
+// --- PHASE 32: ACTIVE RING FOLDING (Clay Catalysis) ---
     // Find TERMINAL atoms (exactly 1 bond) in chains on Clay and pull them together.
     // A terminal atom has: (parent but no children) OR (children but no parent).
     // We collect all terminals per molecule, then apply folding force between them.

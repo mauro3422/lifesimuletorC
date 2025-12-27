@@ -1,4 +1,23 @@
 
+## [Phase 25: Structural Symmetry & Normalized Physics] - 2025-12-27
+
+### Added
+- **Ring Instance ID (`ringInstanceId`)**: Added unique identification for individual rings within complex molecules.
+- **Independent Centroids**: `PhysicsEngine` now calculates centroids per-ring rather than per-molecule, enabling multi-ring stability.
+- **Parametric Formation Physics**: Moved all assembly magic numbers to `structures.json`:
+    - `formationDamping`: Assembly phase friction.
+    - `maxFormationSpeed`: Velocity clamping to prevent explosive assembly.
+    - `completionThreshold`: Precision target for rigid locking.
+- **Improved Detection**: Increased `BOND_AUTO_RANGE` (50.0 -> 55.0) for more reliable bonding of moving atoms.
+
+### Fixed
+- **Structural Asymmetry**: Synchronized formation completion via "Collaborative Handshake" - whole group locks only when everyone is ready.
+- **Explosive Transitions**: Replaced direct velocity bias with force-based attraction and relative speed clamping.
+- **Centroid Distortion**: Cycle atoms are now correctly identified via LCA, preventing branch atoms from skewing the ring center.
+- **Stalled Animation**: Adjusted visual docking progress speed to match the physics-driven attraction.
+
+---
+
 ## [Phase 24: Stable Ring Formation & Chain Growth] - 2025-12-27
 
 ### Fixed

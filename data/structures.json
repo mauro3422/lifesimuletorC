@@ -1,0 +1,19 @@
+{
+    "structures": [
+        {
+            "name": "carbon_square",
+            "atomCount": 4,
+            "atomicNumber": 6,
+            "targetAngle": 1.5708,
+            "damping": 0.15,
+            "globalDamping": 0.98,
+            "formationSpeed": 1.2,
+            "formationDamping": 0.92,
+            "maxFormationSpeed": 300.0,
+            "completionThreshold": 1.0,
+            "rotationOffset": 0.0,
+            "isPlanar": true,
+            "instantFormation": false
+        }
+    ]
+}

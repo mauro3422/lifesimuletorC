@@ -35,6 +35,9 @@ struct StateComponent {
     // --- PHASE 18: CYCLES & MEMBRANES ---
     int cycleBondId;     // Entity ID for closing a loop (Non-hierarchical bond)
     bool isInRing;       // True if this atom is part of the closed perimeter
+    int ringSize;        // Number of atoms in the ring
+    int ringIndex;       // Position in the ring (0 to ringSize-1) for geometric mapping
+    int ringInstanceId;  // Unique ID for this specific ring instance
 };
 
 

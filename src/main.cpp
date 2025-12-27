@@ -12,6 +12,7 @@
 #include "rendering/CameraSystem.hpp"
 #include "rendering/Renderer25D.hpp"
 #include "chemistry/ChemistryDatabase.hpp"
+#include "chemistry/StructureRegistry.hpp"
 #include "core/Config.hpp"
 #include "core/MathUtils.hpp"
 #include "gameplay/Player.hpp"
@@ -77,7 +78,7 @@ int main() {
     // Step 1: Chemical Database
     loading.draw(0.2f, lang.get("ui.loading.periodic_table").c_str());
     ChemistryDatabase& db = ChemistryDatabase::getInstance(); 
-    
+    StructureRegistry::getInstance().loadFromDisk("data/structures.json");    
     // Step 2: World Generation (Primordial Density)
     loading.draw(0.5f, lang.get("ui.loading.world_gen").c_str());
     World world;

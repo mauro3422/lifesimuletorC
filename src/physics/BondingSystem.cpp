@@ -1,9 +1,15 @@
 #include "BondingSystem.hpp"
 #include "SpatialGrid.hpp"
-#include "core/Config.hpp"
-#include "core/MathUtils.hpp"
+#include "../chemistry/ChemistryDatabase.hpp"
+#include "../chemistry/StructureRegistry.hpp"
+#include "../chemistry/StructureDefinition.hpp"
+#include "../core/Config.hpp"
+#include "../core/MathUtils.hpp"
 #include "gameplay/MissionManager.hpp"
 #include "world/EnvironmentManager.hpp"
+#include <string>
+#include <vector>
+#include "raylib.h"
 #include <algorithm>
 #include <cmath>
 #include <functional>
@@ -32,8 +38,8 @@ BondingSystem::BondError BondingSystem::tryBond(int sourceId, int targetId,
                            const std::vector<TransformComponent>& transforms,
                            bool forced,
                            float angleMultiplier) {
-    if (sourceId < 0 || targetId < 0 || sourceId == targetId) return INTERNAL_ERROR;
-    if (states[sourceId].isClustered) return ALREADY_CLUSTERED; 
+    if (sourceId < 0 || targetId < 0 || sourceId == targetId) return BondingSystem::INTERNAL_ERROR;
+    if (states[sourceId].isClustered) return BondingSystem::ALREADY_CLUSTERED; 
 
     // SMART SCANNER: Search for ALL members of the same molecule using dynamic hierarchy
     int molRootId = MathUtils::findMoleculeRoot(targetId, states);
@@ -367,7 +373,7 @@ void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states
                     // This was too restrictive and blocked chain growth.
                     // Now ANY carbon with available valency can bond to any other.
                     
-                    if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == SUCCESS) {
+                    if (tryBond(i, j, states, atoms, transforms, false, angleMultiplier) == BondingSystem::SUCCESS) {
                         break; // One bond per atom per tick
                     }
                 } else {
@@ -489,6 +495,7 @@ void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states,
                             states[partner].isInRing = false;
                         }
                         states[k].cycleBondId = -1;
+                        states[k].ringSize = 0;
                     }
                 }
             }
@@ -499,6 +506,9 @@ void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states,
     // Reset current atom's ring state
     state.cycleBondId = -1;
     state.isInRing = false;
+    state.ringSize = 0;
+    state.ringIndex = -1;
+    state.ringInstanceId = -1;
 
     // --- REVERT POLARITY ---
     float enHost = ChemistryDatabase::getInstance().getElement(atoms[parentId].atomicNumber).electronegativity;
@@ -566,10 +576,10 @@ BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j,
                                std::vector<AtomComponent>& atoms, 
                                std::vector<TransformComponent>& transforms) {
     
-    if (i < 0 || j < 0 || i == j) return INTERNAL_ERROR;
+    if (i < 0 || j < 0 || i == j) return BondingSystem::INTERNAL_ERROR;
     
     // 1. Check if already cycle bonded
-    if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return ALREADY_BONDED;
+    if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return BondingSystem::ALREADY_BONDED;
 
     // 2. Find Slots for BOTH atoms (They must face each other)
     // Relative pos for I -> J
@@ -586,58 +596,73 @@ BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j,
         states[j].cycleBondId = i;
         
         // COLLECT RING ATOMS IN CHAIN ORDER
-        // For a proper square, atoms must be ordered: A-B-C-D where A-B, B-C, C-D, D-A are bonds
-        // The chain is: i is terminal, follow parents until we hit j's chain
+        // For a proper structure, atoms must be ordered: A-B-C-D where A-B, B-C, C-D... are bonds
+        // Walk from i and j to collect paths to root
         std::vector<int> chainFromI;
         std::vector<int> chainFromJ;
-        
-        // Walk from i to root
-        int current = i;
-        while (current != -1) {
-            chainFromI.push_back(current);
-            states[current].isInRing = true;
-            current = states[current].parentEntityId;
+        int currI = i;
+        while (currI != -1) {
+            chainFromI.push_back(currI);
+            currI = states[currI].parentEntityId;
+        }
+        int currJ = j;
+        while (currJ != -1) {
+            chainFromJ.push_back(currJ);
+            currJ = states[currJ].parentEntityId;
         }
         
-        // Walk from j to root
-        current = j;
-        while (current != -1) {
-            chainFromJ.push_back(current);
-            states[current].isInRing = true;
-            current = states[current].parentEntityId;
-        }
-        
-        // Find common ancestor and build ring in order
-        // For 4-atom ring: i -> parent(i) -> ... -> common -> ... -> j
-        // The ring order should be: i, then follow chain to j
-        std::vector<int> ringAtoms;
-        ringAtoms.push_back(i);
-        
-        // Add atoms from i's parent chain (excluding i, already added)
-        for (int k = 1; k < (int)chainFromI.size(); k++) {
-            if (std::find(chainFromJ.begin(), chainFromJ.end(), chainFromI[k]) != chainFromJ.end()) {
-                // Found common ancestor, now add j's chain in reverse back to j
-                int commonIdx = -1;
-                for (int m = 0; m < (int)chainFromJ.size(); m++) {
-                    if (chainFromJ[m] == chainFromI[k]) { commonIdx = m; break; }
+        // Find Lowest Common Ancestor (LCA)
+        int commonRoot = -1;
+        for (int nodeI : chainFromI) {
+            for (int nodeJ : chainFromJ) {
+                if (nodeI == nodeJ) {
+                    commonRoot = nodeI;
+                    goto found_lca;
                 }
-                // Add from common back to j (reverse order)
-                for (int m = commonIdx; m >= 0; m--) {
-                    if (chainFromJ[m] != i && std::find(ringAtoms.begin(), ringAtoms.end(), chainFromJ[m]) == ringAtoms.end()) {
-                        ringAtoms.push_back(chainFromJ[m]);
-                    }
-                }
-                break;
             }
-            ringAtoms.push_back(chainFromI[k]);
+        }
+    found_lca:
+        if (commonRoot == -1) return BondingSystem::INTERNAL_ERROR;
+
+        // Build precise ring list: Path from i to LCA, then LCA to j
+        std::vector<int> ringAtoms;
+        // i up to commonRoot (inclusive)
+        for (int nodeI : chainFromI) {
+            ringAtoms.push_back(nodeI);
+            if (nodeI == commonRoot) break;
+        }
+        // Then commonRoot's descendants down to j (reverse chainFromJ)
+        bool startAdding = false;
+        for (int k = (int)chainFromJ.size() - 1; k >= 0; k--) {
+            int nodeJ = chainFromJ[k];
+            if (startAdding) {
+                ringAtoms.push_back(nodeJ);
+            } else if (nodeJ == commonRoot) {
+                startAdding = true; // Skip commonRoot since it's already added from chainFromI
+            }
+        }
+
+        // Set correct ring attributes for all cycle atoms
+        static int nextRingId = 1;
+        int currentRingId = nextRingId++;
+
+        for (int k = 0; k < (int)ringAtoms.size(); k++) {
+            int idx = ringAtoms[k];
+            states[idx].isInRing = true;
+            states[idx].ringSize = (int)ringAtoms.size();
+            states[idx].ringIndex = k;
+            states[idx].ringInstanceId = currentRingId;
+            states[idx].dockingProgress = 0.0f; // Triggers smooth formation
         }
 
         // OCCUPY SLOTS
         states[i].occupiedSlots |= (1 << slotI);
         states[j].occupiedSlots |= (1 << slotJ);
         
-        // --- REPOSITION ATOMS INTO SQUARE FORMATION ---
-        if (ringAtoms.size() == 4) {
+        // --- GENERALIZED REPOSITIONING ---
+        const StructureDefinition* def = StructureRegistry::getInstance().findMatch((int)ringAtoms.size(), atoms[i].atomicNumber);
+        
+        if (def && def->instantFormation) {
             // Calculate centroid of all ring atoms
             float cx = 0, cy = 0, cz = 0;
             for (int idx : ringAtoms) {
@@ -645,33 +670,34 @@ BondingSystem::BondError BondingSystem::tryCycleBond(int i, int j,
                 cy += transforms[idx].y;
                 cz += transforms[idx].z;
             }
-            cx /= 4.0f; cy /= 4.0f; cz /= 4.0f;
+            cx /= ringAtoms.size(); cy /= ringAtoms.size(); cz /= ringAtoms.size();
             
-            // Place atoms at corners of a square around centroid
-            // Order them so bonds go: 0-1 (top), 1-2 (right), 2-3 (bottom), 3-0 (left)
-            float halfSide = Config::BOND_IDEAL_DIST * 0.5f;
+            // Get ideal positions from definition
+            std::vector<Vector2> offsets = def->getIdealOffsets(Config::BOND_IDEAL_DIST);
             
-            // Position 4 atoms at square corners FOLLOWING chain order
-            transforms[ringAtoms[0]].x = cx - halfSide; transforms[ringAtoms[0]].y = cy - halfSide; // Top-left
-            transforms[ringAtoms[1]].x = cx + halfSide; transforms[ringAtoms[1]].y = cy - halfSide; // Top-right
-            transforms[ringAtoms[2]].x = cx + halfSide; transforms[ringAtoms[2]].y = cy + halfSide; // Bottom-right
-            transforms[ringAtoms[3]].x = cx - halfSide; transforms[ringAtoms[3]].y = cy + halfSide; // Bottom-left
-            
-            // Flatten Z for all
-            for (int idx : ringAtoms) {
-                transforms[idx].z = 0;
+            // Apply offsets to atoms FOLLOWING chain order
+            for (size_t k = 0; k < ringAtoms.size() && k < offsets.size(); k++) {
+                int idx = ringAtoms[k];
+                transforms[idx].x = cx + offsets[k].x;
+                transforms[idx].y = cy + offsets[k].y;
+                if (def->isPlanar) transforms[idx].z = 0;
+                
+                // Zero out velocities to prevent kinetic explosion
                 transforms[idx].vx = 0; transforms[idx].vy = 0; transforms[idx].vz = 0;
             }
             
-            TraceLog(LOG_INFO, "[RING] Repositioned atoms [%d,%d,%d,%d] into square at (%.0f, %.0f)", 
-                     ringAtoms[0], ringAtoms[1], ringAtoms[2], ringAtoms[3], cx, cy);
+            TraceLog(LOG_INFO, "[STRUCTURE] Formed '%s' with %d atoms at (%.0f, %.0f)", 
+                     def->name.c_str(), (int)ringAtoms.size(), cx, cy);
+        } else if (def) {
+            TraceLog(LOG_INFO, "[STRUCTURE] Starting smooth formation for '%s' (%d atoms)", 
+                     def->name.c_str(), (int)ringAtoms.size());
         }
         
         TraceLog(LOG_INFO, "[BOND] Cycle Bond Created: %d(Slot %d) <-> %d(Slot %d)", i, slotI, j, slotJ);
-        return SUCCESS;
+        return BondingSystem::SUCCESS;
     }
     
-    return VALENCY_FULL;
+    return BondingSystem::VALENCY_FULL;
 }
 
 void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& states, 
@@ -684,9 +710,15 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
         if (partnerId >= 0 && partnerId < (int)states.size()) {
             states[partnerId].cycleBondId = -1;
             states[partnerId].isInRing = false;
+            states[partnerId].ringSize = 0;
+            states[partnerId].ringIndex = -1;
+            states[partnerId].ringInstanceId = -1;
         }
         states[entityId].cycleBondId = -1;
         states[entityId].isInRing = false;
+        states[entityId].ringSize = 0;
+        states[entityId].ringIndex = -1;
+        states[entityId].ringInstanceId = -1;
     }
 
     // 1. Break connection with parent

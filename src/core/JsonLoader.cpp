@@ -259,4 +259,44 @@ namespace JsonLoader {
         return molecules;
     }
 
+    // Load Structures from JSON file
+    std::vector<StructureDefinition> loadStructures(const std::string& path) {
+        std::vector<StructureDefinition> structures;
+        std::ifstream file(path);
+        if (!file.is_open()) throw std::runtime_error("[JSON LOADER] Cannot open structures: " + path);
+        
+        json data;
+        try {
+            file >> data;
+        } catch (const json::parse_error& e) {
+            throw std::runtime_error("[JSON LOADER] Parse error in " + path + ": " + e.what());
+        }
+        
+        if (!data.contains("structures") || !data["structures"].is_array()) {
+            throw std::runtime_error("[JSON LOADER] Missing 'structures' array in " + path);
+        }
+
+        for (const auto& j : data["structures"]) {
+            StructureDefinition s;
+            s.name = j.value("name", "unknown");
+            s.atomCount = j.value("atomCount", 0);
+            s.atomicNumber = j.value("atomicNumber", 0);
+            s.targetAngle = j.value("targetAngle", 1.5708f); // Default 90 deg
+            s.damping = j.value("damping", 0.30f);
+            s.globalDamping = j.value("globalDamping", 0.98f);
+            s.formationSpeed = j.value("formationSpeed", 2.0f);
+            s.formationDamping = j.value("formationDamping", 0.90f);
+            s.maxFormationSpeed = j.value("maxFormationSpeed", 400.0f);
+            s.completionThreshold = j.value("completionThreshold", 0.8f);
+            s.rotationOffset = j.value("rotationOffset", 0.0f);
+            s.isPlanar = j.value("isPlanar", true);
+            s.instantFormation = j.value("instantFormation", true);
+            
+            structures.push_back(s);
+            TraceLog(LOG_INFO, "[JSON LOADER] Loaded structure definition: %s", s.name.c_str());
+        }
+        
+        return structures;
+    }
+
 } // namespace JsonLoader

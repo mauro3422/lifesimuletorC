@@ -4,6 +4,7 @@
 #include "json.hpp"
 #include "../chemistry/Element.hpp"
 #include "../chemistry/Molecule.hpp"
+#include "../chemistry/StructureDefinition.hpp"
 #include "../gameplay/MissionManager.hpp"
 #include "raylib.h"
 #include <vector>
@@ -30,6 +31,9 @@ namespace JsonLoader {
 
     // Load Molecules from JSON file (Localized)
     std::vector<Molecule> loadMolecules(const std::string& path, const std::string& lang = "es");
+
+    // Load Structures from JSON file
+    std::vector<struct StructureDefinition> loadStructures(const std::string& path);
 
 } // namespace JsonLoader
 

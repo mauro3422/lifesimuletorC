@@ -51,7 +51,137 @@
 [INFO] [CHEMISTRY] Reloaded 6 elements from JSON (Language: es)
 [INFO] [CHEMISTRY] Reloaded 7 molecules from JSON (Language: es)
 [INFO] [CHEMISTRY] All elements passed 2.5D Z-axis validation ✓
+[INFO] [JSON LOADER] Loaded structure definition: carbon_square
+[INFO] [STRUCTURES] Loaded 1 structure definitions from data/structures.json
 [INFO] [World] TEST MODE - Player initialized at (0,0)
 [INFO] [World] TEST MODE - Created 4 Carbons at clay zone (200, 200)
 [INFO] [World] TEST MODE - Carbon IDs: 1, 2, 3, 4
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [BOND] Bond broken for atom 2 (released from 3)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 3)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [CYCLE TRY] Terminals: 1 <-> 4 | Dist: 53.7 | PathHops: 3
+[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
+[INFO] [BOND] Cycle Bond Created: 1(Slot 2) <-> 4(Slot 1)
+[INFO] [MEMBRANE] CYCLE FORMED: Atom 1 - 4 (Phys + Visual)
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [RING] Ring structure broken - cleared isInRing for all connected atoms
+[INFO] [BOND] Bond broken for atom 2 (released from 3)
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[INFO] [CYCLE TRY] Terminals: 2 <-> 3 | Dist: 58.5 | PathHops: 3
+[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
+[INFO] [BOND] Cycle Bond Created: 2(Slot 3) <-> 3(Slot 0)
+[INFO] [MEMBRANE] CYCLE FORMED: Atom 2 - 3 (Phys + Visual)
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [RING] Ring structure broken - cleared isInRing for all connected atoms
+[INFO] [BOND] Bond broken for atom 1 (released from 4)
+[INFO] [BOND] Bond broken for atom 2 (released from 1)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [CYCLE TRY] Terminals: 1 <-> 3 | Dist: 80.6 | PathHops: 3
+[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
+[INFO] [BOND] Cycle Bond Created: 1(Slot 3) <-> 3(Slot 2)
+[INFO] [MEMBRANE] CYCLE FORMED: Atom 1 - 3 (Phys + Visual)
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [RING] Ring structure broken - cleared isInRing for all connected atoms
+[INFO] [BOND] Bond broken for atom 2 (released from 4)
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [CYCLE TRY] Terminals: 2 <-> 3 | Dist: 40.1 | PathHops: 3
+[INFO] [STRUCTURE] Starting smooth formation for 'carbon_square' (4 atoms)
+[INFO] [BOND] Cycle Bond Created: 2(Slot 1) <-> 3(Slot 1)
+[INFO] [MEMBRANE] CYCLE FORMED: Atom 2 - 3 (Phys + Visual)
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [BOND] Bond broken for atom 2 (released from 1)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 3 separated from 4
+[WARNING] [PHYSICS] BOND BROKEN by stress: Atom 2 separated from 1
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [RING] Ring structure broken - cleared isInRing for all connected atoms
+[INFO] [BOND] Bond broken for atom 1 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [BOND] Bond broken for atom 2 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [BOND] Bond broken for atom 2 (released from 3)
+[INFO] [BOND] Full Isolation: Atom 3 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [BOND] Bond broken for atom 3 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 4 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [BOND] Bond broken for atom 3 (released from 4)
+[INFO] [BOND] Bond broken for atom 2 (released from 3)
+[INFO] [BOND] Full Isolation: Atom 3 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [BOND] Bond broken for atom 1 (released from 4)
+[INFO] [BOND] Bond broken for atom 2 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 4 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [BOND] Bond broken for atom 2 (released from 4)
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
+[INFO] [BOND] Bond broken for atom 3 (released from 4)
+[INFO] [BOND] Full Isolation: Atom 4 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 2]
+[INFO] [BOND] Bond broken for atom 2 (released from 3)
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 2 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
+[INFO] [BOND] Bond broken for atom 3 (released from 4)
+[INFO] [BOND] Bond broken for atom 2 (released from 3)
+[INFO] [BOND] Full Isolation: Atom 3 released from all bonds
+[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
+[INFO] [BOND] Bond broken for atom 1 (released from 2)
+[INFO] [BOND] Full Isolation: Atom 1 released from all bonds
+[INFO] TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
+[INFO] SHADER: [ID 3] Default shader unloaded successfully
+[INFO] TEXTURE: [ID 1] Default texture unloaded successfully
+[INFO] Window closed successfully

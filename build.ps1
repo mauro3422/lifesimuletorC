@@ -16,6 +16,7 @@ g++ src/main.cpp `
     src/rendering/Renderer25D.cpp `
     src/input/InputHandler.cpp `
     src/chemistry/ChemistryDatabase.cpp `
+    src/chemistry/StructureRegistry.cpp `
     src/gameplay/Player.cpp `
     src/gameplay/TractorBeam.cpp `
     src/ui/LabelSystem.cpp `
