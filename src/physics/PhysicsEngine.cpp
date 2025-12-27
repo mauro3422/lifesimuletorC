@@ -215,7 +215,15 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
 
     // 3. LOOP FUSION: Integration, Friction, and Boundaries in one step
     for (TransformComponent& tr : transforms) {
-        // 1. Integration
+        // 1. Integration (With Thermodynamic Jitter)
+        float jitterX = MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER;
+        float jitterY = MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER;
+        float jitterZ = MathUtils::getJitter() * Config::THERMODYNAMIC_JITTER * 0.2f;
+
+        tr.vx += jitterX * dt;
+        tr.vy += jitterY * dt;
+        tr.vz += jitterZ * dt;
+
         tr.x += tr.vx * dt;
         tr.y += tr.vy * dt;
         tr.z += tr.vz * dt;

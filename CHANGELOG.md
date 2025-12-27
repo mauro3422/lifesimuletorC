@@ -1,5 +1,11 @@
 # Changelog
 
+## [Phase 27: Thermodynamic Movement] - 2025-12-27
+### Added
+- **Thermodynamic Jitter**: Fully integrated `THERMODYNAMIC_JITTER` into the integration loop.
+- **Ambient Motion**: Atoms and molecules now exhibit autonomous Brownian motion, allowing them to drift and rotate naturally without player intervention.
+- **Dynamic Physics integration**: Jitter is applied as an impulse relative to `dt`, ensuring simulation speed independence.
+
 ## [Phase 26: Structural Modularity & Symmetry Generalization] - 2025-12-27
 
 ### Added
