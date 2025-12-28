@@ -54,9 +54,6 @@ public:
         // Note: O(R^2) is fine for small N. For large N, use Grid.
         for (auto it1 = rings.begin(); it1 != rings.end(); ++it1) {
             for (auto it2 = std::next(it1); it2 != rings.end(); ++it2) {
-                int ringIdA = it1->first;
-                int ringIdB = it2->first;
-                
                 // Skip if same molecule (already bonded)
                 int repA = it1->second[0];
                 int repB = it2->second[0];
