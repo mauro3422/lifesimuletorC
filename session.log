@@ -56,15 +56,5 @@
 [INFO] [World] TEST MODE - Player initialized at (0,0)
 [INFO] [World] TEST MODE - Created Stacked Squares at Clay Zone
 [INFO] [MISSIONS] Loaded 3 missions from JSON (Language: es)
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 8]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 4]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 3]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 1]
-[INFO] [TRACTOR] Captured C (in Unknown Structure) [ID: 5]
-[INFO] TEXTURE: [ID 2] Unloaded texture data from VRAM (GPU)
-[INFO] SHADER: [ID 3] Default shader unloaded successfully
-[INFO] TEXTURE: [ID 1] Default texture unloaded successfully
-[INFO] Window closed successfully
+[INFO] [RING] Formed 4-ring (square) at (-1200, -393) with atoms 1-7-5-2
+[INFO] [RING] Formed 4-ring (square) at (-1188, -381) with atoms 3-1-7-5

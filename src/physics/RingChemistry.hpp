@@ -67,11 +67,16 @@ public:
 
         int ringSize = distI + distJ + 1;
         
+        // BUG FIX: Reject cycles smaller than 4 atoms (triangles are chemically unstable and shouldn't form membranes)
+        if (ringSize < 4) {
+            TraceLog(LOG_WARNING, "[RING] Rejected cycle of size %d (minimum is 4 for stable ring)", ringSize);
+            return BondError::RING_TOO_SMALL;
+        }
+        
         // PHYSICAL LINK
         states[i].cycleBondId = j;
         states[j].cycleBondId = i;
 
-        // STRUCTURAL TAGGING
         // STRUCTURAL TAGGING
         // FIX #3: Ring Instance ID Overflow Protection
         static int nextRingId = 1;
@@ -80,19 +85,27 @@ public:
         int ringId = nextRingId++;
         if (nextRingId >= MAX_RING_ID) {
             nextRingId = 1; // Wrap around safely
-            // Note: In a perfect world we'd clean up old IDs, but logic handles reuse gracefully
         }
+        
+        // BUG FIX: Build ringMembers in CORRECT ORDER (chain from I to J via LCA)
+        // This ensures positions are assigned sequentially around the ring
         std::vector<int> ringMembers;
         
-        // Trace up from I to LCA
-        for (int k = 0; k <= distI; k++) ringMembers.push_back(chainFromI[k]);
-        // Trace up from J to LCA (excluding LCA as it's already added)
-        for (int k = 0; k < distJ; k++) ringMembers.push_back(chainFromJ[k]);
+        // Path I -> LCA (in order from I going up)
+        for (int k = 0; k <= distI; k++) {
+            ringMembers.push_back(chainFromI[k]);
+        }
+        // Path LCA -> J (in reverse order, excluding LCA which is already added)
+        for (int k = distJ - 1; k >= 0; k--) {
+            ringMembers.push_back(chainFromJ[k]);
+        }
 
-        for (int idx : ringMembers) {
-            states[idx].isInRing = true;
-            states[idx].ringSize = ringSize;
-            states[idx].ringInstanceId = ringId;
+        for (int idx = 0; idx < (int)ringMembers.size(); idx++) {
+            int atomId = ringMembers[idx];
+            states[atomId].isInRing = true;
+            states[atomId].ringSize = ringSize;
+            states[atomId].ringInstanceId = ringId;
+            states[atomId].ringIndex = idx;  // Assign index here for all ring sizes
         }
 
         // --- VISUAL FORMATION (Square Hard-Snap) ---
@@ -101,7 +114,7 @@ public:
              for (int idx : ringMembers) { scx += transforms[idx].x; scy += transforms[idx].y; }
              scx /= 4.0f; scy /= 4.0f;
 
-             // Perfect Square Offsets
+             // Perfect Square Offsets (clockwise order: top-left, top-right, bottom-right, bottom-left)
              float h = Config::BOND_IDEAL_DIST * 0.5f;
              float ox[4] = {-h, h, h, -h};
              float oy[4] = {-h, -h, h, h};
@@ -113,8 +126,10 @@ public:
                  transforms[idx].z = 0.0f;
                  transforms[idx].vx = transforms[idx].vy = transforms[idx].vz = 0.0f;
                  states[idx].dockingProgress = 1.0f; 
-                 states[idx].ringIndex = k;
              }
+             
+             TraceLog(LOG_INFO, "[RING] Formed 4-ring (square) at (%.0f, %.0f) with atoms %d-%d-%d-%d",
+                      scx, scy, ringMembers[0], ringMembers[1], ringMembers[2], ringMembers[3]);
         }
 
         return BondError::SUCCESS;

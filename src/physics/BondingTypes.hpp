@@ -9,7 +9,8 @@ enum class BondError {
     ANGLE_INCOMPATIBLE,
     ALREADY_CLUSTERED,
     ALREADY_BONDED,
-    INTERNAL_ERROR
+    INTERNAL_ERROR,
+    RING_TOO_SMALL  // Added for rejecting rings < 4 atoms
 };
 
 #endif // BONDING_TYPES_HPP
