@@ -77,6 +77,7 @@ namespace Config {
     inline constexpr float BOND_BREAK_STRESS = 180.0f;  // Even stronger to handle larger scale (was 150.0)
     inline constexpr float BOND_IDEAL_DIST = 42.0f;     // Massive increase to ensure VISIBLE GAP (was 24.0)
     inline constexpr float MAX_BOND_RENDER_DIST = 80.0f; // Scale render dist too
+    inline constexpr float MAX_SPRING_FORCE = 3000.0f;  // BUG FIX: Clamp spring forces to prevent explosions
 
     // --- BONDING ANIMATION ---
     inline constexpr float BOND_DOCKING_SPEED = 0.04f; // Slower speed for smoother docking

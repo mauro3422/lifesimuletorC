@@ -1,4 +1,16 @@
-## [Phase 31: Test Coverage & Code Quality] - 2025-12-27
+## [Hot Fix: Critical Physics Stability] - 2025-12-27
+
+### Fixed
+- **Ghost Membrane Bug**: Added `MAX_BOND_RENDER_DIST` check to Cycle Bond rendering, preventing infinite lines when atoms explode.
+- **Physics Explosions**: Added `MAX_SPRING_FORCE` clamp (3000.0) to all spring calculations:
+  - Ring bonds (isInRing)
+  - Normal hierarchical bonds (VSEPR)
+  - Cycle bonds (non-hierarchical)
+- **Root Cause**: Springs without force limits caused infinite acceleration when atoms separated too far.
+
+---
+
+
 
 ### Added
 - **Comprehensive Test Suite**: 43 unit tests across 5 test files for core bonding logic.

@@ -64,6 +64,11 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
             const TransformComponent& trJ = transforms[j];
             
             float dist = sqrtf(powf(trI.x - trJ.x, 2) + powf(trI.y - trJ.y, 2));
+            
+            // BUG FIX: Skip rendering if distance is invalid (prevents "Ghost Membrane" lines)
+            if (dist < 0.01f) continue;  // Degenerate case
+            if (dist > Config::MAX_BOND_RENDER_DIST) continue;  // Broken/exploded state
+            
             float dirX = (trJ.x - trI.x) / dist;
             float dirY = (trJ.y - trI.y) / dist;
             

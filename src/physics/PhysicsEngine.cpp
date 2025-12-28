@@ -154,6 +154,11 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                 fx = nx * forceMag;
                 fy = ny * forceMag;
                 fz = nz * forceMag;
+                
+                // BUG FIX: Clamp spring forces to prevent explosions
+                fx = std::clamp(fx, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
+                fy = std::clamp(fy, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
+                fz = std::clamp(fz, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
             } else {
                 fx = fy = fz = 0;
             }
@@ -163,6 +168,11 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             fx = dx * Config::BOND_SPRING_K;
             fy = dy * Config::BOND_SPRING_K;
             fz = dz * Config::BOND_SPRING_K;
+            
+            // BUG FIX: Clamp spring forces to prevent explosions
+            fx = std::clamp(fx, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
+            fy = std::clamp(fy, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
+            fz = std::clamp(fz, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
         }
 
         // Apply acceleration based on mass
@@ -222,6 +232,11 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         float fx = nx * forceMag;
         float fy = ny * forceMag;
         float fz = nz * forceMag;
+        
+        // BUG FIX: Clamp spring forces to prevent explosions
+        fx = std::clamp(fx, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
+        fy = std::clamp(fy, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
+        fz = std::clamp(fz, -Config::MAX_SPRING_FORCE, Config::MAX_SPRING_FORCE);
 
         float m1 = db.getElement(atoms[i].atomicNumber).atomicMass;
         float m2 = ChemistryDatabase::getInstance().getElement(atoms[partnerId].atomicNumber).atomicMass;
