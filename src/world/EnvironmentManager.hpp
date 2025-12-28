@@ -39,6 +39,14 @@ public:
         return 1.0f;
     }
 
+    // Check if position is in a zone that allows ring formation (e.g., Clay Zone)
+    bool isInRingFormingZone(Vector2 pos) const {
+        for (auto const& zone : zones) {
+            if (zone->contains(pos) && zone->allowsRingFormation()) return true;
+        }
+        return false;
+    }
+
     void draw() {
         for (auto& zone : zones) {
             zone->draw();

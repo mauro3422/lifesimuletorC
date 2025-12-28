@@ -1,4 +1,34 @@
-## [Hot Fix: Critical Physics Stability] - 2025-12-27
+## [Phase 37: Codebase Audit & Test Consolidation] - 2025-12-28
+
+### Changed
+- **Renamed `UndoMechanism.hpp` → `PruningUtils.hpp`**: Clarifies purpose as tree traversal utilities, not undo functionality.
+- **Translated Comments**: All Spanish comments now in English (TractorBeam, ChemistryDatabase, PhysicsEngine).
+- **Unified Test System**: Consolidated fragmented tests from 3 locations into organized structure.
+
+### Added  
+- **`run_tests.ps1`**: Unified test runner for all test suites (integration + standalone).
+- **`.gitignore`**: Excludes build artifacts (*.exe, *.log, *.txt, IDE configs).
+
+### Removed
+- **27 Orphan Files**: Cleaned up root directory (.exe, .log, .txt files from old builds).
+- **Redundant Tests**: Removed `test_core_logic.cpp`, `test_main.cpp` (tested mocked code).
+- **`build_tests.ps1`**: Replaced by unified `run_tests.ps1`.
+- **`test_glue.cpp`**: Useless placeholder test.
+
+### Test Results
+```
+Ring Topology:     7/7 PASS (integration)
+Ladder Diagnostics: PASS (integration)  
+VSEPR Geometry:    50 assertions PASS (standalone)
+```
+
+### Technical Notes
+- Doctest + Raylib conflict: Windows.h macros (`far`, `near`, `Rectangle`) pollute raylib headers.
+- Solution: Integration tests use custom macros; standalone tests use Doctest.
+
+---
+
+
 
 ### Fixed
 - **Ghost Membrane Bug**: Added `MAX_BOND_RENDER_DIST` check to Cycle Bond rendering, preventing infinite lines when atoms explode.
@@ -40,7 +70,7 @@
     - `MolecularHierarchy`: Manages tree traversal and root finding.
     - `RingChemistry`: Specialized logic for cycle detection and ring formation.
     - `AutonomousBonding`: Orchestrates spontaneous bonding rules.
-    - `UndoMechanism`: Helper for undo/redo state logic.
+    - `PruningUtils`: Tree traversal helpers for undo operations (renamed from UndoMechanism).
 
 ### Changed
 - **De-God-Classing**: Refactored monolithic `BondingSystem` into a Facade pattern delegating to the new specialized modules.

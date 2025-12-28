@@ -105,6 +105,141 @@ public:
             }
         }
 
+        // 1.5 ATOM-TO-RING ALIGNMENT (Phase 32: Square Stacking Preparation)
+        // When an atom is connected to a ring, apply alignment force to prepare for next square formation
+        for (int i = 1; i < (int)states.size(); i++) {
+            // Skip atoms dragged by tractor or already in a ring
+            if (tractedRoot != -1 && rootCache[i] == tractedRoot) continue;
+            if (states[i].isInRing) continue;
+            if (!states[i].isClustered) continue;
+            
+            // Check if this atom's parent is in a ring (connected to a square)
+            int parent = states[i].parentEntityId;
+            if (parent == -1 || parent >= (int)states.size()) continue;
+            if (!states[parent].isInRing) continue;
+            
+            // This atom is connected to a ring! Apply alignment force
+            // Calculate ideal position: perpendicular to the parent's ring, away from centroid
+            int ringId = states[parent].ringInstanceId;
+            if (ringId == -1) continue;
+            
+            // Find ring members
+            std::vector<int> ringMembers;
+            for (int k = 0; k < (int)states.size(); k++) {
+                if (states[k].ringInstanceId == ringId) {
+                    ringMembers.push_back(k);
+                }
+            }
+            if (ringMembers.size() < 4) continue;
+            
+            // Calculate ring centroid
+            float cx = 0, cy = 0;
+            for (int m : ringMembers) {
+                cx += transforms[m].x;
+                cy += transforms[m].y;
+            }
+            cx /= ringMembers.size();
+            cy /= ringMembers.size();
+            
+            // 1.5.1 LADDER-SLOT ALIGNMENT (Phase 32 Optimization)
+            // For 4-rings (squares), align to the extensions of existing bonds (90-deg)
+            // instead of a diagonal outward vector.
+            bool alignedToSlot = false;
+            if (ringMembers.size() == 4) {
+                // Find ring neighbors of parent
+                std::vector<int> neighbors;
+                for (int m : ringMembers) {
+                    if (m == parent) continue;
+                    // Are they bonded?
+                    if (states[m].parentEntityId == parent || states[parent].parentEntityId == m || 
+                        states[m].cycleBondId == parent || states[parent].cycleBondId == m) {
+                        neighbors.push_back(m);
+                    }
+                }
+                
+                if (neighbors.size() >= 2) {
+                    // Extensions of the two bonds connected to parent in the ring
+                    float bestDx = 0, bestDy = 0;
+                    float minSlotDistSq = 1e10f;
+                    
+                    for (int n : neighbors) {
+                        float ex = transforms[parent].x - transforms[n].x;
+                        float ey = transforms[parent].y - transforms[n].y;
+                        float eLen = std::sqrt(ex*ex + ey*ey);
+                        if (eLen < 1.0f) continue;
+                        ex /= eLen; ey /= eLen;
+                        
+                        float slotX = transforms[parent].x + ex * Config::BOND_IDEAL_DIST;
+                        float slotY = transforms[parent].y + ey * Config::BOND_IDEAL_DIST;
+                        
+                        float dSq = (slotX - transforms[i].x)*(slotX - transforms[i].x) + 
+                                    (slotY - transforms[i].y)*(slotY - transforms[i].y);
+                                    
+                        if (dSq < minSlotDistSq) {
+                            minSlotDistSq = dSq;
+                            bestDx = slotX - transforms[i].x;
+                            bestDy = slotY - transforms[i].y;
+                        }
+                    }
+                    
+                    if (minSlotDistSq < 1e10f) {
+                        float dist = std::sqrt(minSlotDistSq);
+                        if (dist > 0.1f) {
+                            float alignForce = 150.0f; // Snappy axis alignment
+                            transforms[i].vx += (bestDx / dist) * alignForce * 0.016f;
+                            transforms[i].vy += (bestDy / dist) * alignForce * 0.016f;
+                            
+                            // Damping for stability
+                            if (dist < 15.0f) {
+                                transforms[i].vx *= 0.85f;
+                                transforms[i].vy *= 0.85f;
+                            }
+                        }
+                        alignedToSlot = true;
+                    }
+                }
+            }
+            
+            if (alignedToSlot) continue; 
+
+            // Fallback: Calculate direction from centroid through parent (outward direction)
+            float dirX = transforms[parent].x - cx;
+            float dirY = transforms[parent].y - cy;
+            float dirLen = std::sqrt(dirX * dirX + dirY * dirY);
+            if (dirLen < 1.0f) continue;
+            dirX /= dirLen;
+            dirY /= dirLen;
+            
+            // Target position: parent position + outward direction * bondDistance
+            float targetX = transforms[parent].x + dirX * Config::BOND_IDEAL_DIST;
+            float targetY = transforms[parent].y + dirY * Config::BOND_IDEAL_DIST;
+            
+            // Apply alignment force toward target position (for non-square rings)
+            float dx = targetX - transforms[i].x;
+            float dy = targetY - transforms[i].y;
+            float distSq = dx * dx + dy * dy;
+            
+            if (distSq > 1.0f) { // Only apply if not already perfectly aligned
+                float dist = std::sqrt(distSq);
+                float alignForce = 120.0f; // Increased force for snappier stacking (Phase 32)
+                
+                // Falloff: ignore if too far (don't pull random atoms)
+                if (dist < Config::BOND_AUTO_RANGE * 2.0f) {
+                    float t = 1.0f - (dist / (Config::BOND_AUTO_RANGE * 2.0f));
+                    float currentForce = alignForce * t;
+                    
+                    transforms[i].vx += (dx / dist) * currentForce * 0.016f;
+                    transforms[i].vy += (dy / dist) * currentForce * 0.016f;
+                    
+                    // Stability Damping: reduce perpendicular momentum to target
+                    if (dist < 10.0f) {
+                         transforms[i].vx *= 0.9f;
+                         transforms[i].vy *= 0.9f;
+                    }
+                }
+            }
+        }
+
         // 2. MICRO-BONDING (Existing Logic)
         for (int i = 0; i < (int)states.size(); i++) {
             // ... (rest of function)
@@ -144,8 +279,9 @@ public:
                     bool isSameMolecule = (rootI == rootJ);
 
                     if (isSameMolecule) {
-                        // INTERNAL RING CLOSING LOGIC
-                        if (states[i].cycleBondId == -1 && states[j].cycleBondId == -1) {
+                        // INTERNAL RING CLOSING LOGIC - Only in zones that allow it (Clay Zone)
+                        bool inRingZone = env && env->isInRingFormingZone({transforms[i].x, transforms[i].y});
+                        if (inRingZone && states[i].cycleBondId == -1 && states[j].cycleBondId == -1) {
                             int hops = MathUtils::getHierarchyDistance(i, j, states);
                             if (hops >= 3 && hops <= 6) {
                                 if ((BondError)RingChemistry::tryCycleBond(i, j, states, atoms, transforms) == BondError::SUCCESS) {

@@ -40,6 +40,7 @@ public:
 
     float getBondRangeMultiplier() const override { return 1.5f; } // Facilitates long distance bonding
     float getBondAngleMultiplier() const override { return 1.2f; } // Relaxed geometry for catalysis
+    bool allowsRingFormation() const override { return true; }     // Clay Zone enables membrane formation
 };
 
 #endif // CLAY_ZONE_HPP

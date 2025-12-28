@@ -10,6 +10,7 @@
 #include "../chemistry/ChemistryDatabase.hpp"
 #include "../core/Config.hpp"
 #include "MolecularHierarchy.hpp"
+#include "RingChemistry.hpp"
 
 /**
  * BondingCore (Phase 30)
@@ -148,6 +149,12 @@ public:
         if (parentId != -1) {
             states[parentId].childCount--;
             states[parentId].occupiedSlots &= ~(1u << states[entityId].parentSlotIndex);
+        }
+
+        // BUG FIX: Clean up ring state when bond breaks using centralized RingChemistry
+        if (states[entityId].cycleBondId != -1 || states[entityId].isInRing) {
+            int ringId = states[entityId].ringInstanceId;
+            RingChemistry::invalidateRing(ringId, states);
         }
 
         states[entityId].isClustered = false;

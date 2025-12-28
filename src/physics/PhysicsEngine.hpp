@@ -7,20 +7,21 @@
 #include <vector>
 
 /**
- * El Motor de Física orquestará los diferentes módulos.
+ * PHYSICS ENGINE
+ * Orchestrates simulation subsystems: forces, bonding, collisions, and environment.
  */
 class PhysicsEngine {
 public:
     PhysicsEngine();
     
-    // El paso de simulación principal
+    // Main simulation step
     void step(float dt, std::vector<TransformComponent>& transforms,
               std::vector<AtomComponent>& atoms,
               std::vector<StateComponent>& states,
               const class ChemistryDatabase& db,
               int tractedEntityId = -1);
 
-    // Acceso a la grilla para otros sistemas (como el TractorBeam)
+    // Grid access for other systems (e.g., TractorBeam)
     const SpatialGrid& getGrid() const { return grid; }
 
     EnvironmentManager& getEnvironment() { return environment; }

@@ -8,9 +8,9 @@
 #include <unordered_map>
 
 /**
- * BASE DE DATOS DE QUÍMICA (Optimized V2)
- * Registra y provee acceso O(1) a todos los elementos.
- * Utiliza un vector indexado por número atómico para máximo rendimiento.
+ * CHEMISTRY DATABASE (Optimized V2)
+ * Registers and provides O(1) access to all elements.
+ * Uses a vector indexed by atomic number for maximum performance.
  */
 class ChemistryDatabase {
 public:
@@ -48,9 +48,9 @@ public:
     }
 
 private:
-    ChemistryDatabase(); // Inicializa los elementos
+    ChemistryDatabase(); // Initializes elements
     
-    // Almacenamiento denso para acceso por ID
+    // Dense storage for ID-based access
     std::vector<Element> elements; 
     std::vector<Molecule> molecules;
     

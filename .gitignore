@@ -1,0 +1,30 @@
+# Build outputs
+*.exe
+*.obj
+*.o
+*.pdb
+*.ilk
+bin/
+
+# Logs and temporary files
+*.log
+*.txt
+!README.txt
+session.log
+
+# IDE and editor files
+.vs/
+.vscode/
+*.user
+*.suo
+
+# External dependencies (optional - uncomment if needed)
+# external/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS files
+Thumbs.db
+.DS_Store

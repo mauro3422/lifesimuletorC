@@ -24,6 +24,7 @@ public:
 
     virtual float getBondRangeMultiplier() const { return 1.0f; }
     virtual float getBondAngleMultiplier() const { return 1.0f; }
+    virtual bool allowsRingFormation() const { return false; }  // Only ClayZone allows ring formation
 
     bool contains(Vector2 pos) const {
         return CheckCollisionPointRec(pos, bounds);

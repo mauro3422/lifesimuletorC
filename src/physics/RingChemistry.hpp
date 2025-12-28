@@ -21,8 +21,11 @@ public:
                                              std::vector<AtomComponent>& atoms, 
                                              std::vector<TransformComponent>& transforms) {
         if (i < 0 || j < 0 || i == j) return BondError::INTERNAL_ERROR;
+        
+        // BUG FIX: Allow atoms in a ring to participate in NEW cycle bonds for ladder formation,
+        // but they must not already have a cycle bond themselves.
         if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return BondError::ALREADY_BONDED;
-
+        
         // --- PATH TRACING (Cycle Validation) ---
         std::vector<int> chainFromI;
         int currI = i;
@@ -100,6 +103,14 @@ public:
             ringMembers.push_back(chainFromJ[k]);
         }
 
+        bool anyWasInRing = false;
+        for (int atomId : ringMembers) {
+            if (states[atomId].isInRing) {
+                anyWasInRing = true;
+                break;
+            }
+        }
+
         for (int idx = 0; idx < (int)ringMembers.size(); idx++) {
             int atomId = ringMembers[idx];
             states[atomId].isInRing = true;
@@ -109,7 +120,9 @@ public:
         }
 
         // --- VISUAL FORMATION (Square Hard-Snap) ---
-        if (ringSize == 4) {
+        // Only trigger hard-snap if these atoms were NOT in another ring already
+        // (prevents snapping conflicts during ladder formation)
+        if (ringSize == 4 && !anyWasInRing) {
              float scx = 0, scy = 0;
              for (int idx : ringMembers) { scx += transforms[idx].x; scy += transforms[idx].y; }
              scx /= 4.0f; scy /= 4.0f;
@@ -128,11 +141,36 @@ public:
                  states[idx].dockingProgress = 1.0f; 
              }
              
-             TraceLog(LOG_INFO, "[RING] Formed 4-ring (square) at (%.0f, %.0f) with atoms %d-%d-%d-%d",
+             TraceLog(LOG_INFO, "[RING] Formed 4-ring (isolated square) at (%.0f, %.0f) with atoms %d-%d-%d-%d",
                       scx, scy, ringMembers[0], ringMembers[1], ringMembers[2], ringMembers[3]);
+        } else if (ringSize == 4 && anyWasInRing) {
+             TraceLog(LOG_INFO, "[RING] Formed 4-ring (fused square) with atoms %d-%d-%d-%d. Skipping hard-snap for stability.",
+                      ringMembers[0], ringMembers[1], ringMembers[2], ringMembers[3]);
         }
 
         return BondError::SUCCESS;
+    }
+
+    /**
+     * Centralized Ring Invalidation.
+     * When one bond of a ring breaks, the entire ring structure (visuals/flags) must be invalidated.
+     */
+    static void invalidateRing(int ringId, std::vector<StateComponent>& states) {
+        if (ringId <= 0) return;
+        
+        bool found = false;
+        for (size_t i = 0; i < states.size(); i++) {
+            if (states[i].ringInstanceId == ringId) {
+                states[i].isInRing = false;
+                states[i].ringInstanceId = -1;
+                states[i].ringSize = 0;
+                states[i].cycleBondId = -1;
+                found = true;
+            }
+        }
+        if (found) {
+            TraceLog(LOG_INFO, "[RING] Invalidated entire ring instance: %d", ringId);
+        }
     }
 };
 

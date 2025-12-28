@@ -6,9 +6,11 @@
 #include "../chemistry/StructureDefinition.hpp"
 #include "../core/Config.hpp"
 #include "../core/MathUtils.hpp"
+#include "RingChemistry.hpp"
 #include <cmath>
 #include <algorithm>
 #include <map>
+#include <set>
 #include "../core/ErrorHandling.hpp"
 
 PhysicsEngine::PhysicsEngine() : grid(Config::GRID_CELL_SIZE) {}
@@ -32,6 +34,38 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     std::vector<int> rootCache(transforms.size());
     for (int i = 0; i < (int)transforms.size(); i++) {
         rootCache[i] = MathUtils::findMoleculeRoot(i, states);
+    }
+
+    // 0.6 RING INTEGRITY VALIDATION (Phase 32 BugFix)
+    // Clean up orphaned ring markers - atoms that are marked as inRing but are no longer part of a valid ring.
+    // A ring is ONLY valid if it contains at least one mutual cycleBondId pair.
+    
+    // First pass: identify active rings (supported by a mutual cycle bond)
+    std::set<int> activeRingIds;
+    for (int i = 0; i < (int)states.size(); i++) {
+        if (states[i].isInRing && states[i].cycleBondId != -1) {
+            int partner = states[i].cycleBondId;
+            if (partner >= 0 && partner < (int)states.size() && states[partner].cycleBondId == i) {
+                if (states[i].ringInstanceId != -1) {
+                    activeRingIds.insert(states[i].ringInstanceId);
+                }
+            }
+        }
+    }
+    
+    // Second pass: invalidate any atom whose ringId is not in the active set
+    for (int i = 0; i < (int)states.size(); i++) {
+        if (states[i].isInRing) {
+            int ringId = states[i].ringInstanceId;
+            if (ringId == -1 || activeRingIds.find(ringId) == activeRingIds.end()) {
+                // This atom thinks it's in a ring, but its ringInstanceId has no active cycle bond
+                states[i].isInRing = false;
+                states[i].ringSize = 0;
+                states[i].ringInstanceId = -1;
+                states[i].cycleBondId = -1;
+                // TraceLog(LOG_INFO, "[RING] Cleaned orphaned ring marker on atom %d (Ring %d inactive)", i, ringId);
+            }
+        }
     }
 
     // 1. APPLY ELECTROMAGNETIC FORCES (Coulomb O(N))
@@ -122,9 +156,16 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         bool isPlayerMolecule = (states[i].moleculeId == 0 || i == 0 || parentId == 0);
         
         if (!isPlayerMolecule && dist > Config::BOND_BREAK_STRESS) {
+            // BUG FIX: Clean up ring state BEFORE breaking the hierarchy, using centralized invalidation
+            if (states[i].cycleBondId != -1 || states[i].isInRing) {
+                int ringId = states[i].ringInstanceId;
+                RingChemistry::invalidateRing(ringId, states);
+            }
+
             states[i].isClustered = false;
             states[i].parentEntityId = -1;
-            TraceLog(LOG_WARNING, "[PHYSICS] BOND BROKEN by stress: Atom %d separated from %d", i, parentId);
+            
+            TraceLog(LOG_WARNING, "[PHYSICS] BOND BROKEN by stress: Atom %d separated from %d", i, (int)parentId);
             continue;
         }
 

@@ -5,7 +5,7 @@
 #include "AutonomousBonding.hpp"
 #include "MolecularHierarchy.hpp"
 #include "RingChemistry.hpp"
-#include "UndoMechanism.hpp"
+#include "PruningUtils.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
 
 #include "../core/Config.hpp"
@@ -64,15 +64,10 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
                                   std::vector<AtomComponent>& atoms) {
     if (entityId < 0 || entityId >= (int)states.size()) return;
 
-    // 1. Break cycle bond if exists
-    if (states[entityId].cycleBondId != -1) {
-        int partnerId = states[entityId].cycleBondId;
-        if (partnerId >= 0 && partnerId < (int)states.size()) {
-            states[partnerId].cycleBondId = -1;
-            states[partnerId].isInRing = false;
-        }
-        states[entityId].cycleBondId = -1;
-        states[entityId].isInRing = false;
+    // 1. Break cycle bond if exists - and clean up ALL ring members using centralized invalidation
+    if (states[entityId].cycleBondId != -1 || states[entityId].isInRing) {
+        int ringId = states[entityId].ringInstanceId;
+        RingChemistry::invalidateRing(ringId, states);
     }
 
     // 2. Break connection with parent
@@ -89,11 +84,11 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
 }
 
 int BondingSystem::findLastChild(int parentId, const std::vector<StateComponent>& states) {
-    return ::UndoMechanism::findLastChild(parentId, states);
+    return ::PruningUtils::findLastChild(parentId, states);
 }
 
 int BondingSystem::findPrunableLeaf(int parentId, const std::vector<StateComponent>& states) {
-    return ::UndoMechanism::findPrunableLeaf(parentId, states);
+    return ::PruningUtils::findPrunableLeaf(parentId, states);
 }
 
 int BondingSystem::getBestAvailableSlot(int parentId, Vector3 relativePos,

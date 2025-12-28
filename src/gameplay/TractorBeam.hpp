@@ -7,13 +7,14 @@
 #include <vector>
 
 /**
- * MODULO DE TRACTOR BEAM (Optimizado)
+ * TRACTOR BEAM MODULE (Optimized)
+ * Handles atom capture and dragging with O(1) spatial grid lookups.
  */
 class TractorBeam {
 public:
     TractorBeam() : targetIndex(-1), active(false), wasActiveLastFrame(false), isNewCapture(false) {}
 
-    // Ahora recibe la grilla para una búsqueda veloz O(1)
+    // Uses spatial grid for O(1) neighbor lookup
     void update(const Vector2& mouseWorldPos, bool isInputActive, 
                 const std::vector<TransformComponent>& transforms,
                 const std::vector<StateComponent>& states,
@@ -23,7 +24,7 @@ public:
     int getTargetIndex() const { return targetIndex; }
     Vector2 getTargetPosition() const { return targetPos; }
     bool isActive() const { return active && targetIndex != -1; }
-    bool becameActive() const { return isNewCapture; } // Notifica si se acaba de capturar algo
+    bool becameActive() const { return isNewCapture; } // Returns true on the frame a capture occurred
     void release() { active = false; targetIndex = -1; isNewCapture = false; }
 
 private:
