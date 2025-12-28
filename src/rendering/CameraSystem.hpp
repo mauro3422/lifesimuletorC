@@ -26,13 +26,13 @@ public:
             targetZoom = camera.zoom; // Sincronizamos para que no salte al dejar de pannear
         }
 
-        // 2. Reset con Espacio (Inicia transición cinemática)
+        // 2. Reset with Space (Starts cinematic transition)
         if (input.isSpaceTriggered()) {
             currentMode = FOLLOW_PLAYER;
             targetZoom = Config::CAMERA_INITIAL_ZOOM; 
         }
 
-        // 3. Lógica de Seguimiento Suave
+        // 3. Smooth Follow Logic
         if (currentMode == FOLLOW_PLAYER) {
             camera.target.x += (targetPos.x - camera.target.x) * Config::CAMERA_FOLLOW_SPEED * dt;
             camera.target.y += (targetPos.y - camera.target.y) * Config::CAMERA_FOLLOW_SPEED * dt;
@@ -51,7 +51,7 @@ public:
         // Limitar Zoom Objetivo
         targetZoom = std::clamp(targetZoom, Config::CAMERA_ZOOM_MIN, Config::CAMERA_ZOOM_MAX);
 
-        // --- TRANSICIÓN CINEMÁTICA (Lerp para el Zoom) ---
+        // --- CINEMATIC TRANSITION (Lerp for Zoom) ---
         camera.zoom += (targetZoom - camera.zoom) * Config::CAMERA_ZOOM_SMOOTH * dt;
     }
 

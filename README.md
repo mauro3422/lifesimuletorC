@@ -44,7 +44,8 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - `src/physics/`: `BondingSystem` (Facade), `BondingCore`, `RingChemistry`, `PhysicsEngine`, `SpatialGrid`.
 - `src/gameplay/`: `Player`, `TractorBeam`, `DockingSystem`, `UndoManager`.
 - `data/`: `elements.json`, `structures.json`, `lang_es.json`, `lang_en.json`.
-- `tests/`: Verification Suite (`test_edge_cases.cpp`).
+- `tests/`: Verification Suite (`test_molecular_geometry.cpp`).
+- `src/tests/`: Unit Tests (`test_bonding_core.cpp`, `test_ring_chemistry.cpp`, `test_animation.cpp`).
 
 ## 🛠️ Roadmap Actualizado
 - [x] **Fase 5**: ECS & Render Base
@@ -59,6 +60,7 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - [x] **Architecture Hardening**: JSON DB, Player Refactor, VSEPR Validation
 - [x] **Fase 17**: Deep Audit (Mass Physics, O(1) Bonding, Bilingual UI)
 - [x] **Fase 30**: Architectural Standardization (De-God-Class, ErrorHandler)
+- [x] **Fase 31**: Test Coverage & Code Quality (43 tests, Comment Standardization)
 - [ ] **Fase 18**: Chemical Expansion (Transition Metals, Complex Organics)
 - [ ] **Fase 19**: Exotic States (Plasma, Supercritical Fluids)
 - [ ] **Fase 20**: Bio-Genesis (ATP, Metabolismo Inicial)

@@ -2,10 +2,14 @@
 #include "json.hpp"
 #include <fstream>
 #include <iostream>
+#include <mutex>
 
 using json = nlohmann::json;
 
+// ... (Top of file stays same, using std::lock_guard)
+
 void LocalizationManager::setLanguage(const std::string& langCode) {
+    std::lock_guard<std::mutex> lock(trMutex);
     currentLanguage = langCode;
     std::string path = "data/lang_" + langCode + ".json";
     
@@ -17,6 +21,8 @@ void LocalizationManager::setLanguage(const std::string& langCode) {
     }
 }
 
+// loadLanguageFile is private and called inside lock, so no lock needed here, 
+// BUT we must be careful not to call public methods that lock from here (none called).
 bool LocalizationManager::loadLanguageFile(const std::string& path) {
     std::ifstream file(path);
     if (!file.is_open()) return false;
@@ -37,6 +43,7 @@ bool LocalizationManager::loadLanguageFile(const std::string& path) {
 }
 
 std::string LocalizationManager::get(const std::string& key) const {
+    std::lock_guard<std::mutex> lock(trMutex); 
     auto it = strings.find(key);
     if (it != strings.end()) {
         return it->second;

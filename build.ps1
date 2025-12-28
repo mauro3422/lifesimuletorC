@@ -31,7 +31,7 @@ g++ src/main.cpp `
     -L"$LIB_DIR" `
     -lraylib -lopengl32 -lgdi32 -lwinmm `
     -static-libgcc -static-libstdc++ `
-    -O2 -Wall -std=c++17 `
+    -O2 -Wall -std=c++17 -pthread `
     -o LifeSimulator.exe
 
 # 3. Ejecucion

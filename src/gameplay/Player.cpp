@@ -47,6 +47,11 @@ void Player::update(float dt, const InputHandler& input,
     if (lastTarget != -1 && lastTarget != currentTarget) {
         if (lastTarget < (int)states.size()) {
             states[lastTarget].isShielded = false;
+            // FIX #2: Clear shield for the whole hierarchy to prevent "Ghost Shield"
+            int root = MathUtils::findMoleculeRoot(lastTarget, states);
+            if (root != -1 && root < (int)states.size()) {
+                states[root].isShielded = false;
+            }
         }
     }
 

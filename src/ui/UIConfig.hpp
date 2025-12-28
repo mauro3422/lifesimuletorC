@@ -16,7 +16,7 @@ namespace UIConfig {
     inline constexpr float SEPARATOR_THICKNESS = 1.0f;
     inline constexpr float SEPARATOR_OPACITY = 0.3f;
 
-    // --- TIPOGRAFÍA ---
+    // --- TYPOGRAPHY ---
     inline constexpr int FONT_SIZE_TITLE = 14;
     inline constexpr int FONT_SIZE_HEADER = 12;
     inline constexpr int FONT_SIZE_LABEL = 10;
@@ -43,7 +43,7 @@ namespace UIConfig {
     inline constexpr float CARD_INFO_OFFSET_Y = 32.0f;  // Valencia bar position
     inline constexpr float LABEL_OFFSET = 2.0f;
 
-    // --- COLORES DINÁMICOS (Adaptados de Config.hpp para mayor control visual) ---
+    // --- DYNAMIC COLORS (Adapted from Config.hpp for enhanced visual control) ---
     inline const Color COLOR_SUCCESS = { 46, 204, 113, 255 };  // Esmeralda
     inline const Color COLOR_WARNING = { 241, 196, 15, 255 };  // Girasol
     inline const Color COLOR_ERROR = { 231, 76, 60, 255 };     // Alizarina

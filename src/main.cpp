@@ -141,7 +141,7 @@ int main() {
         while (accumulator >= fixedDeltaTime) {
             player.update(fixedDeltaTime, input, world.transforms, camera, physics.getGrid(), world.states, world.atoms);
             player.applyPhysics(world.transforms, world.states, world.atoms);
-            physics.step(fixedDeltaTime, world.transforms, world.atoms, world.states, player.getTractor().getTargetIndex());
+            physics.step(fixedDeltaTime, world.transforms, world.atoms, world.states, db, player.getTractor().getTargetIndex());
             BondingSystem::updateHierarchy(world.transforms, world.states, world.atoms);
             NotificationManager::getInstance().update(fixedDeltaTime);
             MissionManager::getInstance().update(fixedDeltaTime);

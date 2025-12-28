@@ -6,6 +6,9 @@
 /**
  * DATA REPRESENTATION (ECS)
  * Minimum data required for maximum caching and simulation speed.
+ * 
+ * Phase 31: Fields documented by logical grouping.
+ * All structs are aggregates (no user-defined constructors) for optimal push_back performance.
  */
 
 // Position, Velocity, and Rotation
@@ -21,30 +24,40 @@ struct AtomComponent {
     float partialCharge;
 };
 
-// Clustering State (Molecules)
+/**
+ * STATE COMPONENT (Clustered State for Molecules)
+ * 
+ * Fields are organized into logical groups for clarity:
+ * 1. Hierarchy: Core bonding tree structure
+ * 2. Ring: Cycle/membrane data (Phase 18+)
+ * 3. Physics: Animation and temporary flags
+ * 
+ * This is an AGGREGATE - no user-defined constructors for optimal vector performance.
+ * Use designated initializers or brace initialization: StateComponent{.isClustered=true}
+ */
 struct StateComponent {
-    bool isClustered;
-    int moleculeId;      // -1 if not in a stable molecule
-    int parentEntityId;  // Entity this one is anchored to (-1 = root)
-    int parentSlotIndex; // Which parent slot it occupies
-    float dockingProgress; // 0.0 = recently bonded, 1.0 = fully coupled (animation)
-    bool isShielded;     // Blocks spontaneous bonding (used by Tractor Beam)
+    // === HIERARCHY GROUP ===
+    bool isClustered = false;
+    int moleculeId = -1;
+    int parentEntityId = -1;
+    int parentSlotIndex = -1;
+    float dockingProgress = 1.0f;  // Original position for backward compatibility
+    bool isShielded = false;
+    int childCount = 0;
+    uint32_t occupiedSlots = 0;
 
-    // --- OPTIMIZATIONS (Phase 17) ---
-    int childCount;      // Number of atoms bonded to this one (as children)
-    uint32_t occupiedSlots;      // Bitset (1 bit per slot index) to find free slots in O(1)
-    
-    // --- PHASE 18: CYCLES & MEMBRANES ---
-    int cycleBondId;     // Entity ID for closing a loop (Non-hierarchical bond)
-    bool isInRing;       // True if this atom is part of the closed perimeter
-    int ringSize;        // Number of atoms in the ring
-    int ringIndex;       // Position in the ring (0 to ringSize-1) for geometric mapping
-    int ringInstanceId;  // Unique ID for this specific ring instance
+    // === RING GROUP ===
+    int cycleBondId = -1;
+    bool isInRing = false;
+    int ringSize = 0;
+    int ringIndex = -1;
+    int ringInstanceId = -1;
 
-    // Phase 29: Hardening & Optimization
-    bool justBonded;     // Frame-local flag to prioritize one bond per atom per tick
+    // === PHYSICS GROUP ===
+    bool justBonded = false;
+
+    // === UTILITY METHODS ===
     bool isLocked() const { return isClustered && dockingProgress >= 0.99f; }
 };
-
 
 #endif

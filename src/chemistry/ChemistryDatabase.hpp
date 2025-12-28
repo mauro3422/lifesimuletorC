@@ -22,15 +22,15 @@ public:
     void initialize() { reload(); }
     void reload();
 
-    // Obtener un elemento por su número atómico (O(1) Direct Access)
+    // Get an element by its atomic number (O(1) Direct Access)
     const Element& getElement(int atomicNumber) const;
     
-    // Obtener un elemento por su símbolo (O(1) Hash Map)
+    // Get an element by its symbol (O(1) Hash Map)
     const Element& getElement(const std::string& symbol) const;
 
     bool exists(int atomicNumber) const;
     
-    // Gestión de Moléculas
+    // Molecule Management
     const Molecule* findMoleculeByComposition(const std::map<int, int>& composition) const;
     const std::vector<Molecule>& getAllMolecules() const { return molecules; }
 
@@ -38,7 +38,7 @@ public:
     std::vector<int> getSpawnableAtomicNumbers() const;
     int getRandomSpawnableAtomicNumber() const;
 
-    // Obtener lista de todos los IDs válidos para el Quimidex
+    // Get list of all valid IDs for the Quimidex
     std::vector<int> getRegisteredAtomicNumbers() const {
         std::vector<int> ids;
         for (int i = 0; i < (int)elements.size(); i++) {
@@ -54,7 +54,7 @@ private:
     std::vector<Element> elements; 
     std::vector<Molecule> molecules;
     
-    // Mapa rápido para búsqueda por Símbolo
+    // Fast lookup map by Symbol
     std::unordered_map<std::string, int> symbolToId;
     
     void addElement(Element e);

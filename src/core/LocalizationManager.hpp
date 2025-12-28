@@ -4,6 +4,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <mutex>
 #include "raylib.h"
 
 class LocalizationManager {
@@ -27,6 +28,7 @@ private:
     
     std::string currentLanguage;
     std::unordered_map<std::string, std::string> strings;
+    mutable std::mutex trMutex; 
 
     bool loadLanguageFile(const std::string& path);
 };

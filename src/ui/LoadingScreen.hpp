@@ -25,7 +25,7 @@ public:
         int screenW = GetScreenWidth();
         int screenH = GetScreenHeight();
 
-        // Logo / Título central
+        // Logo / Central Title
         const char* title = "LIFE SIMULATOR";
         int titleSize = 40;
         int titleWidth = MeasureText(title, titleSize);
@@ -48,7 +48,7 @@ public:
         int statusWidth = MeasureText(status.c_str(), statusSize);
         DrawText(status.c_str(), (screenW - statusWidth) / 2, (int)barRect.y + 20, statusSize, Config::THEME_TEXT_SECONDARY);
 
-        // Micro-animación estética (Partículas de carga)
+        // Aesthetic micro-animation (Loading particles)
         float time = (float)GetTime();
         for (int i = 0; i < 5; i++) {
             float orbit = time * 2.0f + (i * 1.2f);

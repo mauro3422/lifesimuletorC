@@ -16,6 +16,7 @@ PhysicsEngine::PhysicsEngine() : grid(Config::GRID_CELL_SIZE) {}
 void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
                         std::vector<AtomComponent>& atoms,
                         std::vector<StateComponent>& states,
+                        const ChemistryDatabase& db,
                         int tractedEntityId) {
     if (atoms.size() != transforms.size() || atoms.size() != states.size()) {
         ErrorHandler::handle(ErrorSeverity::FATAL, "Component size mismatch: atoms=%zu, transforms=%zu, states=%zu", 
@@ -60,19 +61,22 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             
             float dx = transforms[j].x - transforms[i].x;
             float dy = transforms[j].y - transforms[i].y;
-            // Force unit vector
-            float fx = (dx / dist) * forceMag;
-            float fy = (dy / dist) * forceMag;
+            
+            // USE SAFE NORMALIZE (Fix #1)
+            Vector3 diff = {dx, dy, 0.0f};
+            Vector3 dir = MathUtils::safeNormalize(diff);
+            
+            float fx = dir.x * forceMag;
+            float fy = dir.y * forceMag;
 
             // Apply acceleration (a = F / m)
-            float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
-            float m2 = ChemistryDatabase::getInstance().getElement(atoms[j].atomicNumber).atomicMass;
+            float m1 = db.getElement(atoms[i].atomicNumber).atomicMass;
+            float m2 = db.getElement(atoms[j].atomicNumber).atomicMass;
             
-            // Handle potentially zero mass from JSON (fallback to 1.0)
             if (m1 < 0.01f) m1 = 1.0f;
             if (m2 < 0.01f) m2 = 1.0f;
 
-            // BUGFIX: Player Force Clamping (Prevent runaway EM acceleration)
+            // BUGFIX: Player Force Clamping
             if (i == 0) { 
                 float maxF = 150.0f; 
                 fx = std::clamp(fx, -maxF, maxF);
@@ -83,6 +87,11 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
             transforms[i].vy -= (fy / m1) * dt;
             transforms[j].vx += (fx / m2) * dt;
             transforms[j].vy += (fy / m2) * dt;
+            
+            // BUGFIX: Clamp Coulomb Speed (Fix #6)
+            constexpr float MAX_COULOMB_SPEED = 600.0f;
+            MathUtils::ClampMagnitude(transforms[i].vx, transforms[i].vy, MAX_COULOMB_SPEED);
+            MathUtils::ClampMagnitude(transforms[j].vx, transforms[j].vy, MAX_COULOMB_SPEED);
         }
     }
 
@@ -94,7 +103,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         int slotIdx = states[i].parentSlotIndex;
 
         // Get parent data to calculate ideal slot position
-        const Element& parentElem = ChemistryDatabase::getInstance().getElement(atoms[parentId].atomicNumber);
+        const Element& parentElem = db.getElement(atoms[parentId].atomicNumber);
         if (slotIdx >= (int)parentElem.bondingSlots.size()) continue;
 
         Vector3 slotDir = parentElem.bondingSlots[slotIdx];
@@ -157,7 +166,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         }
 
         // Apply acceleration based on mass
-        float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
+        float m1 = db.getElement(atoms[i].atomicNumber).atomicMass;
         float mP = parentElem.atomicMass;
         if (m1 < 0.01f) m1 = 1.0f;
         if (mP < 0.01f) mP = 1.0f;
@@ -214,7 +223,7 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
         float fy = ny * forceMag;
         float fz = nz * forceMag;
 
-        float m1 = ChemistryDatabase::getInstance().getElement(atoms[i].atomicNumber).atomicMass;
+        float m1 = db.getElement(atoms[i].atomicNumber).atomicMass;
         float m2 = ChemistryDatabase::getInstance().getElement(atoms[partnerId].atomicNumber).atomicMass;
         if (m1 < 0.01f) m1 = 1.0f;
         if (m2 < 0.01f) m2 = 1.0f;

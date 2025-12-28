@@ -17,6 +17,7 @@ public:
     void step(float dt, std::vector<TransformComponent>& transforms,
               std::vector<AtomComponent>& atoms,
               std::vector<StateComponent>& states,
+              const class ChemistryDatabase& db,
               int tractedEntityId = -1);
 
     // Acceso a la grilla para otros sistemas (como el TractorBeam)

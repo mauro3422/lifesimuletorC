@@ -7,6 +7,8 @@
 #include "../ecs/components.hpp"
 #include "../core/MathUtils.hpp"
 #include "MolecularHierarchy.hpp"
+#include "BondingTypes.hpp"
+// BondingCore include might still be needed for logic, but for types we use BondingTypes
 
 /**
  * RingChemistry (Phase 30)
@@ -14,12 +16,12 @@
  */
 class RingChemistry {
 public:
-    static BondingCore::BondError tryCycleBond(int i, int j, 
+    static BondError tryCycleBond(int i, int j, 
                                              std::vector<StateComponent>& states, 
                                              std::vector<AtomComponent>& atoms, 
                                              std::vector<TransformComponent>& transforms) {
-        if (i < 0 || j < 0 || i == j) return BondingCore::INTERNAL_ERROR;
-        if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return BondingCore::ALREADY_BONDED;
+        if (i < 0 || j < 0 || i == j) return BondError::INTERNAL_ERROR;
+        if (states[i].cycleBondId != -1 || states[j].cycleBondId != -1) return BondError::ALREADY_BONDED;
 
         // --- PATH TRACING (Cycle Validation) ---
         std::vector<int> chainFromI;
@@ -34,7 +36,7 @@ public:
         }
         if (safetyI >= MAX_DEPTH) {
             TraceLog(LOG_ERROR, "[BOND] Infinite loop detected in hierarchy at atom %d", i);
-            return BondingCore::INTERNAL_ERROR;
+            return BondError::INTERNAL_ERROR;
         }
 
         std::vector<int> chainFromJ;
@@ -61,7 +63,7 @@ public:
         }
         found_lca:
 
-        if (lca == -1) return BondingCore::INTERNAL_ERROR; // Different molecules? Should be filtered by caller.
+        if (lca == -1) return BondError::INTERNAL_ERROR; // Different molecules? Should be filtered by caller.
 
         int ringSize = distI + distJ + 1;
         
@@ -70,7 +72,16 @@ public:
         states[j].cycleBondId = i;
 
         // STRUCTURAL TAGGING
-        int ringId = i * 1000 + j; // Temporary unique ID
+        // STRUCTURAL TAGGING
+        // FIX #3: Ring Instance ID Overflow Protection
+        static int nextRingId = 1;
+        static constexpr int MAX_RING_ID = 1000000;
+        
+        int ringId = nextRingId++;
+        if (nextRingId >= MAX_RING_ID) {
+            nextRingId = 1; // Wrap around safely
+            // Note: In a perfect world we'd clean up old IDs, but logic handles reuse gracefully
+        }
         std::vector<int> ringMembers;
         
         // Trace up from I to LCA
@@ -106,7 +117,7 @@ public:
              }
         }
 
-        return BondingCore::SUCCESS;
+        return BondError::SUCCESS;
     }
 };
 

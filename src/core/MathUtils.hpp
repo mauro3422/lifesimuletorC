@@ -6,6 +6,8 @@
 #include <map>
 #include <cmath>
 #include "../ecs/components.hpp"
+#include <random>
+
 
 namespace MathUtils {
 
@@ -37,9 +39,13 @@ namespace MathUtils {
     };
 
     // Generates a random jitter between -1.0 and 1.0
+    // FIX #8: Improved RNG (Mersenne Twister)
     inline float getJitter() {
-        return (float)GetRandomValue(-100, 100) / 100.0f;
+        static std::mt19937 rng(std::random_device{}());
+        static std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+        return dist(rng);
     }
+
 
     // --- VECTOR MATH (Centralized) ---
     inline float distSq(float x1, float y1, float x2, float y2) {
@@ -90,6 +96,24 @@ namespace MathUtils {
         if (len < 0.0001f) return {0, 0};
         return {v.x/len, v.y/len};
     }
+
+    // --- NEW SAFETY UTILS (Phase 31) ---
+    inline Vector3 safeNormalize(const Vector3& v, const Vector3& fallback = {1.0f, 0.0f, 0.0f}) {
+        float lenSq = v.x*v.x + v.y*v.y + v.z*v.z;
+        if (lenSq < 1e-8f) return fallback;
+        float len = std::sqrt(lenSq);
+        return {v.x/len, v.y/len, v.z/len};
+    }
+
+    inline void ClampMagnitude(float& vx, float& vy, float maxSpeed) {
+        float speedSq = vx*vx + vy*vy;
+        if (speedSq > maxSpeed * maxSpeed) {
+            float scale = maxSpeed / std::sqrt(speedSq);
+            vx *= scale;
+            vy *= scale;
+        }
+    }
+
 
 
 

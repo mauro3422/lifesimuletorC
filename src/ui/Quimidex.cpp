@@ -32,14 +32,14 @@ void Quimidex::draw(InputHandler& input) {
     UIWidgets::drawPanel(rect, input, Config::THEME_HIGHLIGHT);
     UIWidgets::drawHeader(rect, LocalizationManager::getInstance().get("ui.quimidex.title").c_str(), Config::THEME_HIGHLIGHT);
 
-    // Botón de cierre (X) - centrado verticalmente, con padding del borde
+    // Close button (X) - vertically centered, with padding from edge
     float closeSize = 14.0f;
     float closeY = rect.y + (UIConfig::HEADER_HEIGHT - closeSize) / 2;
     if (UIWidgets::drawButton({ rect.x + rect.width - closeSize - 30, closeY, closeSize, closeSize }, "X", input, RED)) {
         isOpen = false;
     }
 
-    // Sistema de Pestañas
+    // Tab System
     Rectangle tabRect = { rect.x + UIConfig::INNER_PADDING, rect.y + UIConfig::HEADER_HEIGHT + 4.0f, rect.width - (UIConfig::INNER_PADDING * 2.0f), UIConfig::QUIMIDEX_TAB_HEIGHT };
     activeTab = UIWidgets::drawTabSystem(tabRect, tabLabels, activeTab, input);
 

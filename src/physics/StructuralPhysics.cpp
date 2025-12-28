@@ -62,8 +62,11 @@ void applyRingDynamics(float dt,
         avgVy /= ringIndices.size();
 
         // 3. Sub-grouping for specific Ring logic (using ringInstanceId)
-        std::unordered_map<int, std::vector<int>> subRings;
-        subRings.reserve(8); // Optimization Phase 28
+        // FIX #15: Remove std::map allocation from hot path
+        static std::unordered_map<int, std::vector<int>> subRings;
+        subRings.clear(); // Reset without deallocating capacity
+        // subRings.reserve(8); // Already reserved from previous runs typically
+
         for (int idx : ringIndices) {
             if (states[idx].isInRing && states[idx].ringInstanceId != -1) {
                 subRings[states[idx].ringInstanceId].push_back(idx);

@@ -14,17 +14,17 @@ struct Element {
     std::string symbol;
     std::string name;
     float atomicMass;
-    float vdWRadius;  // Radio de Van der Waals (en picómetros o unidades de juego)
+    float vdWRadius;  // Van der Waals radius (in picometers or game units)
     Color color;
     Color backgroundColor;  // Background color for UI element cards
     
     // Datos para el Quimidex / Lore
     std::string category;     // Ej: "No metal", "Gas noble"
-    std::string description;  // Lore científico/fantástico
-    std::string origin;       // Origen/Donde se encuentra (Estrellas, Nucleosíntesis, etc)
-    std::string discoveryHint; // Cómo encontrarlo en el juego
+    std::string description;  // Scientific/fantasy lore
+    std::string origin;       // Origin/Where found (Stars, Nucleosynthesis, etc)
+    std::string discoveryHint; // How to find it in the game
     
-    // Configuración de Valencias (para enlaces deterministas)
+    // Valence Configuration (for deterministic bonds)
     int maxBonds;
     float electronegativity;
     std::vector<Vector3> bondingSlots; // Vectores directores VSEPR

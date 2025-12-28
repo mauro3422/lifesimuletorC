@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cassert>
+#include <cmath>
 #include "raylib.h"
 #include "../physics/BondingSystem.hpp"
 #include "../core/Config.hpp"
@@ -108,7 +109,7 @@ void test_StressSeparation() {
 
     // Dependency: PhysicsEngine
     PhysicsEngine engine;
-    engine.step(0.016f, transforms, atoms, states, -1);
+    engine.step(0.016f, transforms, atoms, states, ChemistryDatabase::getInstance(), -1);
 
     if (states[B].isClustered) {
          std::cout << "   [FAILED] Bond did NOT break under stress!" << std::endl;

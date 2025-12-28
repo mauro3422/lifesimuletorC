@@ -18,10 +18,10 @@ public:
     // Limpia la grilla y re-inserta todas las entidades
     void update(const std::vector<TransformComponent>& transforms);
 
-    // Obtener entidades en celdas vecinas a una posición
+    // Get entities in neighboring cells to a position
     std::vector<int> getNearby(Vector2 pos, float radius) const;
 
-    // Helper para depuración visual
+    // Helper for visual debugging
     void debugDraw() const;
 
 private:
@@ -31,7 +31,7 @@ private:
         std::vector<int> entityIndices;
     };
 
-    // Usaremos un sistema de Hash simple para no depender de límites fijos
+    // Using a simple Hash system to not depend on fixed limits
     long long getHash(int cx, int cy) const {
         return ((long long)cx << 32) | (unsigned int)cy;
     }

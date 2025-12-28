@@ -68,33 +68,32 @@ public:
         states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1});
         TraceLog(LOG_INFO, "[World] TEST MODE - Player initialized at (0,0)");
 
-        // 2. Four Carbon atoms in clay zone (spread out, will need to be moved by player)
-        // Clay zone is at x:100-300, y:100-300 (configured in EnvironmentManager)
-        float clayX = 200.0f;
-        float clayY = 200.0f;
+        // 2. Eight Carbon atoms in "Ladder" Formation (Stacked Squares)
+        // Group 1 (Bottom Square)
+        float g1X = -1200.0f;
+        float g1Y = -350.0f; // Lower
+        transforms.push_back({ g1X - 25, g1Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        transforms.push_back({ g1X + 25, g1Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        transforms.push_back({ g1X + 25, g1Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        transforms.push_back({ g1X - 25, g1Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+
+        // Group 2 (Top Square) - Placed 60 units above (Y axis)
+        float g2X = -1200.0f;
+        float g2Y = -410.0f; // Higher (Negative Y is up?) Raylib Y+ is down. So -410 is "Above" physically on screen?
+        transforms.push_back({ g2X - 25, g2Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        transforms.push_back({ g2X + 25, g2Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        transforms.push_back({ g2X + 25, g2Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        transforms.push_back({ g2X - 25, g2Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
+        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
         
-        // Carbon 1
-        transforms.push_back({ clayX - 30.0f, clayY - 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
-        atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1});
-        
-        // Carbon 2
-        transforms.push_back({ clayX + 30.0f, clayY - 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
-        atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1});
-        
-        // Carbon 3
-        transforms.push_back({ clayX + 30.0f, clayY + 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
-        atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1});
-        
-        // Carbon 4
-        transforms.push_back({ clayX - 30.0f, clayY + 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
-        atoms.push_back({6, 0.0f}); // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1});
-        
-        TraceLog(LOG_INFO, "[World] TEST MODE - Created 4 Carbons at clay zone (%.0f, %.0f)", clayX, clayY);
-        TraceLog(LOG_INFO, "[World] TEST MODE - Carbon IDs: 1, 2, 3, 4");
+        TraceLog(LOG_INFO, "[World] TEST MODE - Created Stacked Squares at Clay Zone");
     }
 
     size_t getEntityCount() const { return atoms.size(); }
