@@ -36,14 +36,14 @@ public:
         int subTitleWidth = MeasureText(subTitle, subTitleSize);
         DrawText(subTitle, (screenW - subTitleWidth) / 2, screenH / 2 - 20, subTitleSize, GRAY);
 
-        // Barra de progreso
+        // Progress bar
         float barWidth = 400.0f;
         float barHeight = 8.0f;
         Rectangle barRect = { (screenW - barWidth) / 2.0f, (screenH / 2.0f) + 20.0f, barWidth, barHeight };
         
         UIWidgets::drawProgressBar(barRect, progress, Config::THEME_BORDER);
 
-        // Mensaje de estado
+        // Status message
         int statusSize = 10;
         int statusWidth = MeasureText(status.c_str(), statusSize);
         DrawText(status.c_str(), (screenW - statusWidth) / 2, (int)barRect.y + 20, statusSize, Config::THEME_TEXT_SECONDARY);

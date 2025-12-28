@@ -24,7 +24,7 @@ void Quimidex::draw(InputHandler& input) {
     int screenW = GetScreenWidth();
     int screenH = GetScreenHeight();
 
-    // Panel Central Grande
+    // Main Central Panel
     float width = UIConfig::QUIMIDEX_WIDTH;
     float height = UIConfig::QUIMIDEX_HEIGHT;
     Rectangle rect = { (screenW - width) / 2, (screenH - height) / 2, width, height };
@@ -57,7 +57,7 @@ void Quimidex::drawAtomsTab(Rectangle rect, InputHandler& input) {
     Rectangle listRect = { rect.x, rect.y, listWidth, rect.height };
     Rectangle detailRect = { rect.x + listWidth + 10, rect.y, rect.width - listWidth - 10, rect.height };
 
-    // Lista de Elementos
+    // Element List
     std::vector<int> atomicNumbers = ChemistryDatabase::getInstance().getRegisteredAtomicNumbers();
     std::vector<std::string> names;
     for (int num : atomicNumbers) {
@@ -66,7 +66,7 @@ void Quimidex::drawAtomsTab(Rectangle rect, InputHandler& input) {
 
     selectedElementIdx = UIWidgets::drawListSelection(listRect, names, selectedElementIdx, input);
 
-    // Detalle
+    // Detail Panel
     if (selectedElementIdx < (int)atomicNumbers.size()) {
         drawAtomDetail(detailRect, ChemistryDatabase::getInstance().getElement(atomicNumbers[selectedElementIdx]), input);
     }

@@ -4,10 +4,10 @@
 #include "raylib.h"
 
 /**
- * UIConfig: Constantes centralizadas para el sistema de UI y diseño.
+ * UIConfig: Centralized constants for UI system and layout design.
  */
 namespace UIConfig {
-    // --- LAYOUTS Y PANELES ---
+    // --- LAYOUTS & PANELS ---
     inline constexpr float PANEL_ROUNDNESS = 0.15f;
     inline constexpr int PANEL_SEGMENTS = 32;
     inline constexpr float HEADER_HEIGHT = 25.0f;  // Compact header with centered content
@@ -44,11 +44,11 @@ namespace UIConfig {
     inline constexpr float LABEL_OFFSET = 2.0f;
 
     // --- DYNAMIC COLORS (Adapted from Config.hpp for enhanced visual control) ---
-    inline const Color COLOR_SUCCESS = { 46, 204, 113, 255 };  // Esmeralda
-    inline const Color COLOR_WARNING = { 241, 196, 15, 255 };  // Girasol
-    inline const Color COLOR_ERROR = { 231, 76, 60, 255 };     // Alizarina
-    inline const Color COLOR_PRIMARY = { 52, 152, 219, 255 };  // Pedro River
-    inline const Color COLOR_SECONDARY = { 149, 165, 166, 255 }; // Asbesto
+    inline const Color COLOR_SUCCESS = { 46, 204, 113, 255 };  // Emerald
+    inline const Color COLOR_WARNING = { 241, 196, 15, 255 };  // Sunflower
+    inline const Color COLOR_ERROR = { 231, 76, 60, 255 };     // Alizarin
+    inline const Color COLOR_PRIMARY = { 52, 152, 219, 255 };  // Peter River
+    inline const Color COLOR_SECONDARY = { 149, 165, 166, 255 }; // Asbestos
 }
 
 #endif

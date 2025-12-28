@@ -37,15 +37,28 @@ Este proyecto es la evolución de `LifeSimulator` de Python a C++. El objetivo e
 - **UI**: Sistema modular de `UIWidgets` para consistencia visual.
 
 ## 📂 Estructura
-- `src/core/`: Configuración, `Config.hpp`, `JsonLoader.hpp`, `LocalizationManager.hpp`.
-- `src/ui/`: `Inspector`, `LabelSystem`, `UIWidgets`, `NotificationManager`.
-- `src/rendering/`: Cámara cinemática y Render 2.5D.
-- `src/chemistry/`: Base de datos de elementos (JSON-driven).
-- `src/physics/`: `BondingSystem` (Facade), `BondingCore`, `RingChemistry`, `PhysicsEngine`, `SpatialGrid`.
-- `src/gameplay/`: `Player`, `TractorBeam`, `DockingSystem`, `UndoManager`.
-- `data/`: `elements.json`, `structures.json`, `lang_es.json`, `lang_en.json`.
-- `tests/`: Verification Suite (`test_molecular_geometry.cpp`).
-- `src/tests/`: Unit Tests (`test_bonding_core.cpp`, `test_ring_chemistry.cpp`, `test_animation.cpp`).
+
+```
+LifeSimulatorCPP/
+├── src/
+│   ├── core/           # Config, MathUtils, Localization, ErrorHandling
+│   ├── ecs/            # World, Components
+│   ├── physics/        # PhysicsEngine, BondingSystem, SpatialGrid, RingChemistry
+│   ├── chemistry/      # ChemistryDatabase, StructureRegistry
+│   ├── gameplay/       # Player, TractorBeam, MissionManager
+│   ├── rendering/      # Renderer25D, CameraSystem
+│   ├── ui/             # Inspector, HUD, Quimidex, UIWidgets
+│   ├── input/          # InputHandler
+│   └── world/          # Zones (ClayZone)
+├── data/               # JSON: elements, molecules, structures, localization
+├── tests/              # Integration tests (doctest)
+├── docs/               # Documentation
+└── external/           # Raylib 5.0
+```
+
+📖 **Documentación adicional:**
+- [BUILDING.md](docs/BUILDING.md) - Instrucciones de compilación
+- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Diagrama del sistema
 
 ## 🛠️ Roadmap Actualizado
 - [x] **Fase 5**: ECS & Render Base

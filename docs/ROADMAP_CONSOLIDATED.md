@@ -1,34 +1,95 @@
-# Roadmap Consolidado: LifeSimulator C++
+# 🗺️ Roadmap: LifeSimulator C++
 
-Este documento hereda la visión del proyecto original en Python pero enfocado en la nueva arquitectura de C++.
-
-## 🎯 Objetivos de la Migración
-- [ ] Pasar de 5k a 50k - 100k partículas.
-- [ ] Implementar **Rigid Body Clustering** (las moléculas estables no calculan física interna).
-- [ ] Interfaz nativa ultra-rápida con ImGui.
-- [ ] Portar toda la base de datos científica (140+ moléculas).
-
-## 🚀 Fases de Desarrollo
-
-### Fase 1: Motor Base (Actual)
-- [ ] Setup de Raylib/SFML.
-- [ ] Implementación de un ECS simple (Entities & Components).
-- [ ] Renderizado por partículas (Point Sprites o Instancing).
-- [ ] Colisiones espaciales (Grid Optimization).
-
-### Fase 2: Biofísica Optimizada
-- [ ] Enlaces tipo muelle (Springs).
-- [ ] Lógica de "soldar" moléculas (Clustering).
-- [ ] Cargas parciales (Electronegatividad).
-
-### Fase 3: Gameplay & Biología
-- [ ] Player "Tractor Beam".
-- [ ] Sistema de ATP y Metabolismo.
-- [ ] Quimidex educativa nativa.
-
-### Fase 4: IA & Emergencia
-- [ ] Replicación de ARN/DNA.
-- [ ] Enemigos (Bacterias, Virus).
+Este documento refleja el estado actual del proyecto y las metas futuras.
 
 ---
-*Referencia original: `xd/ROADMAP.md`*
+
+## ✅ Fases Completadas
+
+### Motor Base (Fases 5-8)
+- [x] Setup de Raylib 5.0 con High-DPI
+- [x] Implementación ECS (Entity Component System)
+- [x] Renderizado 2.5D con profundidad
+- [x] Grid espacial O(1) para colisiones
+- [x] Timestep fijo 60Hz para física estable
+
+### Química y Física (Fases 10-17)
+- [x] Motor de Coulomb (Fuerzas electromagnéticas)
+- [x] Electronegatividad y cargas parciales
+- [x] Enlaces elásticos (Hooke's Law)
+- [x] Geometría VSEPR para slots de bonding
+- [x] Ruptura de enlaces por estrés
+- [x] Base de datos JSON-driven (`elements.json`)
+
+### Gameplay (Fases 12-17)
+- [x] Player con Tractor Beam de precisión
+- [x] Sistema de Undo jerárquico
+- [x] Smooth Docking Animation
+- [x] Sistema de notificaciones
+- [x] Inspector de átomos y moléculas
+- [x] Quimidex educativa nativa
+
+### Estructuras y Anillos (Fases 18-27)
+- [x] Cycle Bonds (enlaces no-jerárquicos)
+- [x] Formación de anillos de 4 átomos (C4)
+- [x] Hard Snap geométrico para estabilidad
+- [x] Zone System (Clay Island como catalizador)
+- [x] Thermodynamic Jitter (movimiento browniano)
+
+### Arquitectura (Fases 28-37)
+- [x] De-God-Classing del BondingSystem
+- [x] Módulos especializados (BondingCore, RingChemistry, AutonomousBonding)
+- [x] ErrorHandler unificado
+- [x] 43+ tests unitarios
+- [x] Localización bilingüe (ES/EN) con toggle F1
+- [x] O(1) slot detection con bitmask
+
+---
+
+## 🚧 En Progreso
+
+### Fase 38: Estabilización
+- [ ] Resolver conflicto Raylib+Doctest en tests
+- [ ] Mejorar cobertura de tests (60% → 80%)
+
+---
+
+## 🔮 Fases Futuras
+
+### Fase 18+: Expansión Química
+- [ ] Metales de transición (Fe, Mg, Zn, Cu)
+- [ ] Compuestos orgánicos complejos
+- [ ] 140+ moléculas del catálogo biológico
+
+### Fase 19: Estados Exóticos
+- [ ] Plasma y fluidos supercríticos
+- [ ] Condiciones extremas (temperatura, presión)
+
+### Fase 20: Bio-Génesis
+- [ ] Sistema de ATP y metabolismo
+- [ ] Aminoácidos y nucleótidos
+- [ ] Cadenas de ARN funcionales
+
+### Fase 21+: Automatización
+- [ ] Ribosomas (lectores de ARN → proteínas)
+- [ ] Polimerasas (copiadoras de ADN)
+- [ ] ATP Sintasa (generación de energía)
+
+### Fase 22+: Competencia IA
+- [ ] Bacterias rivales
+- [ ] Virus y fagos
+- [ ] Modos: Survival, Race, Arena, Sandbox
+
+---
+
+## 🎯 Metas de Rendimiento
+
+| Métrica | Actual | Objetivo |
+|---------|--------|----------|
+| Partículas | 2,500 | 50,000+ |
+| FPS | 60 | 60 estable |
+| Tiempo de carga | <2s | <1s |
+
+---
+
+*Actualizado: 2025-12-28*
