@@ -184,7 +184,11 @@ public:
             }
             if (states[i].isClustered) {
                 clusteredCount++;
-                bondCount++;  // Each clustered atom has a bond to parent
+                bondCount++;  // Parent-child bond
+            }
+            // Count cycle bonds (only once per pair - when i < cycleBondId)
+            if (states[i].cycleBondId > (int)i) {
+                bondCount++;  // Cycle bond closing the ring
             }
             centroidX += transforms[i].x;
             centroidY += transforms[i].y;
@@ -265,6 +269,7 @@ int main(int argc, char* argv[]) {
     std::string structureName = "carbon_hexagon";  // Default
     bool animationMode = false;
     bool randomMode = false;
+    bool clusteredMode = false;
     
     // Parse arguments
     for (int i = 1; i < argc; i++) {
@@ -273,6 +278,8 @@ int main(int argc, char* argv[]) {
             animationMode = true;
         } else if (arg == "--random" || arg == "-r") {
             randomMode = true;
+        } else if (arg == "--clustered" || arg == "-c") {
+            clusteredMode = true;
         } else if (arg[0] != '-') {
             structureName = arg;
         }
@@ -284,6 +291,7 @@ int main(int argc, char* argv[]) {
     log.log("Testing: " + structureName);
     if (animationMode) log.log("Mode: ANIMATION (1000 frames)");
     if (randomMode) log.log("Mode: RANDOM spawn positions");
+    if (clusteredMode) log.log("Mode: CLUSTERED (all atoms at same point)");
     log.log("Using REAL physics systems (no mocks)");
     log.log("");
     
@@ -319,7 +327,21 @@ int main(int argc, char* argv[]) {
     std::uniform_real_distribution<float> distX(-50.0f, 50.0f);  // Scatter ±50px (within bonding range)
     std::uniform_real_distribution<float> distY(-50.0f, 50.0f);
     
-    if (randomMode) {
+    if (clusteredMode) {
+        // All atoms at exact same point (stress test for animation)
+        log.log("Spawning " + std::to_string(expected.atomCount) + 
+                " atoms at SAME POINT (clustered) at Clay Zone center");
+        
+        for (int i = 0; i < expected.atomCount; i++) {
+            // All at exact center with tiny random offset to avoid NaN
+            float x = expected.centerX + (i * 0.1f);
+            float y = expected.centerY + (i * 0.1f);
+            
+            transforms.push_back({x, y, 0, 0, 0, 0, 0});
+            atoms.push_back({6, 0});  // Carbon
+            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        }
+    } else if (randomMode) {
         log.log("Spawning " + std::to_string(expected.atomCount) + 
                 " atoms at RANDOM positions in Clay Zone");
         

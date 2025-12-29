@@ -1,3 +1,36 @@
+## [Phase 41: Gradual Animation System] - 2025-12-29
+
+### Fixed
+- **Bond Count Display**: Now shows 6/6 (was 5/6) by including cycleBonds
+- **Rotation Orientation**: Hexagons now use fixed `rotationOffset` from JSON
+- **Topology Preservation**: Consecutive offset assignment prevents crossed bonds
+- **Docking Progress**: Changed from time-based to distance-based tracking
+- **Collective Snap**: Triggers when atoms within 3px of targets (not by percentage)
+- **Formation Damping**: Increased to 0.98 (was 0.90) for smoother animation
+
+### Changed
+- `structures.json`: 
+  - `formationSpeed`: 0.3 → 0.8
+  - `formationDamping`: 0.90 → 0.98
+  - `maxFormationSpeed`: 250 → 300
+- `StructuralPhysics.cpp`: Pull force 3x stronger, distance-based snap trigger
+- `RingChemistry.hpp`: Uses `def->rotationOffset` for consistent orientation
+
+### Added
+- `docs/ANIMATION_SYSTEM.md`: Complete documentation of animation fixes
+- `test_molecule.exe --clustered`: Stress test flag (all atoms at same point)
+- Detailed snap logging showing position gaps
+
+### Test Results
+```
+Clustered spawn test:
+  Frame  0: Spread:0px (all overlapping)
+  Frame 15: Spread:32px, SNAP gaps: 1-2px
+  Frame 20: Spread:42px (perfect hexagon)
+```
+
+---
+
 ## [Phase 40: C6 Hexagon Structures] - 2025-12-28
 
 ### Changed

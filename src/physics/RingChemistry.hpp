@@ -160,41 +160,89 @@ public:
                 .findMatch(ringSize, atoms[ringMembers[0]].atomicNumber);
             
             if (def) {
-                // Calculate centroid
-                float scx = 0, scy = 0;
-                for (int idx : ringMembers) { 
-                    scx += transforms[idx].x; 
-                    scy += transforms[idx].y; 
+                // Use already-calculated centroid (cx, cy) from angular sorting above
+                // Use rotation from structure definition (configurable per structure)
+                float fixedAngle = def->rotationOffset;  // From structures.json
+                float angleStep = (2.0f * 3.1415926535f) / ringSize;
+                float radius = Config::BOND_IDEAL_DIST / (2.0f * std::sin(3.1415926535f / ringSize));
+                
+                std::vector<Vector2> offsets;
+                for (int i = 0; i < ringSize; i++) {
+                    float currentAngle = fixedAngle + i * angleStep;
+                    offsets.push_back({
+                        std::cos(currentAngle) * radius,
+                        std::sin(currentAngle) * radius
+                    });
                 }
-                scx /= (float)ringSize; 
-                scy /= (float)ringSize;
-
-                // Get ideal offsets for this polygon
-                std::vector<Vector2> offsets = def->getIdealOffsets(Config::BOND_IDEAL_DIST);
                 
                 // Hard snap ONLY if instantFormation is enabled
                 if (def->instantFormation) {
-                    for (int k = 0; k < ringSize && k < (int)offsets.size(); k++) {
-                        int idx = ringMembers[k];
-                        transforms[idx].x = scx + offsets[k].x;
-                        transforms[idx].y = scy + offsets[k].y;
-                        transforms[idx].z = 0.0f;
-                        transforms[idx].vx = transforms[idx].vy = transforms[idx].vz = 0.0f;
-                        states[idx].dockingProgress = 1.0f;
-                        states[idx].targetCenterX = scx;  // Store for consistency
-                        states[idx].targetCenterY = scy;
+                    // Find best starting offset for first atom, then assign consecutively
+                    // This preserves ring topology (adjacent atoms get adjacent offsets)
+                    int firstAtom = ringMembers[0];
+                    float firstX = transforms[firstAtom].x - cx;
+                    float firstY = transforms[firstAtom].y - cy;
+                    
+                    // Find which offset is closest to first atom's position
+                    int startK = 0;
+                    float bestDist = 1e9f;
+                    for (int k = 0; k < ringSize; k++) {
+                        float dx = offsets[k].x - firstX;
+                        float dy = offsets[k].y - firstY;
+                        float dist = dx*dx + dy*dy;
+                        if (dist < bestDist) {
+                            bestDist = dist;
+                            startK = k;
+                        }
+                    }
+                    
+                    // Assign consecutive offsets starting from best match
+                    for (int i = 0; i < ringSize; i++) {
+                        int atomId = ringMembers[i];
+                        int k = (startK + i) % ringSize;
+                        
+                        states[atomId].ringIndex = k;
+                        float tgtX = cx + offsets[k].x;
+                        float tgtY = cy + offsets[k].y;
+                        transforms[atomId].x = tgtX;
+                        transforms[atomId].y = tgtY;
+                        transforms[atomId].z = 0.0f;
+                        transforms[atomId].vx = transforms[atomId].vy = transforms[atomId].vz = 0.0f;
+                        states[atomId].dockingProgress = 1.0f;
+                        states[atomId].targetX = tgtX;
+                        states[atomId].targetY = tgtY;
                     }
                 } else {
-                    // Gradual animation: initialize docking progress and STORE FIXED TARGET
-                    for (int idx : ringMembers) {
-                        states[idx].dockingProgress = 0.0f;
-                        states[idx].targetCenterX = scx;  // Fixed centroid for animation
-                        states[idx].targetCenterY = scy;
+                    // Gradual animation: same topology-preserving logic
+                    int firstAtom = ringMembers[0];
+                    float firstX = transforms[firstAtom].x - cx;
+                    float firstY = transforms[firstAtom].y - cy;
+                    
+                    int startK = 0;
+                    float bestDist = 1e9f;
+                    for (int k = 0; k < ringSize; k++) {
+                        float dx = offsets[k].x - firstX;
+                        float dy = offsets[k].y - firstY;
+                        float dist = dx*dx + dy*dy;
+                        if (dist < bestDist) {
+                            bestDist = dist;
+                            startK = k;
+                        }
+                    }
+                    
+                    for (int i = 0; i < ringSize; i++) {
+                        int atomId = ringMembers[i];
+                        int k = (startK + i) % ringSize;
+                        
+                        states[atomId].ringIndex = k;
+                        states[atomId].dockingProgress = 0.0f;
+                        states[atomId].targetX = cx + offsets[k].x;
+                        states[atomId].targetY = cy + offsets[k].y;
                     }
                 }
                 
                 TraceLog(LOG_INFO, "[RING] Formed %d-ring at (%.0f, %.0f) with %d atoms%s",
-                         ringSize, scx, scy, ringSize, 
+                         ringSize, cx, cy, ringSize, 
                          def->instantFormation ? "" : " (gradual animation)");
             } else {
                 // Fallback for rings without structure definition

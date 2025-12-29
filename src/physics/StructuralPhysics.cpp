@@ -111,40 +111,55 @@ void applyRingDynamics(float dt,
             scx /= subIndices.size();
             scy /= subIndices.size();
 
-            // Collaborative Check for this specific ring
-            bool ringReady = true;
+            // Check if ALL atoms are CLOSE to their targets (actual distance check)
+            const float SNAP_THRESHOLD = 3.0f;  // Snap when within 3 pixels
+            bool allClose = true;
+            float maxGap = 0;
             for (int idx : subIndices) {
                 if (states[idx].dockingProgress < 1.0f) {
-                    int rIdx = states[idx].ringIndex;
-                    if (rIdx >= 0 && rIdx < (int)offsets.size()) {
-                        float dx = (scx + offsets[rIdx].x) - transforms[idx].x;
-                        float dy = (scy + offsets[rIdx].y) - transforms[idx].y;
-                        if (std::sqrt(dx*dx + dy*dy) > def->completionThreshold) {
-                            ringReady = false;
-                            break;
-                        }
+                    float dx = states[idx].targetX - transforms[idx].x;
+                    float dy = states[idx].targetY - transforms[idx].y;
+                    float gap = std::sqrt(dx*dx + dy*dy);
+                    if (gap > maxGap) maxGap = gap;
+                    if (gap > SNAP_THRESHOLD) {
+                        allClose = false;
                     }
                 }
             }
 
-            // Perform Hard Snap on completion - ONLY if instantFormation is enabled
-            if (ringReady && def->instantFormation) {
-                bool firstTimeReady = false;
-                for (int idx : subIndices) if (states[idx].dockingProgress < 1.0f) { firstTimeReady = true; break; }
-
+            // Perform collective snap when ALL atoms are within threshold
+            if (allClose && maxGap > 0) {
+                bool needsSnap = false;
                 for (int idx : subIndices) {
-                    if (firstTimeReady) {
-                        int rIdx = states[idx].ringIndex;
-                        if (rIdx >= 0 && rIdx < (int)offsets.size()) {
-                            transforms[idx].x = scx + offsets[rIdx].x;
-                            transforms[idx].y = scy + offsets[rIdx].y;
-                            transforms[idx].z = 0.0f; 
-                            transforms[idx].vx = avgVx;
-                            transforms[idx].vy = avgVy;
-                            transforms[idx].vz = 0.0f;
-                        }
+                    if (states[idx].dockingProgress < 1.0f) {
+                        needsSnap = true;
+                        break;
                     }
-                    states[idx].dockingProgress = 1.0f;
+                }
+
+                if (needsSnap) {
+                    // LOG BEFORE/AFTER for debugging
+                    TraceLog(LOG_INFO, "[SNAP] === Collective snap triggered ===");
+                    for (int idx : subIndices) {
+                        float dx = states[idx].targetX - transforms[idx].x;
+                        float dy = states[idx].targetY - transforms[idx].y;
+                        float gap = std::sqrt(dx*dx + dy*dy);
+                        TraceLog(LOG_INFO, "[SNAP] Atom %d: (%.1f,%.1f) -> target(%.1f,%.1f) gap=%.1fpx",
+                                 idx, transforms[idx].x, transforms[idx].y,
+                                 states[idx].targetX, states[idx].targetY, gap);
+                    }
+                    
+                    // SNAP TO STORED TARGETS
+                    for (int idx : subIndices) {
+                        transforms[idx].x = states[idx].targetX;
+                        transforms[idx].y = states[idx].targetY;
+                        transforms[idx].z = 0.0f; 
+                        transforms[idx].vx = avgVx;
+                        transforms[idx].vy = avgVy;
+                        transforms[idx].vz = 0.0f;
+                        states[idx].dockingProgress = 1.0f;
+                    }
+                    TraceLog(LOG_INFO, "[SNAP] Snap completed - all atoms at targets");
                 }
             }
 
@@ -156,40 +171,36 @@ void applyRingDynamics(float dt,
                 float relVy = transforms[idx].vy - avgVy;
 
                 if (states[idx].dockingProgress < 1.0f) {
-                    int rIdx = states[idx].ringIndex;
-                    if (rIdx >= 0 && rIdx < (int)offsets.size()) {
-                        // Use STORED fixed centroid for animation (not moving centroid)
-                        float fixedCenterX = states[idx].targetCenterX;
-                        float fixedCenterY = states[idx].targetCenterY;
-                        
-                        float targetX = fixedCenterX + offsets[rIdx].x;
-                        float targetY = fixedCenterY + offsets[rIdx].y;
-                        float dx = targetX - transforms[idx].x;
-                        float dy = targetY - transforms[idx].y;
+                    // Use stored ABSOLUTE target position (set by RingChemistry)
+                    float targetX = states[idx].targetX;
+                    float targetY = states[idx].targetY;
+                    float dx = targetX - transforms[idx].x;
+                    float dy = targetY - transforms[idx].y;
+                    float distSq = dx*dx + dy*dy;
+                    float dist = std::sqrt(distSq);
 
-                        float pullForce = def->formationSpeed * Config::Physics::FORMATION_PULL_MULTIPLIER; 
-                        relVx += dx * pullForce * dt;
-                        relVy += dy * pullForce * dt;
+                    // Strong pull force - increases as atom gets closer (spring-like)
+                    float pullForce = def->formationSpeed * Config::Physics::FORMATION_PULL_MULTIPLIER * 3.0f;
+                    relVx += dx * pullForce * dt;
+                    relVy += dy * pullForce * dt;
 
-                        float relSpeedSq = relVx*relVx + relVy*relVy;
-                        float maxRelSpeed = def->maxFormationSpeed;
-                        if (relSpeedSq > maxRelSpeed * maxRelSpeed) {
-                            float scale = maxRelSpeed / std::sqrt(relSpeedSq);
-                            relVx *= scale;
-                            relVy *= scale;
-                        }
-                        
-                        // Increment docking progress (1.0 multiplier = ~3 sec with formationSpeed:0.3)
-                        states[idx].dockingProgress += dt * def->formationSpeed;
-                        
-                        // Snap to final position when animation is complete (time-based, not distance)
-                        if (states[idx].dockingProgress >= 0.99f) {
-                            states[idx].dockingProgress = 1.0f;
-                            transforms[idx].x = targetX;
-                            transforms[idx].y = targetY;
-                            transforms[idx].vx = avgVx;
-                            transforms[idx].vy = avgVy;
-                        }
+                    float relSpeedSq = relVx*relVx + relVy*relVy;
+                    float maxRelSpeed = def->maxFormationSpeed;
+                    if (relSpeedSq > maxRelSpeed * maxRelSpeed) {
+                        float scale = maxRelSpeed / std::sqrt(relSpeedSq);
+                        relVx *= scale;
+                        relVy *= scale;
+                    }
+                    
+                    // DISTANCE-BASED docking progress (not time-based)
+                    // Progress = how close we are to target (0=far, 1=at target)
+                    float maxDist = Config::BOND_IDEAL_DIST * 1.5f;  // Start distance reference
+                    float progress = 1.0f - std::min(dist / maxDist, 1.0f);
+                    states[idx].dockingProgress = std::max(states[idx].dockingProgress, progress);
+                    
+                    // Cap at 99% - collective snap finishes when ALL atoms are close
+                    if (states[idx].dockingProgress > 0.99f) {
+                        states[idx].dockingProgress = 0.99f;
                     }
                 }
 
