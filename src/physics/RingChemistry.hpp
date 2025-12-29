@@ -6,6 +6,9 @@
 #include "raylib.h"
 #include "../ecs/components.hpp"
 #include "../core/MathUtils.hpp"
+#include "../core/Config.hpp"
+#include "../chemistry/StructureRegistry.hpp"
+#include "../chemistry/StructureDefinition.hpp"
 #include "MolecularHierarchy.hpp"
 #include "BondingTypes.hpp"
 // BondingCore include might still be needed for logic, but for types we use BondingTypes
@@ -119,33 +122,44 @@ public:
             states[atomId].ringIndex = idx;  // Assign index here for all ring sizes
         }
 
-        // --- VISUAL FORMATION (Square Hard-Snap) ---
+        // --- VISUAL FORMATION (Generalized Polygon Hard-Snap) ---
         // Only trigger hard-snap if these atoms were NOT in another ring already
-        // (prevents snapping conflicts during ladder formation)
-        if (ringSize == 4 && !anyWasInRing) {
-             float scx = 0, scy = 0;
-             for (int idx : ringMembers) { scx += transforms[idx].x; scy += transforms[idx].y; }
-             scx /= 4.0f; scy /= 4.0f;
+        if (ringSize >= 4 && ringSize <= 8 && !anyWasInRing) {
+            // Look up structure definition for this polygon size
+            const StructureDefinition* def = StructureRegistry::getInstance()
+                .findMatch(ringSize, atoms[ringMembers[0]].atomicNumber);
+            
+            if (def) {
+                // Calculate centroid
+                float scx = 0, scy = 0;
+                for (int idx : ringMembers) { 
+                    scx += transforms[idx].x; 
+                    scy += transforms[idx].y; 
+                }
+                scx /= (float)ringSize; 
+                scy /= (float)ringSize;
 
-             // Perfect Square Offsets (clockwise order: top-left, top-right, bottom-right, bottom-left)
-             float h = Config::BOND_IDEAL_DIST * 0.5f;
-             float ox[4] = {-h, h, h, -h};
-             float oy[4] = {-h, -h, h, h};
-
-             for (int k = 0; k < 4; k++) {
-                 int idx = ringMembers[k];
-                 transforms[idx].x = scx + ox[k];
-                 transforms[idx].y = scy + oy[k];
-                 transforms[idx].z = 0.0f;
-                 transforms[idx].vx = transforms[idx].vy = transforms[idx].vz = 0.0f;
-                 states[idx].dockingProgress = 1.0f; 
-             }
-             
-             TraceLog(LOG_INFO, "[RING] Formed 4-ring (isolated square) at (%.0f, %.0f) with atoms %d-%d-%d-%d",
-                      scx, scy, ringMembers[0], ringMembers[1], ringMembers[2], ringMembers[3]);
-        } else if (ringSize == 4 && anyWasInRing) {
-             TraceLog(LOG_INFO, "[RING] Formed 4-ring (fused square) with atoms %d-%d-%d-%d. Skipping hard-snap for stability.",
-                      ringMembers[0], ringMembers[1], ringMembers[2], ringMembers[3]);
+                // Get ideal offsets for this polygon
+                std::vector<Vector2> offsets = def->getIdealOffsets(Config::BOND_IDEAL_DIST);
+                
+                // Snap each atom to its ideal position
+                for (int k = 0; k < ringSize && k < (int)offsets.size(); k++) {
+                    int idx = ringMembers[k];
+                    transforms[idx].x = scx + offsets[k].x;
+                    transforms[idx].y = scy + offsets[k].y;
+                    transforms[idx].z = 0.0f;
+                    transforms[idx].vx = transforms[idx].vy = transforms[idx].vz = 0.0f;
+                    states[idx].dockingProgress = 1.0f;
+                }
+                
+                TraceLog(LOG_INFO, "[RING] Formed %d-ring at (%.0f, %.0f) with %d atoms",
+                         ringSize, scx, scy, ringSize);
+            } else {
+                // Fallback for rings without structure definition
+                TraceLog(LOG_WARNING, "[RING] No structure definition for ring size %d. Skipping hard-snap.", ringSize);
+            }
+        } else if (ringSize >= 4 && anyWasInRing) {
+            TraceLog(LOG_INFO, "[RING] Formed %d-ring (fused). Skipping hard-snap for stability.", ringSize);
         }
 
         return BondError::SUCCESS;

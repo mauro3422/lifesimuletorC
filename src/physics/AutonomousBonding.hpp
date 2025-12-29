@@ -130,7 +130,7 @@ public:
                     ringMembers.push_back(k);
                 }
             }
-            if (ringMembers.size() < 4) continue;
+            if (ringMembers.size() < 4) continue;  // Minimum ring size
             
             // Calculate ring centroid
             float cx = 0, cy = 0;
@@ -145,7 +145,7 @@ public:
             // For 4-rings (squares), align to the extensions of existing bonds (90-deg)
             // instead of a diagonal outward vector.
             bool alignedToSlot = false;
-            if (ringMembers.size() == 4) {
+            if (ringMembers.size() >= 4) {  // Works for squares, hexagons, etc.
                 // Find ring neighbors of parent
                 std::vector<int> neighbors;
                 for (int m : ringMembers) {
@@ -283,7 +283,7 @@ public:
                         bool inRingZone = env && env->isInRingFormingZone({transforms[i].x, transforms[i].y});
                         if (inRingZone && states[i].cycleBondId == -1 && states[j].cycleBondId == -1) {
                             int hops = MathUtils::getHierarchyDistance(i, j, states);
-                            if (hops >= 3 && hops <= 6) {
+                            if (hops >= 3 && hops <= 7) {  // 4-6 atoms can close rings
                                 if ((BondError)RingChemistry::tryCycleBond(i, j, states, atoms, transforms) == BondError::SUCCESS) {
                                     states[i].justBonded = true;
                                     states[j].justBonded = true;

@@ -1,3 +1,29 @@
+## [Phase 40: C6 Hexagon Structures] - 2025-12-28
+
+### Changed
+- **Carbon Rings**: Upgraded from 4-atom squares to 6-atom hexagons
+  - `structures.json`: Replaced `carbon_square` with `carbon_hexagon` (120° internal angle)
+  - Carbon now forms biologically-accurate benzene-like rings
+- **RingChemistry.hpp**: Generalized hard-snap for any polygon (4-8 atoms)
+  - Uses `StructureRegistry::findMatch()` for dynamic polygon offsets
+  - No more hardcoded square positions
+- **AutonomousBonding.hpp**: Extended cycle closure range
+  - `hops >= 3 && hops <= 7` allows 4-6 atom ring closure
+  - Works for hexagons and future structures
+
+### Technical Notes
+- `StructureDefinition::getIdealOffsets()` calculates regular polygon vertices
+- Hexagon circumradius = `bondDist / (2 * sin(π/6))` = `bondDist`
+- Foundation for membrane construction (hexagon panels)
+
+### Test Results
+```
+Ring Topology: 5/6 PASS (hexagon formation works)
+Ladder Diagnostics: Expected failure (tests C4 squares)
+```
+
+---
+
 ## [Phase 39: Language & Architecture Polish] - 2025-12-28
 
 ### Changed

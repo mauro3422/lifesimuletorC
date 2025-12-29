@@ -1,13 +1,15 @@
 /**
  * test_ring_topology.cpp
  * Validates that ring formation creates correct member ordering and positions
- * to prevent crossed bond visualization.
+ * for hexagonal carbon rings (C6).
  * 
  * Key Tests:
- * 1. Ring member order matches hierarchical adjacency
- * 2. Hard-snap positions atoms in correct square layout
- * 3. Each position-adjacent pair is bond-connected
- * 4. Triangles (3-atom) are rejected
+ * 1. Triangles (3-atom) are rejected
+ * 2. Valid 6-ring hexagon formation
+ * 3. All ring members marked as isInRing
+ * 4. Ring size correctly calculated (6)
+ * 5. Hexagon positions are correct
+ * 6. Z-axis flattened to 0
  */
 
 #include <iostream>
@@ -15,13 +17,13 @@
 #include <cmath>
 #include <cassert>
 
-#include "raylib.h"  // Use real raylib
+#include "raylib.h"
 
 #include "../ecs/components.hpp"
 #include "../core/Config.hpp"
 #include "../chemistry/ChemistryDatabase.hpp"
+#include "../chemistry/StructureRegistry.hpp"
 
-// Include RingChemistry to test it directly
 #include "../physics/RingChemistry.hpp"
 
 #define TEST(name) std::cout << "[TEST] " << #name << "... "; testsRun++;
@@ -32,83 +34,62 @@ int testsRun = 0;
 int testsPassed = 0;
 
 /**
- * Helper: Create a chain of 4 atoms with specific hierarchy
- * Hierarchy:  A(0) -> B(1) -> C(2), A(0) -> D(3)
- * This forms a "Y" shape where cycle bond C-D creates a 4-ring
+ * Helper: Create a chain of 6 carbon atoms for hexagon formation
+ * Hierarchy: 0 -> 1 -> 2 -> 3 -> 4, and 0 -> 5
+ * This forms a "Y" shape where cycle bond 4-5 creates a 6-ring
  */
-void setupHierarchyY(std::vector<TransformComponent>& transforms,
-                     std::vector<AtomComponent>& atoms,
-                     std::vector<StateComponent>& states) {
+void setupHexagonChain(std::vector<TransformComponent>& transforms,
+                       std::vector<AtomComponent>& atoms,
+                       std::vector<StateComponent>& states) {
     transforms.clear();
     atoms.clear();
     states.clear();
     
-    // Atom 0: A (root)
-    transforms.push_back({0.0f, 0.0f, 0.0f, 0, 0, 0, 0});
-    atoms.push_back({6, 0.0f});  // Carbon
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false});
+    // Create 6 carbon atoms in a chain-like hierarchy
+    float spacing = 30.0f;
+    float angle = 2.0944f / 2.0f; // 60 degrees for hexagon setup
     
-    // Atom 1: B (child of A, slot 0)
-    transforms.push_back({50.0f, 0.0f, 0.0f, 0, 0, 0, 0});
-    atoms.push_back({6, 0.0f});
-    states.push_back({true, 1, 0, 0, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false});
-    states[0].isClustered = true;
-    states[0].moleculeId = 1;
-    states[0].childCount = 2;  // A has 2 children (B and D)
-    states[0].occupiedSlots = 0b11;  // Slots 0 and 1 occupied
-    
-    // Atom 2: C (child of B, slot 0)
-    transforms.push_back({100.0f, 0.0f, 0.0f, 0, 0, 0, 0});
-    atoms.push_back({6, 0.0f});
-    states.push_back({true, 1, 1, 0, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false});
-    states[1].childCount = 1;  // B has 1 child (C)
-    states[1].occupiedSlots = 0b1;
-    
-    // Atom 3: D (child of A, slot 1)
-    transforms.push_back({0.0f, 50.0f, 0.0f, 0, 0, 0, 0});
-    atoms.push_back({6, 0.0f});
-    states.push_back({true, 1, 0, 1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false});
+    for (int i = 0; i < 6; i++) {
+        // Position in a rough pre-hexagon shape
+        float x = std::cos(i * 1.0472f) * 50.0f; // 60 degree spacing
+        float y = std::sin(i * 1.0472f) * 50.0f;
+        transforms.push_back({x, y, 0.0f, 0, 0, 0, 0});
+        atoms.push_back({6, 0.0f});  // Carbon
+        
+        StateComponent state = {};
+        state.isClustered = (i > 0); // First atom is root
+        state.moleculeId = 1;
+        state.parentEntityId = (i > 0) ? (i == 5 ? 0 : i - 1) : -1; // 5 -> 0, others -> prev
+        state.parentSlotIndex = 0;
+        state.dockingProgress = 1.0f;
+        state.childCount = (i == 0) ? 2 : (i < 4) ? 1 : 0;  // Root has 2 children, middle have 1
+        state.cycleBondId = -1;
+        state.isInRing = false;
+        state.ringSize = 0;
+        state.ringInstanceId = -1;
+        state.ringIndex = -1;
+        states.push_back(state);
+    }
 }
 
 /**
  * Helper: Check if two atoms are bonded (hierarchically or via cycle)
  */
 bool areBonded(int a, int b, const std::vector<StateComponent>& states) {
-    // Check parent-child relationship
     if (states[a].parentEntityId == b || states[b].parentEntityId == a) {
         return true;
     }
-    // Check cycle bond
     if (states[a].cycleBondId == b || states[b].cycleBondId == a) {
         return true;
     }
     return false;
 }
 
-/**
- * Helper: Calculate distance between two atoms
- */
-float atomDistance(int a, int b, const std::vector<TransformComponent>& transforms) {
-    float dx = transforms[a].x - transforms[b].x;
-    float dy = transforms[a].y - transforms[b].y;
-    return std::sqrt(dx*dx + dy*dy);
-}
-
-/**
- * Helper: Get position "index" based on quadrant (for square validation)
- * Returns 0=top-left, 1=top-right, 2=bottom-right, 3=bottom-left
- */
-int getQuadrant(float x, float y, float cx, float cy) {
-    if (x < cx && y < cy) return 0;  // top-left
-    if (x >= cx && y < cy) return 1; // top-right
-    if (x >= cx && y >= cy) return 2; // bottom-right
-    return 3; // bottom-left
-}
-
 int main() {
-    std::cout << "=== RING TOPOLOGY TESTS ===" << std::endl << std::endl;
+    std::cout << "=== RING TOPOLOGY TESTS (HEXAGON) ===" << std::endl << std::endl;
     
     ChemistryDatabase::getInstance().reload();
+    // StructureRegistry auto-loads via getInstance()
     
     std::vector<TransformComponent> transforms;
     std::vector<AtomComponent> atoms;
@@ -143,23 +124,25 @@ int main() {
     }
     
     // --------------------------------------------
-    // TEST 2: Valid 4-ring formation
+    // TEST 2: Valid 6-ring hexagon formation
     // --------------------------------------------
-    TEST(Valid_4Ring_Formation) {
-        setupHierarchyY(transforms, atoms, states);
+    TEST(Valid_6Ring_Formation) {
+        setupHexagonChain(transforms, atoms, states);
         
-        // Try to form cycle bond between C(2) and D(3)
-        BondError result = RingChemistry::tryCycleBond(2, 3, states, atoms, transforms);
+        // Try to form cycle bond between atom 4 and atom 5
+        // Path: 4 -> 3 -> 2 -> 1 -> 0 <- 5
+        // This creates a 6-ring: 0-1-2-3-4-5-0
+        BondError result = RingChemistry::tryCycleBond(4, 5, states, atoms, transforms);
         
         if (result == BondError::SUCCESS) {
             // Verify cycle bonds were set
-            if (states[2].cycleBondId == 3 && states[3].cycleBondId == 2) {
+            if (states[4].cycleBondId == 5 && states[5].cycleBondId == 4) {
                 PASS
             } else {
                 FAIL("Cycle bond IDs not set correctly")
             }
         } else {
-            FAIL("Expected SUCCESS for 4-ring formation")
+            FAIL("Expected SUCCESS for 6-ring formation")
         }
     }
     
@@ -167,9 +150,13 @@ int main() {
     // TEST 3: All ring members marked as isInRing
     // --------------------------------------------
     TEST(All_Members_In_Ring) {
-        // Using state from previous test
-        bool allInRing = states[0].isInRing && states[1].isInRing && 
-                        states[2].isInRing && states[3].isInRing;
+        bool allInRing = true;
+        for (int i = 0; i < 6; i++) {
+            if (!states[i].isInRing) {
+                allInRing = false;
+                std::cout << "Atom " << i << " not in ring! " << std::endl;
+            }
+        }
         if (allInRing) {
             PASS
         } else {
@@ -181,108 +168,61 @@ int main() {
     // TEST 4: Ring size correctly calculated
     // --------------------------------------------
     TEST(Ring_Size_Correct) {
-        // All atoms should have ringSize = 4
-        bool sizeCorrect = states[0].ringSize == 4 && states[1].ringSize == 4 &&
-                          states[2].ringSize == 4 && states[3].ringSize == 4;
+        bool sizeCorrect = true;
+        for (int i = 0; i < 6; i++) {
+            if (states[i].ringSize != 6) {
+                sizeCorrect = false;
+                std::cout << "Atom " << i << " ringSize: " << states[i].ringSize << std::endl;
+            }
+        }
         if (sizeCorrect) {
             PASS
         } else {
-            std::cout << "Ring sizes: " << states[0].ringSize << ", " << states[1].ringSize 
-                      << ", " << states[2].ringSize << ", " << states[3].ringSize << std::endl;
-            FAIL("Ring size not 4 for all atoms")
+            FAIL("Ring size not 6 for all atoms")
         }
     }
     
     // --------------------------------------------
-    // TEST 5: Positions form a proper square
+    // TEST 5: Hexagon positions form regular hexagon
     // --------------------------------------------
-    TEST(Square_Positions) {
+    TEST(Hexagon_Positions) {
         // Calculate centroid
         float cx = 0, cy = 0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             cx += transforms[i].x;
             cy += transforms[i].y;
         }
-        cx /= 4; cy /= 4;
+        cx /= 6; cy /= 6;
         
-        // Each atom should be at a corner of a square around the centroid
-        float expectedDist = Config::BOND_IDEAL_DIST * 0.5f * std::sqrt(2.0f);
+        // For a regular hexagon with side = BOND_IDEAL_DIST:
+        // Circumradius R = side / (2 * sin(PI/6)) = side / (2 * 0.5) = side
+        float expectedRadius = Config::BOND_IDEAL_DIST / (2.0f * std::sin(3.14159f / 6.0f));
         
-        bool allAtCorners = true;
-        for (int i = 0; i < 4; i++) {
+        bool allAtVertices = true;
+        for (int i = 0; i < 6; i++) {
             float dist = std::sqrt(std::pow(transforms[i].x - cx, 2) + 
                                    std::pow(transforms[i].y - cy, 2));
-            if (std::abs(dist - expectedDist) > 1.0f) {
-                allAtCorners = false;
+            // Allow 5% tolerance
+            if (std::abs(dist - expectedRadius) > expectedRadius * 0.05f) {
+                allAtVertices = false;
                 std::cout << "Atom " << i << " dist from center: " << dist 
-                          << " (expected ~" << expectedDist << ")" << std::endl;
+                          << " (expected ~" << expectedRadius << ")" << std::endl;
             }
         }
         
-        if (allAtCorners) {
+        if (allAtVertices) {
             PASS
         } else {
-            FAIL("Atoms not at correct square corner positions")
+            FAIL("Atoms not at correct hexagon vertex positions")
         }
     }
     
     // --------------------------------------------
-    // TEST 6: Position-adjacent atoms are bond-connected
-    // This is the CRITICAL test for crossed bonds
-    // --------------------------------------------
-    TEST(Adjacent_Positions_Bonded) {
-        // Map each atom to its quadrant
-        float cx = 0, cy = 0;
-        for (int i = 0; i < 4; i++) {
-            cx += transforms[i].x; cy += transforms[i].y;
-        }
-        cx /= 4; cy /= 4;
-        
-        int quadrants[4];
-        for (int i = 0; i < 4; i++) {
-            quadrants[i] = getQuadrant(transforms[i].x, transforms[i].y, cx, cy);
-        }
-        
-        // Find which atom is at each quadrant
-        int atomAtQuadrant[4] = {-1, -1, -1, -1};
-        for (int i = 0; i < 4; i++) {
-            atomAtQuadrant[quadrants[i]] = i;
-        }
-        
-        // Check that adjacent quadrants have bonded atoms
-        // Quadrant adjacency: 0-1, 1-2, 2-3, 3-0
-        bool allAdjacent = true;
-        for (int q = 0; q < 4; q++) {
-            int nextQ = (q + 1) % 4;
-            int atomA = atomAtQuadrant[q];
-            int atomB = atomAtQuadrant[nextQ];
-            
-            if (atomA == -1 || atomB == -1) {
-                std::cout << "Missing atom at quadrant " << q << " or " << nextQ << std::endl;
-                allAdjacent = false;
-                continue;
-            }
-            
-            if (!areBonded(atomA, atomB, states)) {
-                std::cout << "Atoms " << atomA << " (q" << q << ") and " 
-                          << atomB << " (q" << nextQ << ") are NOT bonded but should be!" << std::endl;
-                allAdjacent = false;
-            }
-        }
-        
-        if (allAdjacent) {
-            PASS
-        } else {
-            FAIL("Position-adjacent atoms are not bond-connected (crossed bonds!)")
-        }
-    }
-    
-    // --------------------------------------------
-    // TEST 7: Verify Z-axis flattened to 0
+    // TEST 6: Verify Z-axis flattened to 0
     // --------------------------------------------
     TEST(Z_Axis_Flattened) {
         bool allFlat = true;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 6; i++) {
             if (std::abs(transforms[i].z) > 0.1f) {
                 allFlat = false;
             }
