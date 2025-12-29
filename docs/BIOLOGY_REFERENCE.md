@@ -98,6 +98,99 @@ Fosfolípidos:
 Fórmula ejemplo: C42H82NO8P (Fosfatidilcolina)
 ```
 
+---
+
+## 🧱 Visión de Escala: Del Ladrillo a la Casa
+
+### La Analogía Fundamental
+
+Imagina que estás construyendo una **casa de ladrillos**:
+
+| Nivel | Biología Real | En el Juego | Rol |
+|-------|--------------|-------------|-----|
+| **Ladrillo** | Hexágono de Carbono (C6) | RigidBody estable | Unidad básica impenetrable |
+| **Muro/Pared** | Membrana lipídica | Cadena de hexágonos | Barrera que encierra |
+| **Casa** | Célula completa | Espacio interior | Donde ocurre la vida |
+
+### ¿Siempre mismo tamaño los hexágonos?
+
+**Sí.** En química real:
+- Un anillo de benceno/grafeno (C6) **siempre** tiene el mismo tamaño exacto
+- La distancia de los enlaces C-C es fija (~1.4 Å)  
+- Los "ladrillos" son **idénticos**
+
+**Para crecer**: No estiras hexágonos, **agregas más** al borde (como azulejos en un piso).
+
+### Flujo de Construcción
+
+```
+PASO 1: Hexágono Básico
+┌──────────────────────────────────────┐
+│  6 Carbonos → 1 Hexágono (RigidBody) │
+│        C──C                           │
+│       /    \                          │
+│      C      C                         │
+│       \    /                          │
+│        C──C                           │
+└──────────────────────────────────────┘
+              │
+              ▼
+PASO 2: Fusión de Hexágonos
+┌──────────────────────────────────────┐
+│  2 Hexágonos comparten 1 lado →      │
+│  "Placa" de 2 ladrillos              │
+│      ┌───┬───┐                       │
+│      │ ⬡ │ ⬡ │                       │
+│      └───┴───┘                       │
+└──────────────────────────────────────┘
+              │
+              ▼
+PASO 3: Crecimiento de Placa
+┌──────────────────────────────────────┐
+│  Seguir pegando placas...            │
+│      ┌───┬───┬───┬───┐               │
+│      │ ⬡ │ ⬡ │ ⬡ │ ⬡ │               │
+│      └───┴───┴───┴───┘               │
+└──────────────────────────────────────┘
+              │
+              ▼
+PASO 4: Curvatura y Cierre (MEMBRANA)
+┌──────────────────────────────────────┐
+│  La estructura se curva y cierra     │
+│  formando una "burbuja"              │
+│                                      │
+│       ⬡─⬡─⬡─⬡                        │
+│      /       \                       │
+│     ⬡   💧💧  ⬡  ← Interior          │
+│     ⬡   💧💧  ⬡    (Citoplasma)      │
+│      \       /                       │
+│       ⬡─⬡─⬡─⬡                        │
+│                                      │
+│  = PROTOCÉLULA                       │
+└──────────────────────────────────────┘
+```
+
+### El Interior: Caldo de Cultivo
+
+Una vez cerrada la membrana:
+
+- **Adentro** hay un espacio **gigante** (en comparación con 1 átomo)
+- Ahí viven las moléculas de agua ($H_2O$), futuras cadenas de ARN, proteínas, etc.
+- Las moléculas **rebotan** contra las paredes de hexágonos pero **no se escapan**
+- Es una "piscina molecular" protegida
+
+### Física Requerida
+
+| Sistema | Estado | Descripción |
+|---------|--------|-------------|
+| Hexago Formation | ✅ Existe | 6C → anillo rígido |
+| Cycle Bonds | ✅ Existe | Enlaces no-jerárquicos |
+| Hexago Fusion | 🚧 Futuro | Pegar hexágonos por lado compartido |
+| Boundary Detection | 🚧 Futuro | Detectar "adentro" vs "afuera" |
+| Membrane Impermeability | 🚧 Futuro | Colisiones contra muro de hexágonos |
+
+---
+
 ### 2. Sistema de Energía
 ```
 ATP Sintasa:

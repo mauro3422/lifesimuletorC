@@ -70,6 +70,14 @@ Este documento refleja el estado actual del proyecto y las metas futuras.
 - [ ] Aminoácidos y nucleótidos
 - [ ] Cadenas de ARN funcionales
 
+### Fase 20.5: Construcción de Membranas 🆕
+- [ ] **Fusión de Hexágonos**: Pegar C6 por lado compartido
+- [ ] **Crecimiento de Placas**: Encadenar hexágonos en malla
+- [ ] **Curvatura Automática**: La placa se curva al crecer
+- [ ] **Cierre de Membrana**: Detectar cuando forma "burbuja"
+- [ ] **Detección Interior/Exterior**: Partículas adentro vs afuera
+- [ ] **Impermeabilidad**: Colisiones contra muro de hexágonos
+
 ### Fase 21+: Automatización
 - [ ] Ribosomas (lectores de ARN → proteínas)
 - [ ] Polimerasas (copiadoras de ADN)
