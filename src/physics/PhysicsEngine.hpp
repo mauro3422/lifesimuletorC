@@ -29,6 +29,31 @@ public:
 private:
     void resolveCollisions(std::vector<TransformComponent>& transforms);
     
+    // Helper methods extracted from step() for better maintainability
+    void validateRingIntegrity(std::vector<StateComponent>& states);
+    
+    void applyCoulombForces(float dt,
+                            std::vector<TransformComponent>& transforms,
+                            const std::vector<AtomComponent>& atoms,
+                            const class ChemistryDatabase& db);
+    
+    void applyBondSprings(float dt,
+                          std::vector<TransformComponent>& transforms,
+                          const std::vector<AtomComponent>& atoms,
+                          std::vector<StateComponent>& states,
+                          const class ChemistryDatabase& db,
+                          int diagCounter);
+    
+    void applyCycleBonds(float dt,
+                         std::vector<TransformComponent>& transforms,
+                         const std::vector<AtomComponent>& atoms,
+                         const std::vector<StateComponent>& states,
+                         const class ChemistryDatabase& db);
+    
+    void integrateMotion(float dt,
+                         std::vector<TransformComponent>& transforms,
+                         const std::vector<StateComponent>& states);
+    
     SpatialGrid grid;
     EnvironmentManager environment;
 };

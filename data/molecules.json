@@ -63,7 +63,7 @@
     {
         "id": "O2",
         "formula": "O2",
-        "category": "ATMOSFÉRICO",
+        "category": "ATMOSPHERIC",
         "color": {
             "r": 230,
             "g": 0,
@@ -123,7 +123,7 @@
     {
         "id": "CH4",
         "formula": "CH4",
-        "category": "ORGÁNICO",
+        "category": "ORGANIC",
         "color": {
             "r": 0,
             "g": 255,
@@ -185,7 +185,7 @@
     {
         "id": "CO2",
         "formula": "CO2",
-        "category": "VOLÁTIL",
+        "category": "VOLATILE",
         "color": {
             "r": 200,
             "g": 200,
