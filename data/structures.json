@@ -7,7 +7,7 @@
             "targetAngle": 2.0944,
             "damping": 0.12,
             "globalDamping": 0.98,
-            "formationSpeed": 1.0,
+            "formationSpeed": 0.3,
             "formationDamping": 0.90,
             "maxFormationSpeed": 250.0,
             "completionThreshold": 1.5,

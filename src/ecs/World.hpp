@@ -54,8 +54,8 @@ public:
     }
 
     /**
-     * TEST MODE: Minimal world for debugging ring formation
-     * Creates only 4 carbons in a clay zone (x:100-200, y:100-200)
+     * TEST MODE: Minimal world for debugging hexagon (C6) ring formation
+     * Creates 6 carbons in a pre-hexagon arrangement inside Clay Zone center
      */
     void initializeTestMode() {
         transforms.clear();
@@ -68,32 +68,24 @@ public:
         states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1});
         TraceLog(LOG_INFO, "[World] TEST MODE - Player initialized at (0,0)");
 
-        // 2. Eight Carbon atoms in "Ladder" Formation (Stacked Squares)
-        // Group 1 (Bottom Square)
-        float g1X = -1200.0f;
-        float g1Y = -350.0f; // Lower
-        transforms.push_back({ g1X - 25, g1Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-        transforms.push_back({ g1X + 25, g1Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-        transforms.push_back({ g1X + 25, g1Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-        transforms.push_back({ g1X - 25, g1Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-
-        // Group 2 (Top Square) - Placed 60 units above (Y axis)
-        float g2X = -1200.0f;
-        float g2Y = -410.0f; // Higher (Negative Y is up?) Raylib Y+ is down. So -410 is "Above" physically on screen?
-        transforms.push_back({ g2X - 25, g2Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-        transforms.push_back({ g2X + 25, g2Y - 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-        transforms.push_back({ g2X + 25, g2Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
-        transforms.push_back({ g2X - 25, g2Y + 25, 0, 0, 0, 0, 0 }); atoms.push_back({6, 0.0f}); 
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        // 2. Six Carbon atoms in pre-hexagon Formation (loose circle)
+        // Clay Zone is at: { -1200, -400, 800, 800 }
+        // Center of Clay Zone: (-1200 + 400, -400 + 400) = (-800, 0)
+        float centerX = -800.0f;
+        float centerY = 0.0f;
+        float radius = 40.0f;  // Slightly larger than BOND_AUTO_RANGE for gradual bonding
         
-        TraceLog(LOG_INFO, "[World] TEST MODE - Created Stacked Squares at Clay Zone");
+        for (int i = 0; i < 6; i++) {
+            float angle = i * (2.0f * 3.14159f / 6.0f);  // 60 degrees apart
+            float x = centerX + std::cos(angle) * radius;
+            float y = centerY + std::sin(angle) * radius;
+            
+            transforms.push_back({ x, y, 0, 0, 0, 0, 0 });
+            atoms.push_back({6, 0.0f});  // Carbon
+            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+        }
+        
+        TraceLog(LOG_INFO, "[World] TEST MODE - Created 6 Carbons in hexagon at Clay Zone center (%.0f, %.0f)", centerX, centerY);
     }
 
     size_t getEntityCount() const { return atoms.size(); }

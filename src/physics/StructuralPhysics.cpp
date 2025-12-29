@@ -79,6 +79,25 @@ void applyRingDynamics(float dt,
             const StructureDefinition* def = StructureRegistry::getInstance().findMatch(states[sampleIdx].ringSize, atoms[sampleIdx].atomicNumber);
             if (!def) continue;
 
+            // FIX: Skip rings that are fully formed (all dockingProgress == 1.0)
+            // This prevents drift from recalculating velocities
+            bool ringComplete = true;
+            for (int idx : subIndices) {
+                if (states[idx].dockingProgress < 1.0f) {
+                    ringComplete = false;
+                    break;
+                }
+            }
+            if (ringComplete && def->instantFormation) {
+                // Completed ring with instant formation - just apply damping, no forces
+                for (int idx : subIndices) {
+                    transforms[idx].vx *= def->damping;
+                    transforms[idx].vy *= def->damping;
+                    transforms[idx].vz *= Config::Physics::Z_DAMPING;
+                }
+                continue;  // Skip the rest of the ring processing
+            }
+
             float internalDamping = def->damping;
             float globalDriftDamping = def->globalDamping;
             std::vector<Vector2> offsets = def->getIdealOffsets(Config::BOND_IDEAL_DIST);
@@ -108,8 +127,8 @@ void applyRingDynamics(float dt,
                 }
             }
 
-            // Perform Hard Snap on completion
-            if (ringReady) {
+            // Perform Hard Snap on completion - ONLY if instantFormation is enabled
+            if (ringReady && def->instantFormation) {
                 bool firstTimeReady = false;
                 for (int idx : subIndices) if (states[idx].dockingProgress < 1.0f) { firstTimeReady = true; break; }
 
@@ -139,8 +158,12 @@ void applyRingDynamics(float dt,
                 if (states[idx].dockingProgress < 1.0f) {
                     int rIdx = states[idx].ringIndex;
                     if (rIdx >= 0 && rIdx < (int)offsets.size()) {
-                        float targetX = scx + offsets[rIdx].x;
-                        float targetY = scy + offsets[rIdx].y;
+                        // Use STORED fixed centroid for animation (not moving centroid)
+                        float fixedCenterX = states[idx].targetCenterX;
+                        float fixedCenterY = states[idx].targetCenterY;
+                        
+                        float targetX = fixedCenterX + offsets[rIdx].x;
+                        float targetY = fixedCenterY + offsets[rIdx].y;
                         float dx = targetX - transforms[idx].x;
                         float dy = targetY - transforms[idx].y;
 
@@ -155,8 +178,19 @@ void applyRingDynamics(float dt,
                             relVx *= scale;
                             relVy *= scale;
                         }
+                        
+                        // Increment docking progress (1.0 multiplier = ~3 sec with formationSpeed:0.3)
+                        states[idx].dockingProgress += dt * def->formationSpeed;
+                        
+                        // Snap to final position when animation is complete (time-based, not distance)
+                        if (states[idx].dockingProgress >= 0.99f) {
+                            states[idx].dockingProgress = 1.0f;
+                            transforms[idx].x = targetX;
+                            transforms[idx].y = targetY;
+                            transforms[idx].vx = avgVx;
+                            transforms[idx].vy = avgVy;
+                        }
                     }
-                    states[idx].dockingProgress += dt * (def->formationSpeed * 0.2f);
                 }
 
                 transforms[idx].vx = (avgVx * globalDriftDamping) + (relVx * currentDamping);

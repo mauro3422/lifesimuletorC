@@ -11,6 +11,7 @@
 #include "BondingCore.hpp"
 #include "RingChemistry.hpp"
 #include "BondingTypes.hpp"
+#include "StructureDetector.hpp"
 
 /**
  * AutonomousBonding (Phase 30)
@@ -279,21 +280,19 @@ public:
                     bool isSameMolecule = (rootI == rootJ);
 
                     if (isSameMolecule) {
-                        // INTERNAL RING CLOSING LOGIC - Only in zones that allow it (Clay Zone)
+                        // STRUCTURE DETECTION: Check if molecule can form a known structure
                         bool inRingZone = env && env->isInRingFormingZone({transforms[i].x, transforms[i].y});
-                        if (inRingZone && states[i].cycleBondId == -1 && states[j].cycleBondId == -1) {
-                            int hops = MathUtils::getHierarchyDistance(i, j, states);
-                            if (hops >= 3 && hops <= 7) {  // 4-6 atoms can close rings
-                                if ((BondError)RingChemistry::tryCycleBond(i, j, states, atoms, transforms) == BondError::SUCCESS) {
-                                    states[i].justBonded = true;
-                                    states[j].justBonded = true;
-                                    break; 
-                                }
+                        if (inRingZone && !states[i].isInRing) {
+                            // Try to detect and form a structure from this molecule
+                            if (StructureDetector::tryFormStructure(rootI, states, atoms, transforms)) {
+                                states[i].justBonded = true;
+                                break;  // Structure formed, done with this atom
                             }
                         }
                     } else {
                         // INTER-MOLECULAR BONDING
-                        if (rootI != 0 && rootJ != 0 && !states[rootI].isShielded && !states[rootJ].isShielded) { 
+                        if (rootI != 0 && rootJ != 0 && !states[rootI].isShielded && !states[rootJ].isShielded) {
+                            // Standard bonding - let atoms bond freely
                             if ((BondError)BondingCore::tryBond(i, j, states, atoms, transforms) == BondError::SUCCESS) {
                                 states[i].justBonded = true;
                                 states[j].justBonded = true;

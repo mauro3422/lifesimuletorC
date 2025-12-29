@@ -125,7 +125,9 @@ void PhysicsEngine::applyBondSprings(float dt,
         int slotIdx = states[i].parentSlotIndex;
 
         const Element& parentElem = db.getElement(atoms[parentId].atomicNumber);
-        if (slotIdx >= (int)parentElem.bondingSlots.size()) continue;
+        // BOUNDS CHECK: Skip if slotIdx invalid or bondingSlots empty
+        if (slotIdx < 0 || parentElem.bondingSlots.empty() || 
+            slotIdx >= (int)parentElem.bondingSlots.size()) continue;
 
         Vector3 slotDir = parentElem.bondingSlots[slotIdx];
         
@@ -156,6 +158,11 @@ void PhysicsEngine::applyBondSprings(float dt,
 
         // Ring vs Normal bond physics
         float fx, fy, fz;
+        
+        // SKIP SPRINGS DURING DOCKING ANIMATION - let StructuralPhysics control
+        if (states[i].isInRing && states[i].dockingProgress < 1.0f) {
+            continue;  // Don't apply conflicting bond spring forces
+        }
         
         if (states[i].isInRing && states[parentId].isInRing) {
             // Ring bonds: distance-only forces

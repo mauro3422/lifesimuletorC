@@ -52,6 +52,8 @@ struct StateComponent {
     int ringSize = 0;
     int ringIndex = -1;
     int ringInstanceId = -1;
+    float targetCenterX = 0.0f;  // Fixed centroid for docking animation
+    float targetCenterY = 0.0f;
 
     // === PHYSICS GROUP ===
     bool justBonded = false;

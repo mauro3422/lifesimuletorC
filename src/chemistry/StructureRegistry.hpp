@@ -23,6 +23,13 @@ public:
     // For now, we mainly use findMatch for formation.
     
     const std::vector<StructureDefinition>& getAllStructures() const { return structures; }
+    
+    // Override instantFormation for all structures (for testing/animation mode)
+    void setInstantFormation(bool instant) {
+        for (auto& s : structures) {
+            s.instantFormation = instant;
+        }
+    }
 
 private:
     StructureRegistry() = default;

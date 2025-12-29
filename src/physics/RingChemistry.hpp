@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <algorithm>
+#include <utility>
+#include <cmath>
 #include "raylib.h"
 #include "../ecs/components.hpp"
 #include "../core/MathUtils.hpp"
@@ -106,20 +108,48 @@ public:
             ringMembers.push_back(chainFromJ[k]);
         }
 
+        // Check if any atom was ALREADY in a VALID ring (for fusion detection)
+        // Only count as "was in ring" if they have a different ringInstanceId AND a valid cycleBond
         bool anyWasInRing = false;
         for (int atomId : ringMembers) {
-            if (states[atomId].isInRing) {
+            // Only consider it a "previous ring" if they have a valid cycle bond
+            // AND a different ring instance (not -1 or 0)
+            if (states[atomId].isInRing && 
+                states[atomId].ringInstanceId > 0 && 
+                states[atomId].cycleBondId >= 0 &&
+                states[atomId].cycleBondId < (int)states.size() &&
+                states[states[atomId].cycleBondId].cycleBondId == atomId) {  // Mutual cycle bond
                 anyWasInRing = true;
                 break;
             }
         }
 
-        for (int idx = 0; idx < (int)ringMembers.size(); idx++) {
-            int atomId = ringMembers[idx];
+        // Calculate centroid for proper ringIndex assignment
+        float cx = 0, cy = 0;
+        for (int atomId : ringMembers) {
+            cx += transforms[atomId].x;
+            cy += transforms[atomId].y;
+        }
+        cx /= (float)ringSize;
+        cy /= (float)ringSize;
+        
+        // Sort atoms by angle around centroid for correct geometry
+        std::vector<std::pair<float, int>> angleAtom;
+        for (int atomId : ringMembers) {
+            float dx = transforms[atomId].x - cx;
+            float dy = transforms[atomId].y - cy;
+            float angle = std::atan2(dy, dx);
+            angleAtom.push_back({angle, atomId});
+        }
+        std::sort(angleAtom.begin(), angleAtom.end());
+        
+        // Assign ringIndex based on sorted angular position
+        for (int idx = 0; idx < (int)angleAtom.size(); idx++) {
+            int atomId = angleAtom[idx].second;
             states[atomId].isInRing = true;
             states[atomId].ringSize = ringSize;
             states[atomId].ringInstanceId = ringId;
-            states[atomId].ringIndex = idx;  // Assign index here for all ring sizes
+            states[atomId].ringIndex = idx;  // Now based on angular order
         }
 
         // --- VISUAL FORMATION (Generalized Polygon Hard-Snap) ---
@@ -142,18 +172,30 @@ public:
                 // Get ideal offsets for this polygon
                 std::vector<Vector2> offsets = def->getIdealOffsets(Config::BOND_IDEAL_DIST);
                 
-                // Snap each atom to its ideal position
-                for (int k = 0; k < ringSize && k < (int)offsets.size(); k++) {
-                    int idx = ringMembers[k];
-                    transforms[idx].x = scx + offsets[k].x;
-                    transforms[idx].y = scy + offsets[k].y;
-                    transforms[idx].z = 0.0f;
-                    transforms[idx].vx = transforms[idx].vy = transforms[idx].vz = 0.0f;
-                    states[idx].dockingProgress = 1.0f;
+                // Hard snap ONLY if instantFormation is enabled
+                if (def->instantFormation) {
+                    for (int k = 0; k < ringSize && k < (int)offsets.size(); k++) {
+                        int idx = ringMembers[k];
+                        transforms[idx].x = scx + offsets[k].x;
+                        transforms[idx].y = scy + offsets[k].y;
+                        transforms[idx].z = 0.0f;
+                        transforms[idx].vx = transforms[idx].vy = transforms[idx].vz = 0.0f;
+                        states[idx].dockingProgress = 1.0f;
+                        states[idx].targetCenterX = scx;  // Store for consistency
+                        states[idx].targetCenterY = scy;
+                    }
+                } else {
+                    // Gradual animation: initialize docking progress and STORE FIXED TARGET
+                    for (int idx : ringMembers) {
+                        states[idx].dockingProgress = 0.0f;
+                        states[idx].targetCenterX = scx;  // Fixed centroid for animation
+                        states[idx].targetCenterY = scy;
+                    }
                 }
                 
-                TraceLog(LOG_INFO, "[RING] Formed %d-ring at (%.0f, %.0f) with %d atoms",
-                         ringSize, scx, scy, ringSize);
+                TraceLog(LOG_INFO, "[RING] Formed %d-ring at (%.0f, %.0f) with %d atoms%s",
+                         ringSize, scx, scy, ringSize, 
+                         def->instantFormation ? "" : " (gradual animation)");
             } else {
                 // Fallback for rings without structure definition
                 TraceLog(LOG_WARNING, "[RING] No structure definition for ring size %d. Skipping hard-snap.", ringSize);
