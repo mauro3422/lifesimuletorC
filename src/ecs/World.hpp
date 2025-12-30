@@ -26,7 +26,7 @@ public:
         // 1. PLAYER (Always ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({1, 0.0f}); // Initial Hydrogen
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1}); // ringSize=0, ringInstanceId=-1
+        states.push_back(StateComponent{});  // Default init (Phase 43)
         TraceLog(LOG_INFO, "[World] Player initialized at (0,0)");
 
         // 2. WORLD POPULATION
@@ -49,7 +49,7 @@ public:
 
             transforms.push_back(tr);
             atoms.push_back({atomicNum, 0.0f});
-            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1}); 
+            states.push_back(StateComponent{}); 
         }
     }
 
@@ -65,7 +65,7 @@ public:
         // 1. PLAYER (Always ID 0)
         transforms.push_back({ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f });
         atoms.push_back({1, 0.0f}); // Hydrogen
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1});
+        states.push_back(StateComponent{});
         TraceLog(LOG_INFO, "[World] TEST MODE - Player initialized at (0,0)");
 
         // 2. Six Carbon atoms in pre-hexagon Formation (loose circle)
@@ -82,7 +82,7 @@ public:
             
             transforms.push_back({ x, y, 0, 0, 0, 0, 0 });
             atoms.push_back({6, 0.0f});  // Carbon
-            states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, 0, -1, false});
+            states.push_back(StateComponent{});
         }
         
         TraceLog(LOG_INFO, "[World] TEST MODE - Created 6 Carbons in hexagon at Clay Zone center (%.0f, %.0f)", centerX, centerY);

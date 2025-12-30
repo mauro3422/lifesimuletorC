@@ -11,11 +11,7 @@
  */
 class MolecularHierarchy {
 public:
-    static int findRoot(int entityId, const std::vector<StateComponent>& states) {
-        if (entityId < 0 || entityId >= (int)states.size()) return -1;
-        // The cached moleculeId IS the root index in our unified system.
-        return (states[entityId].moleculeId != -1) ? states[entityId].moleculeId : entityId;
-    }
+    // findRoot is now unified in MathUtils::findMoleculeRoot() (Phase 43)
 
     /**
      * Propagates a moleculeId across the entire connected cluster (parents, children, and cycles).
@@ -46,11 +42,11 @@ public:
                 members.push_back(p);
             }
 
-            // b. Check Children (Optimization: we scan the whole list, in Phase 43 we should add child lists)
-            for (int i = 0; i < (int)states.size(); i++) {
-                if (states[i].parentEntityId == curr && !visited[i]) {
-                    visited[i] = true;
-                    members.push_back(i);
+            // b. Check Children using childList (Phase 43 optimization: O(k) instead of O(N))
+            for (int childId : states[curr].childList) {
+                if (!visited[childId]) {
+                    visited[childId] = true;
+                    members.push_back(childId);
                 }
             }
 
@@ -71,14 +67,11 @@ public:
         }
     }
 
-    static std::vector<int> getChildren(int parentId, const std::vector<StateComponent>& states) {
-        std::vector<int> children;
-        for (int i = 0; i < (int)states.size(); i++) {
-            if (states[i].parentEntityId == parentId) {
-                children.push_back(i);
-            }
-        }
-        return children;
+    // getChildren is now O(1) via states[parentId].childList (Phase 43)
+    static const std::vector<int>& getChildren(int parentId, const std::vector<StateComponent>& states) {
+        static const std::vector<int> empty;
+        if (parentId < 0 || parentId >= (int)states.size()) return empty;
+        return states[parentId].childList;
     }
 };
 

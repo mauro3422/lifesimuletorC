@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 #include "raylib.h"
 #include "raymath.h"
 #include "../ecs/components.hpp"
@@ -139,6 +140,7 @@ public:
 
             states[bestHostId].childCount++;
             states[bestHostId].occupiedSlots |= (1u << bestSlotIdx);
+            states[bestHostId].childList.push_back(sourceId);  // Phase 43: sync childList
 
             MolecularHierarchy::propagateMoleculeId(sourceId, states);
             return SUCCESS;
@@ -157,6 +159,9 @@ public:
         if (parentId != -1) {
             states[parentId].childCount--;
             states[parentId].occupiedSlots &= ~(1u << states[entityId].parentSlotIndex);
+            // Phase 43: remove from childList
+            auto& list = states[parentId].childList;
+            list.erase(std::remove(list.begin(), list.end(), entityId), list.end());
         } else if (partnerId != -1) {
             states[partnerId].cycleBondId = -1;
             states[entityId].cycleBondId = -1;

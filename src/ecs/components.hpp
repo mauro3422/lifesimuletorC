@@ -2,6 +2,7 @@
 #define COMPONENTS_HPP
 
 #include <cstdint>
+#include <vector>
 
 /**
  * DATA REPRESENTATION (ECS)
@@ -45,6 +46,7 @@ struct StateComponent {
     bool isShielded = false;
     int childCount = 0;
     uint32_t occupiedSlots = 0;
+    std::vector<int> childList;    // Phase 43: O(1) access to children
 
     // === RING GROUP ===
     int cycleBondId = -1;

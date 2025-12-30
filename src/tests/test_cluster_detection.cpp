@@ -104,7 +104,7 @@ bool testSingleClusterFormation(bool verbose) {
     // Player placeholder (index 0)
     transforms.push_back({0, 0, 0, 0, 0, 0, 0});
     atoms.push_back({1, 0});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     
     // Spawn 6 carbons in a tight circle (within bonding range)
     float centerX = -800.0f, centerY = 0.0f;
@@ -117,7 +117,7 @@ bool testSingleClusterFormation(bool verbose) {
         
         transforms.push_back({x, y, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});  // Carbon
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     std::cout << " Initial: 6 isolated carbons at radius " << spawnRadius << std::endl;
@@ -173,7 +173,7 @@ bool testTwoSeparateClusters(bool verbose) {
     // Player placeholder
     transforms.push_back({0, 0, 0, 0, 0, 0, 0});
     atoms.push_back({1, 0});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     
     // Group A: 3 carbons at (-800, 0)
     float groupAx = -800.0f, groupAy = 0.0f;
@@ -184,7 +184,7 @@ bool testTwoSeparateClusters(bool verbose) {
         
         transforms.push_back({x, y, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     // Group B: 3 carbons at (-500, 0) - 300 units away (outside bonding range)
@@ -196,7 +196,7 @@ bool testTwoSeparateClusters(bool verbose) {
         
         transforms.push_back({x, y, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     std::cout << " Initial: 2 groups of 3 carbons, 300 units apart" << std::endl;
@@ -239,7 +239,7 @@ bool testClusterBreakDetection(bool verbose) {
     // Player placeholder
     transforms.push_back({0, 0, 0, 0, 0, 0, 0});
     atoms.push_back({1, 0});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     
     // Create 4 carbons and manually bond them: 1->2->3->4
     for (int i = 0; i < 4; i++) {
@@ -248,7 +248,7 @@ bool testClusterBreakDetection(bool verbose) {
         
         transforms.push_back({x, y, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     // Manually bond them
@@ -285,7 +285,7 @@ bool testBondFormationSpeed(bool verbose) {
     // Player placeholder
     transforms.push_back({0, 0, 0, 0, 0, 0, 0});
     atoms.push_back({1, 0});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     
     // Spawn 6 carbons at random positions within bonding range
     float centerX = -800.0f, centerY = 0.0f;
@@ -297,7 +297,7 @@ bool testBondFormationSpeed(bool verbose) {
         
         transforms.push_back({x, y, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     PhysicsEngine physics;
@@ -357,7 +357,7 @@ bool testChaosReformation(bool verbose) {
     // Player placeholder
     transforms.push_back({0, 0, 0, 0, 0, 0, 0});
     atoms.push_back({1, 0});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     
     // Spawn 6 carbons in a cluster
     float centerX = -800.0f, centerY = 0.0f;
@@ -368,7 +368,7 @@ bool testChaosReformation(bool verbose) {
         
         transforms.push_back({x, y, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     PhysicsEngine physics;
@@ -480,14 +480,14 @@ bool testRapidBreakReform(bool verbose) {
     // Player placeholder
     transforms.push_back({0, 0, 0, 0, 0, 0, 0});
     atoms.push_back({1, 0});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     
     // Create a linear chain: 1-2-3-4
     for (int i = 0; i < 4; i++) {
         float x = -800.0f + i * 30.0f;
         transforms.push_back({x, 0, 0, 0, 0, 0, 0});
         atoms.push_back({6, 0.0f});
-        states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+        states.push_back(StateComponent{});
     }
     
     // Bond them: 1-2-3-4
