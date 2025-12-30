@@ -37,7 +37,7 @@ int spawnAtom(int atomicNumber, float x, float y) {
     TransformComponent t = {x, y, 0, 0, 0, 0, 0};
     transforms.push_back(t);
     atoms.push_back({atomicNumber, 0.0f});
-    states.push_back({false, -1, -1, -1, 1.0f, false, 0, 0, -1, false, 0, -1, -1, false, 0.0f});
+    states.push_back(StateComponent{});
     return id;
 }
 
