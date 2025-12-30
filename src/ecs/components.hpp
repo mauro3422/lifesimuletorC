@@ -57,9 +57,10 @@ struct StateComponent {
 
     // === PHYSICS GROUP ===
     bool justBonded = false;
+    float releaseTimer = 0.0f; // Time since isShielded was set back to false
 
     // === UTILITY METHODS ===
-    bool isLocked() const { return isClustered && dockingProgress >= 0.99f; }
+    bool isLocked() const { return isClustered && dockingProgress >= 0.99f && !isShielded; }
 };
 
 #endif

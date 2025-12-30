@@ -1,3 +1,41 @@
+## [Phase 42: Tractor Beam & Bonding Stability] - 2025-12-30
+
+### Critical Bug Fixes
+- **Ghost cycleBondId**: Fixed orphaned cycle bonds blocking reformation
+  - `RingChemistry::invalidateRing` now clears `cycleBondId` on both partners
+  - Previously: atoms kept phantom bonds after ring destruction
+- **Shield Propagation**: Tractor beam now shields ALL molecule members, not just root
+  - `Player.cpp`: `getMoleculeMembers()` called for full shield coverage
+  - `Player.cpp`: Shield cleanup uses `lastRootId` to track molecule changes
+- **Spontaneous Bonding Fix**: Fixed shield check blocking valid bonds
+  - `AutonomousBonding.hpp`: Changed from root-based to atom-based shield check
+  - Atoms can now rebond immediately after tractor release
+
+### New Test Suite: `test_cluster_detection.cpp`
+- `testSingleClusterFormation`: 6 atoms → 1 cluster with 6 bonds
+- `testTwoSeparateClusters`: Distant groups stay separate
+- `testClusterBreakDetection`: Bond break → 2 clusters detected
+- `testBondFormationSpeed`: First bond in 1 frame
+- `testChaosReformation`: 3 cycles of break-move-reform (stress test)
+- `testRapidBreakReform`: 10 rapid break/reform cycles
+
+### Test Results
+```
+CLUSTER DETECTION TEST SUITE: 6/6 tests passed
+  Chaos Reformation: 6 bonds reformed after complete destruction
+  Rapid Break-Reform: 10/10 successful cycles
+```
+
+### Files Modified
+- `src/physics/RingChemistry.hpp`: cycleBondId cleanup in invalidateRing
+- `src/physics/AutonomousBonding.hpp`: Atom-based shield check
+- `src/gameplay/Player.hpp`: Added `lastRootId` tracking
+- `src/gameplay/Player.cpp`: Full molecule shielding
+- `src/gameplay/TractorBeam.cpp`: Sticky lock implementation
+- `src/ecs/components.hpp`: `isLocked()` returns false when shielded
+
+---
+
 ## [Phase 41: Gradual Animation System] - 2025-12-29
 
 ### Fixed

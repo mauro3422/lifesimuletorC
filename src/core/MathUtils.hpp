@@ -118,21 +118,11 @@ namespace MathUtils {
 
 
 
-    // Finds the root of a molecular structure given an entity index
-    // O(depth) where depth is typically < 10
+    // Finds the root of a molecular structure (Cluster ID)
+    // O(1) using the cached moleculeId (Phase 42 Unification)
     inline int findMoleculeRoot(int entityId, const std::vector<StateComponent>& states) {
         if (entityId < 0 || entityId >= (int)states.size()) return -1;
-        
-        int rootId = entityId;
-        int safetyCounter = 0;
-        const int MAX_DEPTH = 100;
-        
-        while (states[rootId].parentEntityId != -1 && safetyCounter < MAX_DEPTH) {
-            rootId = states[rootId].parentEntityId;
-            safetyCounter++;
-        }
-        
-        return rootId;
+        return (states[entityId].moleculeId != -1) ? states[entityId].moleculeId : entityId;
     }
 
     // Simple propagation - just set the immediate bonded atom's moleculeId

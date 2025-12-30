@@ -343,12 +343,6 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     // 0. Update environment
     environment.update(transforms, states, dt); 
 
-    // 0.5 Precalculate roots (Phase 28 Optimization)
-    std::vector<int> rootCache(transforms.size());
-    for (int i = 0; i < (int)transforms.size(); i++) {
-        rootCache[i] = MathUtils::findMoleculeRoot(i, states);
-    }
-
     // 0.6 Ring integrity validation
     validateRingIntegrity(states);
 
@@ -362,13 +356,13 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     applyCycleBonds(dt, transforms, atoms, states, db);
 
     // 4. Structural dynamics (rings & rigid groups)
-    StructuralPhysics::applyRingDynamics(dt, transforms, atoms, states, rootCache);
+    StructuralPhysics::applyRingDynamics(dt, transforms, atoms, states);
 
     // 5. Folding & affinity (catalytic synthesis)
-    StructuralPhysics::applyFoldingAndAffinity(dt, transforms, atoms, states, environment, rootCache);
+    StructuralPhysics::applyFoldingAndAffinity(dt, transforms, atoms, states, environment);
 
     // 6. Spontaneous bonding (autonomous evolution)
-    BondingSystem::updateSpontaneousBonding(states, atoms, transforms, grid, rootCache, &environment, tractedEntityId);
+    BondingSystem::updateSpontaneousBonding(states, atoms, transforms, grid, &environment, tractedEntityId);
 
     // 7. Integration, friction, and boundaries
     integrateMotion(dt, transforms, states);
@@ -378,6 +372,13 @@ void PhysicsEngine::step(float dt, std::vector<TransformComponent>& transforms,
     if (diagCounter > 120) diagCounter = 0;
     grid.update(transforms);
 
-    // 9. Reset frame-local flags
-    for (auto& s : states) s.justBonded = false;
+    // 9. Reset frame-local flags and update timers
+    for (auto& s : states) {
+        s.justBonded = false;
+        if (s.isShielded) {
+            s.releaseTimer = 0.0f; // Reset during shield
+        } else {
+            s.releaseTimer += dt;  // Accumulate post-release
+        }
+    }
 }

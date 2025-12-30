@@ -24,7 +24,7 @@ void TractorBeam::update(const Vector2& mouseWorldPos, bool isInputActive,
 
     targetPos = mouseWorldPos; 
 
-    // TARGET LOCK: If we already have a target, keep the ID as long as active=true
+    // STICKY LOCK (Phase 42): If we have a target and beam is still active, don't search.
     if (targetIndex != -1) {
         return; 
     }

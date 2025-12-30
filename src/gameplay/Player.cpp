@@ -9,6 +9,7 @@
 Player::Player(int entityIndex) : playerIndex(entityIndex) {
     atomicNumber = 1; 
     speed = Config::PLAYER_SPEED;
+    lastRootId = -1;
 }
 
 void Player::update(float dt, const InputHandler& input, 
@@ -44,16 +45,21 @@ void Player::update(float dt, const InputHandler& input,
     tractor.update(mouseWorld, input.isTractorBeamActive(), worldTransforms, states, atoms, grid);
     
     int currentTarget = tractor.getTargetIndex();
-    if (lastTarget != -1 && lastTarget != currentTarget) {
-        if (lastTarget < (int)states.size()) {
-            states[lastTarget].isShielded = false;
-            // FIX #2: Clear shield for the whole hierarchy to prevent "Ghost Shield"
-            int root = MathUtils::findMoleculeRoot(lastTarget, states);
-            if (root != -1 && root < (int)states.size()) {
-                states[root].isShielded = false;
+    int currentRoot = (currentTarget != -1) ? MathUtils::findMoleculeRoot(currentTarget, states) : -1;
+
+    // DETECT CHANGE: Target changed OR Root changed (due to bond breaks while dragging)
+    if (lastTarget != -1 && (currentTarget != lastTarget || currentRoot != lastRootId)) {
+        if (lastRootId != -1 && lastRootId < (int)states.size()) {
+            // FIX: Clear shield for EVERY member of the MOLECULE associated with the OLD root
+            std::vector<int> members = MathUtils::getMoleculeMembers(lastRootId, states);
+            for (int mIdx : members) {
+                states[mIdx].isShielded = false;
             }
+            // Explicitly clear old root just in case getMoleculeMembers didn't catch it
+            states[lastRootId].isShielded = false; 
         }
     }
+    lastRootId = currentRoot;
 
     // 4. AUTO-DOCKING (delegated to DockingSystem)
     if (tractor.isActive()) {
@@ -94,7 +100,11 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
         }
     }
     
-    states[targetIdx].isShielded = true;
+    // FIX (Phase 42): Shield ALL members of the molecule, not just root
+    std::vector<int> members = MathUtils::getMoleculeMembers(targetIdx, states);
+    for (int mIdx : members) {
+        states[mIdx].isShielded = true;
+    }
     auto& targetTr = worldTransforms[targetIdx];
     Vector2 tPos = tractor.getTargetPosition();
     

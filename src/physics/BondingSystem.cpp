@@ -46,13 +46,12 @@ void BondingSystem::updateHierarchy(std::vector<TransformComponent>& transforms,
 }
 
 void BondingSystem::updateSpontaneousBonding(std::vector<StateComponent>& states,
-                                     std::vector<AtomComponent>& atoms,
-                                     std::vector<TransformComponent>& transforms,
-                                     const SpatialGrid& grid,
-                                     const std::vector<int>& rootCache,
-                                     EnvironmentManager* env,
-                                     int tractedEntityId) {
-    ::AutonomousBonding::updateSpontaneousBonding(states, atoms, transforms, grid, rootCache, env, tractedEntityId);
+                                             std::vector<AtomComponent>& atoms,
+                                             std::vector<TransformComponent>& transforms,
+                                             const SpatialGrid& grid,
+                                             EnvironmentManager* env,
+                                             int tractedEntityId) {
+    ::AutonomousBonding::updateSpontaneousBonding(states, atoms, transforms, grid, env, tractedEntityId);
 }
 
 void BondingSystem::breakBond(int entityId, std::vector<StateComponent>& states, 
@@ -64,23 +63,31 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
                                   std::vector<AtomComponent>& atoms) {
     if (entityId < 0 || entityId >= (int)states.size()) return;
 
+    TraceLog(LOG_INFO, "[BOND_SYSTEM] Isolating Atom %d...", entityId);
+
     // 1. Break cycle bond if exists - and clean up ALL ring members using centralized invalidation
     if (states[entityId].cycleBondId != -1 || states[entityId].isInRing) {
         int ringId = states[entityId].ringInstanceId;
+        TraceLog(LOG_INFO, "  - Breaking Ring %d", ringId);
         RingChemistry::invalidateRing(ringId, states);
     }
 
     // 2. Break connection with parent
     if (states[entityId].isClustered) {
+        TraceLog(LOG_INFO, "  - Breaking Parent Bond");
         ::BondingCore::breakBond(entityId, states, atoms);
     }
 
     // 3. Break connections with children
+    int breakCount = 0;
     for (int i = 0; i < (int)states.size(); i++) {
         if (states[i].parentEntityId == entityId) {
+            TraceLog(LOG_INFO, "  - Found Child: Atom %d", i);
             ::BondingCore::breakBond(i, states, atoms);
+            breakCount++;
         }
     }
+    TraceLog(LOG_INFO, "[BOND_SYSTEM] Isolation of %d complete. Broke %d child bonds.", entityId, breakCount);
 }
 
 int BondingSystem::findLastChild(int parentId, const std::vector<StateComponent>& states) {
@@ -110,6 +117,6 @@ BondError BondingSystem::tryCycleBond(int i, int j, std::vector<StateComponent>&
     return (BondError)::RingChemistry::tryCycleBond(i, j, states, atoms, transforms);
 }
 
-void BondingSystem::propagateMoleculeId(int entityId, int newMoleculeId, std::vector<StateComponent>& states) {
-    ::MolecularHierarchy::propagateMoleculeId(entityId, newMoleculeId, states);
+void BondingSystem::propagateMoleculeId(int entityId, std::vector<StateComponent>& states) {
+    ::MolecularHierarchy::propagateMoleculeId(entityId, states);
 }

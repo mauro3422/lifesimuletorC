@@ -28,8 +28,9 @@ public:
                                   std::vector<AtomComponent>& atoms,
                                   std::vector<TransformComponent>& transforms) {
         
-        // 1. Get all atoms in this molecule
-        std::vector<int> members = getMoleculeMembers(rootId, states);
+        // 1. Get all atoms in this molecule (Cluster-aware)
+        int molRootId = states[rootId].moleculeId;
+        std::vector<int> members = MathUtils::getMoleculeMembers(molRootId != -1 ? molRootId : rootId, states);
         if (members.size() < 4) return false;  // Minimum for any ring
         
         // 2. Group by atomic number
@@ -58,8 +59,6 @@ public:
                     if (reorganizeAndClose(candidates, states, atoms, transforms, def)) {
                         return true;
                     }
-                } else {
-                    TraceLog(LOG_INFO, "[STRUCTURE] Cannot form ring: some atoms already in ring");
                 }
             }
         }
@@ -67,39 +66,6 @@ public:
         return false;
     }
 
-private:
-    /**
-     * Get all atoms in a molecule by traversing hierarchy
-     */
-    static std::vector<int> getMoleculeMembers(int rootId, const std::vector<StateComponent>& states) {
-        std::vector<int> members;
-        std::vector<bool> visited(states.size(), false);
-        std::vector<int> stack = {rootId};
-        
-        while (!stack.empty()) {
-            int curr = stack.back();
-            stack.pop_back();
-            
-            if (curr < 0 || curr >= (int)states.size() || visited[curr]) continue;
-            visited[curr] = true;
-            members.push_back(curr);
-            
-            // Add parent
-            if (states[curr].parentEntityId != -1 && !visited[states[curr].parentEntityId]) {
-                stack.push_back(states[curr].parentEntityId);
-            }
-            
-            // Add children (by scanning)
-            for (int i = 0; i < (int)states.size(); i++) {
-                if (states[i].parentEntityId == curr && !visited[i]) {
-                    stack.push_back(i);
-                }
-            }
-        }
-        
-        return members;
-    }
-    
     /**
      * Check if N atoms can form a ring (no existing cycle bonds, enough are connected)
      */

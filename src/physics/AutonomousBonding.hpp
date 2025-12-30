@@ -37,7 +37,6 @@ public:
                                          std::vector<AtomComponent>& atoms,
                                          std::vector<TransformComponent>& transforms,
                                          const SpatialGrid& grid,
-                                         const std::vector<int>& rootCache,
                                          EnvironmentManager* env = nullptr,
                                          int tractedRoot = -1) {
         
@@ -46,7 +45,7 @@ public:
         std::map<int, std::vector<int>> rings;
         for (size_t i = 1; i < states.size(); i++) { // Skip player
             if (states[i].isInRing && states[i].ringInstanceId != -1) {
-                // Check rootCache to group full molecules is done later
+                // Check moleculeId to group full molecules is done later
                 rings[states[i].ringInstanceId].push_back((int)i);
             }
         }
@@ -55,10 +54,10 @@ public:
         // Note: O(R^2) is fine for small N. For large N, use Grid.
         for (auto it1 = rings.begin(); it1 != rings.end(); ++it1) {
             for (auto it2 = std::next(it1); it2 != rings.end(); ++it2) {
-                // Skip if same molecule (already bonded)
+                // Check moleculeId to group full molecules is done later
                 int repA = it1->second[0];
                 int repB = it2->second[0];
-                if (rootCache[repA] == rootCache[repB]) continue;
+                if (states[repA].moleculeId == states[repB].moleculeId) continue;
 
                 // Calculate Centroids
                 Vector3 cA = getCentroid(it1->second, transforms);
@@ -110,7 +109,7 @@ public:
         // When an atom is connected to a ring, apply alignment force to prepare for next square formation
         for (int i = 1; i < (int)states.size(); i++) {
             // Skip atoms dragged by tractor or already in a ring
-            if (tractedRoot != -1 && rootCache[i] == tractedRoot) continue;
+            if (tractedRoot != -1 && states[i].moleculeId == tractedRoot) continue;
             if (states[i].isInRing) continue;
             if (!states[i].isClustered) continue;
             
@@ -248,8 +247,8 @@ public:
             if (states[i].justBonded) continue;
             if (states[i].isLocked() && states[i].isInRing) continue;
 
-            // Skip atoms being dragged by tractor
-            if (tractedRoot != -1 && (rootCache[i] == tractedRoot)) continue;
+            // Skip the exact atom being dragged by tractor (but allow its molecule to bond)
+            if (tractedRoot != -1 && i == tractedRoot) continue;
 
             std::vector<int> neighbors = grid.getNearby({transforms[i].x, transforms[i].y}, Config::BOND_AUTO_RANGE * 1.5f);
 
@@ -275,8 +274,11 @@ public:
                 float currentRange = Config::BOND_AUTO_RANGE * rangeMultiplier;
                 
                 if (distSq < currentRange * currentRange) {
-                    int rootI = rootCache[i];
-                    int rootJ = rootCache[j];
+                    // DYNAMIC ROOT DETECTION (Phase 42)
+                    // moleculeId remains stable since propagation is triggered immediately after bond changes.
+                    // Using findRoot directly for current state accuracy.
+                    int rootI = MathUtils::findMoleculeRoot(i, states);
+                    int rootJ = MathUtils::findMoleculeRoot(j, states);
                     bool isSameMolecule = (rootI == rootJ);
 
                     if (isSameMolecule) {
@@ -291,9 +293,16 @@ public:
                         }
                     } else {
                         // INTER-MOLECULAR BONDING
-                        if (rootI != 0 && rootJ != 0 && !states[rootI].isShielded && !states[rootJ].isShielded) {
+                        // FIX (Phase 42): Check if the SPECIFIC atoms (not roots) are shielded
+                        if (rootI != 0 && rootJ != 0 && !states[i].isShielded && !states[j].isShielded) {
+                            // GRACE PERIOD TOLERANCE (Phase 42)
+                            // If an atom was recently released from a tractor beam (releaseTimer < 2.0s),
+                            // be more permissive with bonding angles to allow "forced" connections.
+                            bool inGracePeriod = (states[i].releaseTimer < 2.0f || states[j].releaseTimer < 2.0f);
+                            float toleranceMultiplier = inGracePeriod ? 0.2f : 1.0f; // Much wider angle in grace period
+
                             // Standard bonding - let atoms bond freely
-                            if ((BondError)BondingCore::tryBond(i, j, states, atoms, transforms) == BondError::SUCCESS) {
+                            if ((BondError)BondingCore::tryBond(i, j, states, atoms, transforms, inGracePeriod, toleranceMultiplier) == BondError::SUCCESS) {
                                 states[i].justBonded = true;
                                 states[j].justBonded = true;
                                 break; 

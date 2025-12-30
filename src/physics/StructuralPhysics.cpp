@@ -13,8 +13,7 @@ namespace StructuralPhysics {
 void applyRingDynamics(float dt, 
                       std::vector<TransformComponent>& transforms,
                       const std::vector<AtomComponent>& atoms,
-                      std::vector<StateComponent>& states,
-                      const std::vector<int>& rootCache) {
+                      std::vector<StateComponent>& states) {
     
     // Phase 28: Small optimization, stack.reserve
     static std::vector<int> stack;
@@ -218,8 +217,7 @@ void applyFoldingAndAffinity(float dt,
                             std::vector<TransformComponent>& transforms,
                             const std::vector<AtomComponent>& atoms,
                             std::vector<StateComponent>& states,
-                            EnvironmentManager& environment,
-                            const std::vector<int>& rootCache) {
+                            EnvironmentManager& environment) {
     
     // --- CARBON AFFINITY ---
     std::vector<int> seekingCarbons;
@@ -247,8 +245,8 @@ void applyFoldingAndAffinity(float dt,
             if (d2 > Config::Physics::CARBON_AFFINITY_MIN_DIST * Config::Physics::CARBON_AFFINITY_MIN_DIST && 
                 d2 < Config::Physics::CARBON_AFFINITY_MAX_DIST * Config::Physics::CARBON_AFFINITY_MAX_DIST) {
                 float dist = std::sqrt(d2);
-                int root1 = rootCache[c1];
-                int root2 = rootCache[c2];
+                int root1 = states[c1].moleculeId;
+                int root2 = states[c2].moleculeId;
                 float affinityStrength = (root1 != root2) ? Config::Physics::CARBON_AFFINITY_STRENGTH_EXTERNAL : Config::Physics::CARBON_AFFINITY_STRENGTH_INTERNAL;
                 float nx = dx / dist;
                 float ny = dy / dist;
@@ -275,8 +273,8 @@ void applyFoldingAndAffinity(float dt,
         for (size_t b = a + 1; b < terminals.size(); b++) {
             int t1 = terminals[a];
             int t2 = terminals[b];
-            int root1 = rootCache[t1];
-            int root2 = rootCache[t2];
+            int root1 = states[t1].moleculeId;
+            int root2 = states[t2].moleculeId;
             if (root1 != root2) continue; 
             
             float dx = transforms[t2].x - transforms[t1].x;

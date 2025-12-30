@@ -1,7 +1,6 @@
 #ifndef BONDING_CORE_HPP
 #define BONDING_CORE_HPP
 
-#include <vector>
 #include <cassert>
 #include <cmath>
 #include "raylib.h"
@@ -90,14 +89,20 @@ public:
                        bool forced = false,
                        float angleMultiplier = 1.0f) {
         if (sourceId < 0 || targetId < 0 || sourceId == targetId) return INTERNAL_ERROR;
-        if (states[sourceId].isLocked()) return ALREADY_CLUSTERED;
+        // ALLOWANCE (Phase 42): Clustered atoms can be a source IF they are a root (the whole molecule attaches)
+        // or if they are currently docking (forming). Full clusters (locked) can only be targets.
+        if (states[sourceId].isLocked() && states[sourceId].parentEntityId != -1) return ALREADY_CLUSTERED;
 
-        int molRootId = MolecularHierarchy::findRoot(targetId, states);
+        int molRootId = states[targetId].moleculeId;
         
         std::vector<int> candidates;
-        for (int i = 0; i < (int)states.size(); i++) {
-            if (MolecularHierarchy::findRoot(i, states) == molRootId) {
-                candidates.push_back(i);
+        if (molRootId == -1) {
+            candidates.push_back(targetId);
+        } else {
+            for (int i = 0; i < (int)states.size(); i++) {
+                if (states[i].moleculeId == molRootId) {
+                    candidates.push_back(i);
+                }
             }
         }
 
@@ -135,7 +140,7 @@ public:
             states[bestHostId].childCount++;
             states[bestHostId].occupiedSlots |= (1u << bestSlotIdx);
 
-            MolecularHierarchy::propagateMoleculeId(sourceId, molRootId, states);
+            MolecularHierarchy::propagateMoleculeId(sourceId, states);
             return SUCCESS;
         }
 
@@ -143,26 +148,43 @@ public:
     }
 
     static void breakBond(int entityId, std::vector<StateComponent>& states, std::vector<AtomComponent>& atoms) {
-        if (entityId < 0 || entityId >= (int)states.size() || !states[entityId].isClustered) return;
+        if (entityId < 0 || entityId >= (int)states.size()) return;
+        if (!states[entityId].isClustered) return;
 
         int parentId = states[entityId].parentEntityId;
+        int partnerId = states[entityId].cycleBondId;
+
         if (parentId != -1) {
             states[parentId].childCount--;
             states[parentId].occupiedSlots &= ~(1u << states[entityId].parentSlotIndex);
+        } else if (partnerId != -1) {
+            states[partnerId].cycleBondId = -1;
+            states[entityId].cycleBondId = -1;
         }
 
-        // BUG FIX: Clean up ring state when bond breaks using centralized RingChemistry
-        if (states[entityId].cycleBondId != -1 || states[entityId].isInRing) {
+        // Clean up all ring/structural states
+        if (partnerId != -1 || states[entityId].isInRing) {
             int ringId = states[entityId].ringInstanceId;
             RingChemistry::invalidateRing(ringId, states);
         }
 
-        states[entityId].isClustered = false;
+        // Reset Hierarchy (Delegated to propagateMoleculeId for consistency)
         states[entityId].parentEntityId = -1;
-        states[entityId].moleculeId = entityId; // Each isolated atom is its own root
+        states[entityId].parentSlotIndex = -1;
+        states[entityId].moleculeId = entityId; 
         states[entityId].dockingProgress = 0.0f;
+        states[entityId].occupiedSlots = 0; // Isolated atoms have no children
+        states[entityId].childCount = 0;
 
-        MolecularHierarchy::propagateMoleculeId(entityId, entityId, states);
+        // Propagate from the side that was broken
+        MolecularHierarchy::propagateMoleculeId(entityId, states);
+        
+        // Propagate from the OTHER side to ensure both new clusters are updated (Phase 42)
+        if (parentId != -1) {
+            MolecularHierarchy::propagateMoleculeId(parentId, states);
+        } else if (partnerId != -1) {
+            MolecularHierarchy::propagateMoleculeId(partnerId, states);
+        }
     }
 };
 

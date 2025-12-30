@@ -83,8 +83,25 @@ void Renderer25D::drawAtoms(const std::vector<TransformComponent>& transforms, c
             float scale = 1.0f + (((trI.z + trJ.z) / 2.0f) * Config::DEPTH_SCALE_FACTOR);
             if (scale < Config::RENDER_MIN_SCALE) scale = Config::RENDER_MIN_SCALE;
 
-            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale * 2.0f, BLACK);
-            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * scale * 2.0f, SKYBLUE);
+            // Only draw as SKYBLUE and thick if BOTH atoms are in a recognized ring (Phase 42 fix)
+            bool isActiveRing = states[i].isInRing && states[j].isInRing;
+            
+            Color bondColor;
+            float thicknessMult = 1.0f;
+            if (isActiveRing) {
+                bondColor = SKYBLUE;
+                thicknessMult = 2.0f;
+            } else {
+                bondColor = { 
+                    (unsigned char)((elI.color.r + elJ.color.r) / 2),
+                    (unsigned char)((elI.color.g + elJ.color.g) / 2),
+                    (unsigned char)((elI.color.b + elJ.color.b) / 2),
+                    255 
+                };
+            }
+
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_BG * scale * thicknessMult, BLACK);
+            DrawLineEx(start, end, Config::RENDER_BOND_THICKNESS_FG * scale * thicknessMult, bondColor);
         }
     }
 

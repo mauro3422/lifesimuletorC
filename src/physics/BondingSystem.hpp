@@ -46,7 +46,6 @@ public:
                                          std::vector<AtomComponent>& atoms,
                                          std::vector<TransformComponent>& transforms,
                                          const SpatialGrid& grid,
-                                         const std::vector<int>& rootCache,
                                          EnvironmentManager* env = nullptr,
                                          int tractedEntityId = -1);
 
@@ -73,7 +72,7 @@ public:
                                  std::vector<AtomComponent>& atoms, 
                                  std::vector<TransformComponent>& transforms);
 
-    static void propagateMoleculeId(int entityId, int newMoleculeId, std::vector<StateComponent>& states);
+    static void propagateMoleculeId(int entityId, std::vector<StateComponent>& states);
 };
 
 #endif

@@ -22,8 +22,7 @@ namespace StructuralPhysics {
     void applyRingDynamics(float dt, 
                           std::vector<TransformComponent>& transforms,
                           const std::vector<AtomComponent>& atoms,
-                          std::vector<StateComponent>& states,
-                          const std::vector<int>& rootCache);
+                          std::vector<StateComponent>& states);
 
     /**
      * Applies folding forces to terminals and carbon affinity pulls.
@@ -32,8 +31,7 @@ namespace StructuralPhysics {
                                 std::vector<TransformComponent>& transforms,
                                 const std::vector<AtomComponent>& atoms,
                                 std::vector<StateComponent>& states,
-                                EnvironmentManager& environment,
-                                const std::vector<int>& rootCache);
+                                EnvironmentManager& environment);
 
 }
 

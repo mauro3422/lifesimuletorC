@@ -10,8 +10,8 @@ namespace Config {
     inline constexpr float WORLD_BOUNCE = -0.5f;
     inline constexpr float BOND_COMPRESSION = 1.2f; 
     inline constexpr float BOND_SNAP_THRESHOLD = 0.45f;
-    inline constexpr float BOND_AUTO_RANGE = 55.0f; // Increased for better "grab" (was 50.0)
-    inline constexpr int BONDING_THROTTLE_FRAMES = 6;  // Execute every 6 frames (10 Hz) 
+    inline constexpr float BOND_AUTO_RANGE = 65.0f; // Increased for better "grab" (was 55.0)
+    inline constexpr int BONDING_THROTTLE_FRAMES = 2;  // Increased frequency to 30Hz (was 10Hz) 
     inline constexpr float THERMODYNAMIC_JITTER = 2.5f; // Increased from 0.5 to promote bending/mixing
     inline constexpr float GRID_CELL_SIZE = 100.0f;     
     inline constexpr float PHYSICS_EPSILON = 0.001f;

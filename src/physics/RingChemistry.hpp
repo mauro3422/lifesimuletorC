@@ -84,6 +84,9 @@ public:
         // PHYSICAL LINK
         states[i].cycleBondId = j;
         states[j].cycleBondId = i;
+        
+        // Synchronize cluster IDs
+        MolecularHierarchy::propagateMoleculeId(i, states);
 
         // STRUCTURAL TAGGING
         // FIX #3: Ring Instance ID Overflow Protection
@@ -268,12 +271,20 @@ public:
                 states[i].isInRing = false;
                 states[i].ringInstanceId = -1;
                 states[i].ringSize = 0;
+                
+                // FIX (Phase 42): Clear cycleBondId when ring is invalidated.
+                // This prevents "ghost bonds" from blocking spontaneous reformation.
+                int partner = states[i].cycleBondId;
+                if (partner != -1 && partner < (int)states.size()) {
+                    states[partner].cycleBondId = -1;
+                }
                 states[i].cycleBondId = -1;
+                
                 found = true;
             }
         }
         if (found) {
-            TraceLog(LOG_INFO, "[RING] Invalidated entire ring instance: %d", ringId);
+            TraceLog(LOG_INFO, "[RING] Invalidated entire ring instance metadata: %d", ringId);
         }
     }
 };

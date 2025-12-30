@@ -44,6 +44,7 @@ private:
     UndoManager undoManager;
     int atomicNumber;
     float speed;
+    int lastRootId = -1;
 };
 
 #endif
