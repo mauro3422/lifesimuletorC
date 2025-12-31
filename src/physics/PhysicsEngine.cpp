@@ -120,8 +120,13 @@ void PhysicsEngine::applyBondSprings(float dt,
                                      int diagCounter) {
     for (int i = 0; i < (int)transforms.size(); i++) {
         if (!states[i].isClustered || states[i].parentEntityId == -1) continue;
-
+        
+        // Phase 45: Skip internal springs for frozen structures (super-atom mode)
         int parentId = states[i].parentEntityId;
+        if (states[i].isFrozen && states[parentId].isFrozen &&
+            states[i].structureId != -1 && states[i].structureId == states[parentId].structureId) {
+            continue;  // Structure is rigid, no internal physics needed
+        }
         int slotIdx = states[i].parentSlotIndex;
 
         const Element& parentElem = db.getElement(atoms[parentId].atomicNumber);

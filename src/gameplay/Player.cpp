@@ -96,45 +96,54 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
     }
 
     // Break bonds on first capture (Phase 43 fix: also check ring/cycle bonds)
+    // Phase 45: CTRL modifier for structural movement mode
+    bool structuralMode = IsKeyDown(KEY_LEFT_CONTROL) || IsKeyDown(KEY_RIGHT_CONTROL);
+    bool isInFrozenStructure = states[idx].isFrozen && states[idx].structureId != -1;
+    
     if (tractor.becameActive()) {
         TraceLog(LOG_INFO, "[TRACTOR_DEBUG] === NEW CAPTURE: idx=%d ===", idx);
         TraceLog(LOG_INFO, "[TRACTOR_DEBUG] BEFORE: parent=%d, cycle=%d, molId=%d, clustered=%d, ring=%d, childCount=%d",
                  states[idx].parentEntityId, states[idx].cycleBondId, states[idx].moleculeId,
                  states[idx].isClustered ? 1 : 0, states[idx].isInRing ? 1 : 0, states[idx].childCount);
         
-        bool hasBonds = states[idx].parentEntityId != -1 ||
-                        states[idx].cycleBondId != -1 ||
-                        states[idx].isInRing ||
-                        states[idx].isClustered ||
-                        BondingSystem::findLastChild(idx, states) != -1;
-        
-        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] hasBonds=%d", hasBonds ? 1 : 0);
-        
-        if (hasBonds) {
-            // Get old members BEFORE breaking (to re-propagate them after)
-            std::vector<int> oldMembers = MathUtils::getMoleculeMembers(idx, states);
-            TraceLog(LOG_INFO, "[TRACTOR_DEBUG] oldMembers.size=%d", (int)oldMembers.size());
+        // Phase 45: Skip bond breaking if CTRL is held and atom is in frozen structure
+        if (structuralMode && isInFrozenStructure) {
+            TraceLog(LOG_INFO, "[TRACTOR_DEBUG] STRUCTURAL MODE: Moving structure %d as unit", states[idx].structureId);
+        } else {
+            bool hasBonds = states[idx].parentEntityId != -1 ||
+                            states[idx].cycleBondId != -1 ||
+                            states[idx].isInRing ||
+                            states[idx].isClustered ||
+                            BondingSystem::findLastChild(idx, states) != -1;
             
-            BondingSystem::breakAllBonds(idx, states, atoms);
+            TraceLog(LOG_INFO, "[TRACTOR_DEBUG] hasBonds=%d", hasBonds ? 1 : 0);
             
-            // Re-propagate moleculeId for remaining structure members
-            for (int oldId : oldMembers) {
-                if (oldId != idx && states[oldId].isClustered) {
-                    BondingSystem::propagateMoleculeId(oldId, states);
+            if (hasBonds) {
+                // Get old members BEFORE breaking (to re-propagate them after)
+                std::vector<int> oldMembers = MathUtils::getMoleculeMembers(idx, states);
+                TraceLog(LOG_INFO, "[TRACTOR_DEBUG] oldMembers.size=%d", (int)oldMembers.size());
+                
+                BondingSystem::breakAllBonds(idx, states, atoms);
+                
+                // Re-propagate moleculeId for remaining structure members
+                for (int oldId : oldMembers) {
+                    if (oldId != idx && states[oldId].isClustered) {
+                        BondingSystem::propagateMoleculeId(oldId, states);
+                    }
                 }
             }
+            
+            TraceLog(LOG_INFO, "[TRACTOR_DEBUG] AFTER: parent=%d, cycle=%d, molId=%d, clustered=%d, ring=%d, childCount=%d",
+                     states[idx].parentEntityId, states[idx].cycleBondId, states[idx].moleculeId,
+                     states[idx].isClustered ? 1 : 0, states[idx].isInRing ? 1 : 0, states[idx].childCount);
+            
+            // Verify isolation
+            bool isolated = (states[idx].parentEntityId == -1) && 
+                            (states[idx].cycleBondId == -1) &&
+                            (states[idx].childList.empty());
+            TraceLog(LOG_INFO, "[TRACTOR_DEBUG] ISOLATED=%d (childList.size=%d)", 
+                     isolated ? 1 : 0, (int)states[idx].childList.size());
         }
-        
-        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] AFTER: parent=%d, cycle=%d, molId=%d, clustered=%d, ring=%d, childCount=%d",
-                 states[idx].parentEntityId, states[idx].cycleBondId, states[idx].moleculeId,
-                 states[idx].isClustered ? 1 : 0, states[idx].isInRing ? 1 : 0, states[idx].childCount);
-        
-        // Verify isolation
-        bool isolated = (states[idx].parentEntityId == -1) && 
-                        (states[idx].cycleBondId == -1) &&
-                        (states[idx].childList.empty());
-        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] ISOLATED=%d (childList.size=%d)", 
-                 isolated ? 1 : 0, (int)states[idx].childList.size());
     }
     
     // Always shield and move the CLICKED atom (idx), not any root
@@ -146,6 +155,8 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
     float dy = tPos.y - targetTr.y;
     float dist = MathUtils::dist(tPos, Vector2{targetTr.x, targetTr.y});
 
+    // Calculate velocity for the target atom
+    float newVx = 0, newVy = 0;
     if (dist > 5.0f) {
         targetTr.vx *= Config::TRACTOR_DAMPING; 
         targetTr.vy *= Config::TRACTOR_DAMPING;
@@ -164,10 +175,25 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
         float jitterMag = (1.0f - (dist / Config::TRACTOR_JITTER_GRADIENT)) * Config::TRACTOR_JITTER_INTENSITY;
         if (jitterMag < 0) jitterMag = 0;
         
-        targetTr.vx += (steerX - targetTr.vx) * Config::TRACTOR_STEER_FACTOR + (MathUtils::getJitter() * jitterMag);
-        targetTr.vy += (steerY - targetTr.vy) * Config::TRACTOR_STEER_FACTOR + (MathUtils::getJitter() * jitterMag);
+        newVx = (steerX - targetTr.vx) * Config::TRACTOR_STEER_FACTOR + (MathUtils::getJitter() * jitterMag);
+        newVy = (steerY - targetTr.vy) * Config::TRACTOR_STEER_FACTOR + (MathUtils::getJitter() * jitterMag);
+        
+        targetTr.vx += newVx;
+        targetTr.vy += newVy;
     } else {
         targetTr.vx *= Config::TRACTOR_HOLD_DAMPING;
         targetTr.vy *= Config::TRACTOR_HOLD_DAMPING;
+    }
+    
+    // Phase 45: If in structural mode, apply same velocity to ALL atoms in structure
+    if (structuralMode && isInFrozenStructure) {
+        int structId = states[idx].structureId;
+        for (int i = 0; i < (int)worldTransforms.size(); i++) {
+            if (i != idx && states[i].structureId == structId && states[i].isFrozen) {
+                states[i].isShielded = true;  // Shield all structure atoms
+                worldTransforms[i].vx = targetTr.vx;
+                worldTransforms[i].vy = targetTr.vy;
+            }
+        }
     }
 }

@@ -1,3 +1,27 @@
+## [Phase 45: Super-Atom & Structural Movement] - 2025-12-31
+
+### New Features
+- **Super-Atom System (Rigid Structures)**: Completed rings are now "frozen" into rigid bodies.
+  - Internal springs are skipped in `PhysicsEngine` once a structure is frozen.
+  - New `structureId` and `isFrozen` fields in `StateComponent`.
+  - Automatic "Freeze Trigger" in `StructuralPhysics` after collective snap completion.
+- **Structural Movement Mode (CTRL Modifier)**:
+  - **Normal Click**: Isolate individual atom (break all bonds).
+  - **CTRL + Click**: Drag the entire frozen structure as a single unit without breaking internal bonds.
+  - All atoms in the structure receive the same velocity and shielding during structural movement.
+
+### Technical Improvements
+- **Rigid Body Optimization**: Reduced physics calculations for completed rings by skipping internal harmonic springs.
+- **Improved Coordination**: Synchronized `isShielded` state across all atoms in a structure when dragging with CTRL.
+
+### Files Modified
+- `src/ecs/components.hpp`: Added `structureId` and `isFrozen`.
+- `src/physics/PhysicsEngine.cpp`: Implemented spring skipping logic.
+- `src/physics/StructuralPhysics.cpp`: Added freeze trigger after snap.
+- `src/gameplay/Player.cpp`: Added CTRL modifier logic for structural tractor beam.
+
+---
+
 ## [Phase 44: Tractor Beam Hexagon Fix] - 2025-12-31
 
 ### Critical Bug Fixes (4-day investigation)

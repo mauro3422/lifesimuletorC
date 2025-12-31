@@ -56,6 +56,10 @@ struct StateComponent {
     int ringInstanceId = -1;
     float targetX = 0.0f;  // Absolute target position for docking animation
     float targetY = 0.0f;
+    
+    // === STRUCTURE GROUP (Phase 45: Super-Atom) ===
+    int structureId = -1;   // -1 = free atom, >0 = belongs to frozen structure
+    bool isFrozen = false;  // True when structure is locked and moves as rigid body
 
     // === PHYSICS GROUP ===
     bool justBonded = false;

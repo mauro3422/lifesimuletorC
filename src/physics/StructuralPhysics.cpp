@@ -159,6 +159,16 @@ void applyRingDynamics(float dt,
                         states[idx].dockingProgress = 1.0f;
                     }
                     TraceLog(LOG_INFO, "[SNAP] Snap completed - all atoms at targets");
+                    
+                    // Phase 45: Freeze structure into super-atom (rigid body mode)
+                    static int nextStructureId = 1;
+                    int newStructureId = nextStructureId++;
+                    for (int idx : subIndices) {
+                        states[idx].structureId = newStructureId;
+                        states[idx].isFrozen = true;
+                    }
+                    TraceLog(LOG_INFO, "[STRUCTURE] Frozen ring as structureId=%d with %d atoms", 
+                             newStructureId, (int)subIndices.size());
                 }
             }
 
