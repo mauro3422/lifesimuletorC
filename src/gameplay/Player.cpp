@@ -85,26 +85,37 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
     int idx = tractor.getTargetIndex();
     if (idx < 0 || idx >= (int)worldTransforms.size() || idx == playerIndex) return;
 
-    int targetIdx = MathUtils::findMoleculeRoot(idx, states);
+    // Phase 43 FIX: Always work with the CLICKED atom (idx), not the molecule root
+    // On first capture, isolate it. On subsequent frames, just move the already-isolated atom.
     
-    if (targetIdx == playerIndex) {
+    // Check if this atom belongs to player's molecule
+    int rootCheck = MathUtils::findMoleculeRoot(idx, states);
+    if (rootCheck == playerIndex) {
         tractor.release();
         return;
     }
 
     // Break bonds on first capture (Phase 43 fix: also check ring/cycle bonds)
     if (tractor.becameActive()) {
+        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] === NEW CAPTURE: idx=%d ===", idx);
+        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] BEFORE: parent=%d, cycle=%d, molId=%d, clustered=%d, ring=%d, childCount=%d",
+                 states[idx].parentEntityId, states[idx].cycleBondId, states[idx].moleculeId,
+                 states[idx].isClustered ? 1 : 0, states[idx].isInRing ? 1 : 0, states[idx].childCount);
+        
         bool hasBonds = states[idx].parentEntityId != -1 ||
                         states[idx].cycleBondId != -1 ||
                         states[idx].isInRing ||
-                        states[idx].isClustered ||  // Also check if clustered at all
+                        states[idx].isClustered ||
                         BondingSystem::findLastChild(idx, states) != -1;
+        
+        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] hasBonds=%d", hasBonds ? 1 : 0);
+        
         if (hasBonds) {
             // Get old members BEFORE breaking (to re-propagate them after)
             std::vector<int> oldMembers = MathUtils::getMoleculeMembers(idx, states);
+            TraceLog(LOG_INFO, "[TRACTOR_DEBUG] oldMembers.size=%d", (int)oldMembers.size());
             
             BondingSystem::breakAllBonds(idx, states, atoms);
-            targetIdx = idx;  // Now isolated, it's its own root
             
             // Re-propagate moleculeId for remaining structure members
             for (int oldId : oldMembers) {
@@ -113,11 +124,22 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
                 }
             }
         }
+        
+        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] AFTER: parent=%d, cycle=%d, molId=%d, clustered=%d, ring=%d, childCount=%d",
+                 states[idx].parentEntityId, states[idx].cycleBondId, states[idx].moleculeId,
+                 states[idx].isClustered ? 1 : 0, states[idx].isInRing ? 1 : 0, states[idx].childCount);
+        
+        // Verify isolation
+        bool isolated = (states[idx].parentEntityId == -1) && 
+                        (states[idx].cycleBondId == -1) &&
+                        (states[idx].childList.empty());
+        TraceLog(LOG_INFO, "[TRACTOR_DEBUG] ISOLATED=%d (childList.size=%d)", 
+                 isolated ? 1 : 0, (int)states[idx].childList.size());
     }
     
-    // Only shield the ISOLATED atom now (not the whole old molecule)
-    states[targetIdx].isShielded = true;
-    auto& targetTr = worldTransforms[targetIdx];
+    // Always shield and move the CLICKED atom (idx), not any root
+    states[idx].isShielded = true;
+    auto& targetTr = worldTransforms[idx];
     Vector2 tPos = tractor.getTargetPosition();
     
     float dx = tPos.x - targetTr.x;

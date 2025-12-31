@@ -178,8 +178,13 @@ public:
         states[entityId].parentSlotIndex = -1;
         states[entityId].moleculeId = entityId; 
         states[entityId].dockingProgress = 0.0f;
-        states[entityId].occupiedSlots = 0; // Isolated atoms have no children
-        states[entityId].childCount = 0;
+        states[entityId].isClustered = false;  // Phase 43: atom is now truly isolated
+        
+        // Only reset if atom has no children (preserve hierarchy for remaining subtree)
+        if (states[entityId].childList.empty()) {
+            states[entityId].occupiedSlots = 0;
+            states[entityId].childCount = 0;
+        }
 
         // Propagate from the side that was broken
         MolecularHierarchy::propagateMoleculeId(entityId, states);

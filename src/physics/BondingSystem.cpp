@@ -93,6 +93,11 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
     states[entityId].isClustered = false;
     states[entityId].parentEntityId = -1;
     
+    // Phase 44 FIX: Clear stale child references
+    states[entityId].childList.clear();
+    states[entityId].childCount = 0;
+    states[entityId].occupiedSlots = 0;
+    
     // Use centralized ring flag clearing
     RingChemistry::clearRingFlags(entityId, states);
 

@@ -74,9 +74,13 @@ public:
                             int requiredCount) {
         if ((int)candidates.size() < requiredCount) return false;
         
-        // Check none already in a ring
+        // Check none already in a ring OR currently being held by tractor beam
         for (int id : candidates) {
             if (states[id].isInRing || states[id].cycleBondId != -1) {
+                return false;
+            }
+            // Phase 44 FIX: Don't include shielded atoms in ring formation
+            if (states[id].isShielded) {
                 return false;
             }
         }

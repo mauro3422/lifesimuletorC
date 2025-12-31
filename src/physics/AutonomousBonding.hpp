@@ -295,14 +295,14 @@ public:
                         // INTER-MOLECULAR BONDING
                         // FIX (Phase 42): Check if the SPECIFIC atoms (not roots) are shielded
                         if (rootI != 0 && rootJ != 0 && !states[i].isShielded && !states[j].isShielded) {
-                            // GRACE PERIOD TOLERANCE (Phase 42)
-                            // If an atom was recently released from a tractor beam (releaseTimer < 2.0s),
-                            // be more permissive with bonding angles to allow "forced" connections.
+                            // GRACE PERIOD BLOCK (Phase 43 fix)
+                            // If an atom was recently released from tractor beam (releaseTimer < 2.0s),
+                            // BLOCK bonding completely to prevent immediate rebonding.
                             bool inGracePeriod = (states[i].releaseTimer < 2.0f || states[j].releaseTimer < 2.0f);
-                            float toleranceMultiplier = inGracePeriod ? 0.2f : 1.0f; // Much wider angle in grace period
+                            if (inGracePeriod) continue;  // Skip - prevent rebonding during grace period
 
                             // Standard bonding - let atoms bond freely
-                            if ((BondError)BondingCore::tryBond(i, j, states, atoms, transforms, inGracePeriod, toleranceMultiplier) == BondError::SUCCESS) {
+                            if ((BondError)BondingCore::tryBond(i, j, states, atoms, transforms, false, 1.0f) == BondError::SUCCESS) {
                                 states[i].justBonded = true;
                                 states[j].justBonded = true;
                                 break; 
