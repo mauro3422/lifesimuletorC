@@ -87,6 +87,15 @@ void BondingSystem::breakAllBonds(int entityId, std::vector<StateComponent>& sta
             breakCount++;
         }
     }
+
+    // 4. Phase 43 FIX: Fully isolate this atom (reset moleculeId to self)
+    states[entityId].moleculeId = entityId;
+    states[entityId].isClustered = false;
+    states[entityId].parentEntityId = -1;
+    
+    // Use centralized ring flag clearing
+    RingChemistry::clearRingFlags(entityId, states);
+
     TraceLog(LOG_INFO, "[BOND_SYSTEM] Isolation of %d complete. Broke %d child bonds.", entityId, breakCount);
 }
 

@@ -261,31 +261,58 @@ public:
     /**
      * Centralized Ring Invalidation.
      * When one bond of a ring breaks, the entire ring structure (visuals/flags) must be invalidated.
+     * Phase 43 FIX: Also handles edge cases where ringId is invalid.
      */
     static void invalidateRing(int ringId, std::vector<StateComponent>& states) {
-        if (ringId <= 0) return;
-        
         bool found = false;
-        for (size_t i = 0; i < states.size(); i++) {
-            if (states[i].ringInstanceId == ringId) {
-                states[i].isInRing = false;
-                states[i].ringInstanceId = -1;
-                states[i].ringSize = 0;
-                
-                // FIX (Phase 42): Clear cycleBondId when ring is invalidated.
-                // This prevents "ghost bonds" from blocking spontaneous reformation.
-                int partner = states[i].cycleBondId;
-                if (partner != -1 && partner < (int)states.size()) {
-                    states[partner].cycleBondId = -1;
+        
+        // If ringId is valid, invalidate by ringId
+        if (ringId > 0) {
+            for (size_t i = 0; i < states.size(); i++) {
+                if (states[i].ringInstanceId == ringId) {
+                    states[i].isInRing = false;
+                    states[i].ringInstanceId = -1;
+                    states[i].ringSize = 0;
+                    states[i].ringIndex = -1;
+                    states[i].dockingProgress = 0.0f;  // Reset to NOT locked
+                    
+                    // FIX (Phase 42): Clear cycleBondId when ring is invalidated.
+                    int partner = states[i].cycleBondId;
+                    if (partner != -1 && partner < (int)states.size()) {
+                        states[partner].cycleBondId = -1;
+                    }
+                    states[i].cycleBondId = -1;
+                    
+                    found = true;
                 }
-                states[i].cycleBondId = -1;
-                
-                found = true;
             }
         }
+        
         if (found) {
             TraceLog(LOG_INFO, "[RING] Invalidated entire ring instance metadata: %d", ringId);
         }
+    }
+    
+    /**
+     * Force-clears ALL ring flags from a specific atom.
+     * Used when isolating an atom via tractor beam.
+     */
+    static void clearRingFlags(int atomId, std::vector<StateComponent>& states) {
+        if (atomId < 0 || atomId >= (int)states.size()) return;
+        
+        // Clear partner's cycleBondId first
+        int partner = states[atomId].cycleBondId;
+        if (partner != -1 && partner < (int)states.size()) {
+            states[partner].cycleBondId = -1;
+        }
+        
+        // Clear this atom's ring flags
+        states[atomId].isInRing = false;
+        states[atomId].ringInstanceId = -1;
+        states[atomId].ringSize = 0;
+        states[atomId].ringIndex = -1;
+        states[atomId].cycleBondId = -1;
+        states[atomId].dockingProgress = 1.0f;
     }
 };
 

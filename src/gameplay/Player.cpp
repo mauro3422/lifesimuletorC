@@ -92,19 +92,31 @@ void Player::applyPhysics(std::vector<TransformComponent>& worldTransforms,
         return;
     }
 
-    // Break bonds on first capture
+    // Break bonds on first capture (Phase 43 fix: also check ring/cycle bonds)
     if (tractor.becameActive()) {
-        if (states[idx].parentEntityId != -1 || BondingSystem::findLastChild(idx, states) != -1) {
+        bool hasBonds = states[idx].parentEntityId != -1 ||
+                        states[idx].cycleBondId != -1 ||
+                        states[idx].isInRing ||
+                        states[idx].isClustered ||  // Also check if clustered at all
+                        BondingSystem::findLastChild(idx, states) != -1;
+        if (hasBonds) {
+            // Get old members BEFORE breaking (to re-propagate them after)
+            std::vector<int> oldMembers = MathUtils::getMoleculeMembers(idx, states);
+            
             BondingSystem::breakAllBonds(idx, states, atoms);
-            targetIdx = idx;
+            targetIdx = idx;  // Now isolated, it's its own root
+            
+            // Re-propagate moleculeId for remaining structure members
+            for (int oldId : oldMembers) {
+                if (oldId != idx && states[oldId].isClustered) {
+                    BondingSystem::propagateMoleculeId(oldId, states);
+                }
+            }
         }
     }
     
-    // FIX (Phase 42): Shield ALL members of the molecule, not just root
-    std::vector<int> members = MathUtils::getMoleculeMembers(targetIdx, states);
-    for (int mIdx : members) {
-        states[mIdx].isShielded = true;
-    }
+    // Only shield the ISOLATED atom now (not the whole old molecule)
+    states[targetIdx].isShielded = true;
     auto& targetTr = worldTransforms[targetIdx];
     Vector2 tPos = tractor.getTargetPosition();
     
